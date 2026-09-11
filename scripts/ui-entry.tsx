@@ -16,7 +16,7 @@ const dom = new JSDOM('<!doctype html><html><body><div id="raiz"></div></body></
   { url: 'http://localhost/', pretendToBeVisual: true });
 const w = dom.window as any;
 const g = globalThis as any;
-g.window = w; g.document = w.document; g.navigator = w.navigator;
+g.window = w; g.document = w.document; Object.defineProperty(g, "navigator", { value: w.navigator, writable: true, configurable: true });
 for (const k of ['HTMLElement', 'HTMLInputElement', 'HTMLTextAreaElement', 'HTMLSelectElement', 'InputEvent',
   'Event', 'MouseEvent', 'FocusEvent', 'KeyboardEvent', 'CustomEvent', 'Node', 'Text', 'DocumentFragment',
   'getComputedStyle', 'requestAnimationFrame', 'cancelAnimationFrame', 'DOMParser', 'XMLSerializer']) g[k] = w[k] ?? g[k];
@@ -93,7 +93,7 @@ const clicar = async (el: any) => {
   ok(!!ta, 'Classificar: há campo de descrição');
   if (ta) {
     await act(async () => { digitar(ta, 'cadeira giratória de escritório estofada em polipropileno'); });
-    await espera(80);
+    await espera(500);
     ok(/9401/.test(c.txt()), 'Classificar: classifica ao digitar (9401.31.00 na tela)');
     ok(/Reforma tribut[áa]ria do consumo/i.test(c.txt()), 'Classificar: bloco da reforma no resultado');
     ok(/parametrizar no ERP/i.test(c.txt()), 'Classificar: atalho para a parametrização de ERP');

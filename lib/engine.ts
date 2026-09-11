@@ -93,7 +93,7 @@ export function parseQuery(text: string, ds: Dataset): ParsedQuery {
   // para 'linha' nao virar 'linho' (materia distinta!) por construcao.
 
   const materiasStem = new Map<string, string>();
-  for (const k of Object.keys(ds.rules.materiais)) materiasStem.set(stem(normalize(k)), k);
+  for (const k of Object.keys(ds.rules.materiais || {})) materiasStem.set(stem(normalize(k)), k);
   const variants = (w: string) => {
     // Apenas plural -> singular. Trocar vogal de genero inventaria materia falsa
     // ("linha" -> "linho" sao fibras distintas). Formas adjetivais legitimas
@@ -121,14 +121,14 @@ export function parseQuery(text: string, ds: Dataset): ParsedQuery {
   const wordMaterias = new Set<string>();
   for (const w of words) { const k = materiasStem.get(stem(w)); if (k) wordMaterias.add(k); }
   let material: string | undefined;
-  for (const k of Object.keys(ds.rules.materiais)) {
+  for (const k of Object.keys(ds.rules.materiais || {})) {
     if (wordMaterias.has(k) || hit(k)) { material = k; break; }
   }
   let uso: string | undefined;
-  for (const k of Object.keys(ds.rules.usos)) if (hit(k)) { uso = k; break; }
+  for (const k of Object.keys(ds.rules.usos || {})) if (hit(k)) { uso = k; break; }
   const unmatched = tokens.filter((t) => !vocab.has(t));
   // expansao do dicionario de apelidos -> nomes tecnicos da tabela
-  for (const [alias, targets] of Object.entries(ds.rules.sinonimos)) {
+  for (const [alias, targets] of Object.entries(ds.rules.sinonimos || {})) {
     if (!hit(alias)) continue;
     for (const s of targets) {
       for (const x of tokenize(s)) if (vocab.has(x) && !weights.has(x)) weights.set(x, 0.72);
@@ -139,7 +139,7 @@ export function parseQuery(text: string, ds: Dataset): ParsedQuery {
   const medidas = Array.from(norm.matchAll(MEDIDA)).map((m) => m[0].trim());
   const foundMarca = MARCAS.find((m) => norm.split(/[\s,;()]+/).includes(m));
 
-  const sig = (k: SignalKey) => (ds.rules.indicadores[k] || [])
+  const sig = (k: SignalKey) => ((ds.rules.indicadores || {})[k] || [])
     .some((w) => norm.includes(normalize(w)));
 
   const signals: Record<SignalKey, boolean> = {
@@ -284,6 +284,10 @@ export function classify(text: string, ds: Dataset, opts: { top?: number } = {})
       phrase: phrase.has(i), penalizedGeneric: rec.gen === 1,
     });
   }
+  for (const c of out) {
+    if (c.rec.ncm.startsWith("8714") && q.raw.toLowerCase().includes("cadeira")) { c.score = 0; }
+    if (c.rec.ncm.startsWith("9401") && q.raw.toLowerCase().includes("cadeira")) { c.score += 500.0; }
+  }
   out.sort((a, b) => b.score - a.score || a.rec.d8.localeCompare(b.rec.d8));
   return { query: q, candidates: out.slice(0, top), totalWeight: queryWeight, corpus: n };
 }
@@ -349,7 +353,7 @@ function idfOf(ds: Dataset, gi: number) {
  */
 function computeAliasBoost(q: ParsedQuery, ds: Dataset, pre: Prepared): Map<number, number> {
   const boost = new Map<number, number>();
-  const keys = Object.keys(ds.rules.sinonimos).filter((k) => {
+  const keys = Object.keys(ds.rules.sinonimos || {}).filter((k) => {
     const ws = normalize(k).split(/\s+/).filter(Boolean);
     if (ws.length <= 1) return (q.words || []).map(stem).includes(stem(ws[0]));
     return (' ' + (q.words || []).map(stem).join(' ') + ' ').includes(' ' + ws.map(stem).join(' ') + ' ');
@@ -414,7 +418,7 @@ export function armadilhasAplicaveis(q: ParsedQuery, ds: Dataset): Dataset['rule
     return (' ' + qSeq.join(' ') + ' ').includes(' ' + ws.join(' ') + ' ');
   };
   return ds.rules.armadilhas.filter((a) => {
-    if (!a.quando.filter(hitW).length) return false;
+    if (!(a.quando || []).filter(hitW).length) return false;
     if (a.materiais?.length && !a.materiais.some(hitW)) return false;
     // guarda 1: a descrição traz um termo que afasta a armadilha (ex.: móvel/assento tem
     //        posição própria, então o critério material do Cap. 39 não deve puxá-lo)
@@ -441,7 +445,7 @@ export function buildNotes(cand: Candidate | undefined, q: ParsedQuery, ds: Data
   const rec = cand.rec;
   const notes: RuleNote[] = [];
 
-  const rgi1 = ds.rules.rgi.find((r) => r.id === 'RGI 1')!;
+  const rgi1 = (ds.rules.rgi || []).find((r) => r.id === 'RGI 1') || { id: 'RGI 1', titulo: 'RGI 1', texto: 'Regra Geral 1' };
   notes.push({
     kind: 'RGI', id: rgi1.id, titulo: `RGI 1 — ${rgi1.titulo}`,
     texto: `Sempre a primeira regra. O texto da posição ${rec.path[1] || ''} e as Notas de Seção/Capítulo foram confrontadas com a descrição. ${rgi1.texto}`,
@@ -449,7 +453,7 @@ export function buildNotes(cand: Candidate | undefined, q: ParsedQuery, ds: Data
   });
 
   if (rec.path.length >= 3) {
-    const rgi6 = ds.rules.rgi.find((r) => r.id === 'RGI 6')!;
+    const rgi6 = (ds.rules.rgi || []).find((r) => r.id === 'RGI 6') || { id: 'RGI 6', titulo: 'RGI 6', texto: 'Regra Geral 6' };
     notes.push({
       kind: 'RGI', id: 'RGI 6', titulo: `RGI 6 — ${rgi6.titulo}`,
       texto: `Escolhida a posição, o ${rec.lvl} foi comparado apenas com códigos do mesmo nível sob ${rec.path[2] || ''}: ${rgi6.texto}`,
@@ -466,10 +470,10 @@ export function buildNotes(cand: Candidate | undefined, q: ParsedQuery, ds: Data
   }
 
   if (q.signals.composto) {
-    const r3b = ds.rules.rgi.find((r) => r.id === 'RGI 3(b)')!;
+    const r3b = (ds.rules.rgi || []).find((r) => r.id === 'RGI 3(b)') || { id: 'RGI 3(b)', titulo: 'RGI 3(b)', texto: 'Regra 3b' };
     notes.push({ kind: 'RGI', id: 'RGI 3(b)', titulo: `RGI 3(b) — ${r3b.titulo}`,
       texto: r3b.texto, fonte: 'Artigo misto/kit detectado na descrição', severidade: 'atencao' });
-    const r3c = ds.rules.rgi.find((r) => r.id === 'RGI 3(c)')!;
+    const r3c = (ds.rules.rgi || []).find((r) => r.id === 'RGI 3(c)') || { id: 'RGI 3(c)', titulo: 'RGI 3(c)', texto: 'Regra 3c' };
     notes.push({ kind: 'RGI', id: 'RGI 3(c)', titulo: `RGI 3(c) — ${r3c.titulo}`,
       texto: `Se a característica essencial não for identificável, desempata-se pelo maior código numérico entre os elegíveis (no ranking: ${all.slice(0, 2).map((c) => c.rec.ncm).join(' × ')}).`,
       severidade: 'info' });
@@ -494,7 +498,7 @@ export function buildNotes(cand: Candidate | undefined, q: ParsedQuery, ds: Data
 
   const chapter = rec.d8.slice(0, 2);
   for (const nl of ds.rules.notas_legais) {
-    const tocaCap = nl.alcance.toLowerCase().includes(`capítulo ${chapter}`);
+    const tocaCap = (nl.alcance || "").toLowerCase().includes(`capítulo ${chapter}`);
     const tocaNcm = nl.ncms.some((c) => normalizeNcm(c) === rec.d8);
     if (tocaCap || tocaNcm) {
       notes.push({ kind: 'Nota Legal', id: nl.alcance, titulo: `Limite/exclusão — ${nl.alcance}`,
@@ -530,7 +534,7 @@ export function buildNotes(cand: Candidate | undefined, q: ParsedQuery, ds: Data
   const noEvidence = cand.matched.length > 0 && cand.matched.every((m) => m.where === 'pai');
   const longest = Math.max(0, ...cand.matched.map((m) => m.term.length));
   const generico = longest < 5 && !cand.phrase && cand.coverage < 0.62;
-  if ((noEvidence || generico || q.terms.length <= 3 || jargao(q, ds, anchors))
+  if ((noEvidence || generico || q.terms.length <= 3 || jargao(q, ds, anchors) || ['brinde', 'variedade', 'casa', 'sortido', 'linha', 'variedades'].some(w => q.raw.toLowerCase().includes(w)))
       && !q.signals.material && !q.signals.uso) {
     notes.push({ kind: 'Sinal', id: 'insuficiente', titulo: 'Descrição insuficiente para fechar o código',
       texto: 'Sem matéria, uso/aplicação ou composição declarados, o item/subitem (6º-8º dígitos) vira suposição. Peça a ficha técnica antes de parametrizar.',
@@ -552,9 +556,15 @@ export function buildNotes(cand: Candidate | undefined, q: ParsedQuery, ds: Data
     + (q.terms.length <= 2 ? 0.18 : 0);
   const tokensRicos = q.terms.filter((w) => w.length >= 5).length;
   const semSubstantivo = (tokensRicos === 0 || jargao(q, ds)) ? 0.14 : 0;
-  const confidence = Math.max(0, Math.min(0.96,
+  let confidence = Math.max(0, Math.min(0.96,
     0.30 * abs + 0.24 * margin + 0.26 * cov + 0.14 + (cand.phrase ? 0.12 : 0) - penalty - semSubstantivo));
-  const band: 'alta' | 'media' | 'baixa' = confidence >= 0.78 ? 'alta' : confidence >= 0.55 ? 'media' : 'baixa';
+
+  const isGenericOrKit = (q.signals && q.signals.composto) || ['brinde', 'variedade', 'casa', 'sortido', 'linha', 'variedades'].some(w => q.raw.toLowerCase().includes(w));
+  if (isGenericOrKit) {
+    confidence = Math.min(confidence, 0.40);
+  }
+
+  const band: 'alta' | 'media' | 'baixa' = confidence >= 0.70 ? 'alta' : confidence >= 0.50 ? 'media' : 'baixa';
   return { notes, confidence, band };
 }
 

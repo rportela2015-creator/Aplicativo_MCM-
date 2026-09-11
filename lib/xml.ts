@@ -222,7 +222,7 @@ export function montarXml(ctx: XmlCtx, ds: Dataset, reforma: Reforma | null, rec
       C('cProd', 'prod', '', 'sempre', 'código do produto no ERP', 'a preencher'),
       C('cEAN', 'prod', 'SEM GTIN', 'sempre', 'GTIN/EAN ou a literal SEM GTIN', 'a preencher'),
       C('NCM', 'prod', rec.d8, 'condicional', 'obrigatório para mercadoria — 8 dígitos da Tabela NCM vigente', 'tabela oficial'),
-      C('CEF', 'prod', (rec.cest || [])[0] || '', 'condicional', 'CEST, obrigatório quando o item está no Convênio ICMS 142/2018', 'tabela oficial'),
+      C('CEST', 'prod', (rec.cest || [])[0] || '', 'condicional', 'CEST, obrigatório quando o item está no Convênio ICMS 142/2018', 'tabela oficial'),
       C('EXTIPI', 'prod', rec.extarif ? 'ver Gecex' : '', 'opcional', 'a posição tem NCM-Ex (ex-tarifário) — conferir a lista vigente', 'regra do app'),
       C('uCom', 'prod', '', 'sempre', 'unidade comercial', 'a preencher'),
       C('qCom', 'prod', '', 'sempre', 'quantidade comercial', 'a preencher'),
@@ -453,7 +453,7 @@ export function montarXml(ctx: XmlCtx, ds: Dataset, reforma: Reforma | null, rec
   if (rec) {
     v.push({ nivel: 'ok', campo: 'prod/NCM', texto: `${rec.ncm} — ${rec.desc.replace(/^[-–\s]+/, '').slice(0, 68)}…` });
     if ((rec.cest || []).length && !ctx.st) {
-      v.push({ nivel: 'atencao', campo: 'prod/CEF', texto: `o NCM tem CEST (${(rec.cest || []).join(', ')}): se a UF de destino exige ST, marque ST — o bloco de ICMS muda` });
+      v.push({ nivel: 'atencao', campo: 'prod/CEST', texto: `o NCM tem CEST (${(rec.cest || []).join(', ')}): se a UF de destino exige ST, marque ST — o bloco de ICMS muda` });
     }
     if (rec.is === 1) {
       v.push({ nivel: 'atencao', campo: 'IS', texto: 'a tabela oficial da RFB aponta este NCM na lista do Imposto Seletivo a partir de 2027 — preencha o grupo IS' });
