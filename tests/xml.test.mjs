@@ -70,12 +70,12 @@ t('cUF bate com a tabela oficial de UFs baixada da RFB (inclusive RN=24 e PE=26)
   assert.equal(mods.xml.cUF('ZZ'), '');
 });
 
-t('item de mercadoria: NCM e CEF saem da tabela oficial, CFOP da de CONFAZ', () => {
+t('item de mercadoria: NCM e CEST saem da tabela oficial, CFOP da de CONFAZ', () => {
   const rec = ds.byD8.get('84713012');
   const p = mods.xml.montarXml({ ...BASE }, ds, reforma, rec);
   assert.equal(campo(p, 'produto', 'NCM').valor, '84713012');
   assert.equal(campo(p, 'produto', 'NCM').fonte, 'tabela oficial');
-  assert.equal(campo(p, 'produto', 'CEF').valor, '21.028.00', 'CEST não virou CEF');
+  assert.equal(campo(p, 'produto', 'CEST').valor, '21.028.00', 'CEST não virou CEF');
   assert.match(p.resumo, /CFOP 5\.102/, p.resumo);
   assert.equal(campo(p, 'ide', 'cUF').valor, '35');
   assert.equal(campo(p, 'emit', 'CRT').valor, '3');
