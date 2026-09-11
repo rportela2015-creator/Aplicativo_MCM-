@@ -1,6 +1,6 @@
 {
  "aviso_fontes": null,
- "gerado_em": "2026-09-10T16:40:30",
+ "gerado_em": "2026-09-11T11:47:01",
  "ncm_vigente": "Vigente em 09/09/2026",
  "ncm_ato": "Resolução Gecex nº 926/2026",
  "fontes": {
@@ -57,7 +57,7 @@
  },
  "validacao": {
   "ncm_agregador_vs_siscomex": "10515 de 10515 códigos idênticos; 0 divergências",
-  "ncs_citados_nas_regras": 77,
+  "ncs_citados_nas_regras": 0,
   "invalidos": 0,
   "regras_sem_codigo_inexistente": true,
   "reform_classes": 164,

@@ -29,6 +29,16 @@ const BAND_TXT: Record<string, string> = {
 
 const fmt = (v: number | null | undefined, suf = '%') => (v === null || v === undefined ? '—' : `${v}${suf}`);
 
+interface AiResponse {
+  ncm: string;
+  descricaoNcm: string;
+  confianca: 'ALTA' | 'MEDIA' | 'BAIXA';
+  cstIbsCbs: string;
+  cClassTrib?: string;
+  sujeitoImpostoSeletivo: boolean;
+  fundamentacao: string;
+}
+
 export default function Classificar() {
   const [ds, setDs] = useState<Dataset | null>(null);
   const [frio, setFrio] = useState(false);
@@ -42,6 +52,11 @@ export default function Classificar() {
   const [ufD, setUfD] = useState('SP');
   const [aberto, setAberto] = useState(0);
   const [mostrarTudo, setMostrarTudo] = useState(false);
+
+  // Estados da IA
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResult, setAiResult] = useState<AiResponse | null>(null);
+  const [aiError, setAiError] = useState('');
 
   useEffect(() => {
     loadDataset().then(async (d) => { setDs(d); await d.pronto; setFrio(true); })
@@ -57,6 +72,29 @@ export default function Classificar() {
   }, [ds, texto, mostrarTudo]);
 
   const pinput: ParamInput = { operacao, regime, finalidade, ufOrigem: ufO, ufDestino: ufD };
+
+  const consultarIA = async () => {
+    if (!texto.trim()) return;
+    setAiLoading(true);
+    setAiError('');
+    try {
+      const contexto = `Operação: ${operacao}, Regime: ${regime}, Finalidade: ${finalidade}, Origem: ${ufO}, Destino: ${ufD}`;
+      const res = await fetch('/api/classificar-ia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ descricao: texto, contextoOperacao: contexto }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Erro na resposta do servidor.');
+      }
+      setAiResult(data);
+    } catch (e: any) {
+      setAiError(e.message || 'Falha ao consultar IA.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   if (err) return <div className="err">Não consegui carregar o dataset. Rode <code>npm run build:dados</code> e recarregue. <span className="mono">{err}</span></div>;
   if (!ds) return <div className="card"><span className="spin" /> carregando Tabela NCM vigente (10.515 códigos de 8 dígitos)…</div>;
@@ -75,13 +113,35 @@ export default function Classificar() {
         <textarea
           autoFocus
           value={texto}
-          onChange={(e) => setTexto(e.target.value)}
+          onChange={(e) => {
+            setTexto(e.target.value);
+            if (aiResult) setAiResult(null);
+          }}
           placeholder="ex.: Cadeira estofada giratória em polipropileno, base de aço cromado, para escritório"
         />
         <div className="chips">
           {EXEMPLOS.map((x) => (
-            <button key={x} className="chip" onClick={() => setTexto(x)} type="button">{x}</button>
+            <button key={x} className="chip" onClick={() => { setTexto(x); setAiResult(null); }} type="button">{x}</button>
           ))}
+        </div>
+
+        <div className="row" style={{ marginTop: 12, justifyContent: 'flex-start' }}>
+          <button
+            type="button"
+            className="chip"
+            style={{
+              background: 'var(--primary, #0f172a)',
+              color: '#fff',
+              padding: '8px 14px',
+              fontWeight: 600,
+              cursor: aiLoading || !texto.trim() ? 'not-allowed' : 'pointer',
+              opacity: aiLoading || !texto.trim() ? 0.6 : 1,
+            }}
+            onClick={consultarIA}
+            disabled={aiLoading || !texto.trim()}
+          >
+            {aiLoading ? <><span className="spin" /> Processando com IA…</> : '✦ Classificar com IA Especialista'}
+          </button>
         </div>
 
         <h3>Contexto da operação (para a parametrização fiscal)</h3>
@@ -125,11 +185,40 @@ export default function Classificar() {
         </div>
       </div>
 
-      {semResultado && (
+      {aiError && (
+        <div className="err" style={{ marginTop: 10 }}>
+          Falha na classificação por IA: {aiError}
+        </div>
+      )}
+
+      {aiResult && (
+        <div className="card" style={{ border: '2px solid #2563eb', background: '#f8fafc', margin: '14px 0' }}>
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ margin: 0, color: '#1e40af' }}>Parecer Técnico Tributário (IA Especialista)</h3>
+            <span className={`badge ${aiResult.confianca === 'ALTA' ? 'alta' : aiResult.confianca === 'MEDIA' ? 'media' : 'baixa'}`}>
+              Confiabilidade {aiResult.confianca}
+            </span>
+          </div>
+
+          <div className="taxgrid" style={{ marginTop: 12 }}>
+            <Tax k="NCM Sugerido" v={fmtCode(aiResult.ncm)} />
+            <Tax k="CST IBS/CBS" v={aiResult.cstIbsCbs} />
+            <Tax k="cClassTrib" v={aiResult.cClassTrib || '—'} />
+            <Tax k="Imposto Seletivo" v={aiResult.sujeitoImpostoSeletivo ? 'SIM' : 'NÃO'} />
+            <Tax k="Descrição Oficial" v={aiResult.descricaoNcm} wide />
+          </div>
+
+          <div className="note info" style={{ marginTop: 12 }}>
+            <div className="t">Fundamentação Normativa (NESH / LC 214 e 227)</div>
+            <div className="x">{aiResult.fundamentacao}</div>
+          </div>
+        </div>
+      )}
+
+      {semResultado && !aiResult && (
         <div className="err">
           Nenhum código da Tabela NCM vigente descreve essa mercadoria. Reescreva em termos de <b>matéria</b> e{' '}
-          <b>função</b> (ex.: “utensílio de mesa de plástico” em vez de “linha casa”) — ou consulte o painel{' '}
-          <b>Consultar NCM</b>.
+          <b>função</b> (ex.: “utensílio de mesa de plástico” em vez de “linha casa”) — ou clique em <b>Classificar com IA Especialista</b> acima.
         </div>
       )}
 

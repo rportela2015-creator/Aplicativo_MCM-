@@ -5,3 +5,5 @@ out/
 .test-parse/
 tsconfig.tsbuildinfo
 .DS_Store
+
+*.zip
