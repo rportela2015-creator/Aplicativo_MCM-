@@ -1,0 +1,23 @@
+{
+ "gerado_em": "2026-09-09T16:40:02",
+ "base": "https://consumo.tributos.gov.br/servico/calcular-tributos-consumo/api/calculadora/dados-abertos",
+ "fallback": "https://dfe-portal.svrs.rs.gov.br/DFE/ClassificacaoTributaria",
+ "datas": [
+  "2026-01-01",
+  "2027-01-01"
+ ],
+ "falhas": {},
+ "ok": {
+  "situacoes_cbsibs_2026": true,
+  "situacoes_cbsibs_2027": true,
+  "situacoes_is_2027": true,
+  "fundamentacoes_2026": true,
+  "transferencias_cbs": true,
+  "transferencias_ibs": true,
+  "ufs": true,
+  "aliquota_uniao_2026": true,
+  "aliquota_uniao_2027": true,
+  "aliquota_uniao_2029": true,
+  "aliquota_uniao_2033": true
+ }
+}

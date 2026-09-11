@@ -1,0 +1,67 @@
+{
+ "aviso_fontes": null,
+ "gerado_em": "2026-09-10T16:40:30",
+ "ncm_vigente": "Vigente em 09/09/2026",
+ "ncm_ato": "Resolução Gecex nº 926/2026",
+ "fontes": {
+  "tabela_ncm": {
+   "nome": "Portal Único Siscomex — Classif (Tabela NCM vigente)",
+   "url": "https://portalunico.siscomex.gov.br/classif/#/nomenclatura/tabela?perfil=publico",
+   "api": "https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json",
+   "status": "fonte primária oficial",
+   "linhas": 15156
+  },
+  "atributos_catalogo": {
+   "nome": "Portal Único Siscomex — Cadastro de Atributos (CADA)",
+   "api": "https://portalunico.siscomex.gov.br/cadatributos/api/atributo-ncm/download/json",
+   "status": "fonte primária oficial",
+   "linhas": 10571
+  },
+  "ipi_tipi": {
+   "nome": "TIPI vigente (Decreto) por NCM",
+   "status": "derivada — conferir com o texto legal antes de usar",
+   "linhas": 10515
+  },
+  "ii_tec": {
+   "nome": "TEC / II por NCM (Resoluções Gecex + exceções nacionais)",
+   "status": "derivada — conferir com o texto legal antes de usar",
+   "linhas": 10515
+  },
+  "cest": {
+   "nome": "CEST (Convênio ICMS 142/2018) + mapeamento NCM",
+   "status": "derivada do CONFAZ",
+   "linhas": 1223
+  },
+  "reforma_cclasstrib": {
+   "nome": "Dados abertos — Calculadora de Tributos do Consumo (RFB): CST-IBS/CBS, cClassTrib, IS e alíquotas",
+   "api": "https://consumo.tributos.gov.br/servico/calcular-tributos-consumo/api/calculadora/dados-abertos",
+   "status": "fonte primária oficial",
+   "linhas": 164
+  },
+  "cfop": {
+   "nome": "Tabela CFOP (Ajuste SINIEF 23/2023)",
+   "status": "derivada do CONFAZ",
+   "linhas": 619
+  },
+  "pis_cofins": {
+   "nome": "Regime de incidência PIS/COFINS",
+   "status": "HEURÍSTICA local (CST sugerido por regra); não substitui a LC 195/2023 e a Tabela de Incidência da RFB"
+  }
+ },
+ "contagens": {
+  "ncm_8_digitos": 10515,
+  "com_ipi": 9751,
+  "com_ii": 10515,
+  "com_cest": 2697,
+  "com_atributos": 10516
+ },
+ "validacao": {
+  "ncm_agregador_vs_siscomex": "10515 de 10515 códigos idênticos; 0 divergências",
+  "ncs_citados_nas_regras": 77,
+  "invalidos": 0,
+  "regras_sem_codigo_inexistente": true,
+  "reform_classes": 164,
+  "reform_is": 99,
+  "fontes_oficiais_ok": true
+ }
+}

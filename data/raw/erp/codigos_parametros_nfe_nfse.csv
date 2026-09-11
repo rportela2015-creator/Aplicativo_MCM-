@@ -1,0 +1,468 @@
+Campo / Tag XML,Descrição do Código,Tipo,Tamanho (Nº Caracteres),Exemplo de Preenchimento / Valor,Fonte
+NF-e (Modelo 55),Nota Fiscal Eletrônica,Documento Fiscal Eletrônico,2,55,1
+NFC-e (Modelo 65),Nota Fiscal de Consumidor Eletrônica,Documento Fiscal Eletrônico,2,65,1
+CT-e (Modelo 57),Conhecimento de Transporte Eletrônico,Documento Fiscal Eletrônico,2,57,1
+MDF-e (Modelo 58),Manifesto Eletrônico de Documentos Fiscais,Documento Fiscal Eletrônico,2,58,1
+NFAg (Modelo 75),Nota Fiscal de Água e Saneamento Eletrônica,Documento Fiscal Eletrônico,2,75,1
+NF-e ABI (Modelo 77),Nota Fiscal Eletrônica de Alienação de Bens Imóveis,Documento Fiscal Eletrônico,2,77,1
+NCM/SH,Nomenclatura Comum do Mercosul,Alfanumérico,8,9619.00.00,1
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS) incidente na operação.,Numérico (moeda),"15,2",1234.56,2
+vCBS,Valor da Contribuição sobre Bens e Serviços (CBS) incidente na operação.,Numérico (moeda),"15,2",987.65,2
+pIBS,Alíquota do IBS (estadual + municipal) aplicada sobre a base de cálculo.,Numérico (percentual),"3,4",17.7,2
+pCBS,Alíquota da CBS aplicada sobre a base de cálculo.,Numérico (percentual),"3,4",8.8,2
+vBC,"Base de Cálculo do IBS e da CBS, correspondente ao valor da operação.",Numérico (moeda),"15,2",5000.00,2
+mod,"Modelo do Documento Fiscal Eletrônico (55 para NF-e, 65 para NFC-e).",Numérico,2,55,"user description, 60"
+vCredPresumido,Valor do crédito presumido calculado em operações específicas (ex: produtor rural).,Numérico (moeda),"15,2",150.00,2
+tpSplit,Indicador de utilização do mecanismo de split payment na liquidação financeira.,Numérico,1,1 (Sim),2
+NCM,Código da Nomenclatura Comum do Mercosul / Sistema Harmonizado utilizado para classificação fiscal de bens materiais.,Numérico,8,8411.11.00,3
+NBS,"Nomenclatura Brasileira de Serviços, Intangíveis e Outras Operações que Produzam Variações no Patrimônio.",Alfanumérico,9,1.0301.31.00,3
+CNPJ,Cadastro Nacional da Pessoa Jurídica; identificação única obrigatória para contribuintes e responsáveis da CBS e IBS.,Numérico,14,00000000000191,3
+chAcesso,Chave de acesso que identifica o documento fiscal eletrônico de maneira única.,Numérico,44,35190800000000000000550010000000011234567890,3
+vCBS,Valor da Contribuição Social sobre Bens e Serviços (CBS) destacada no documento fiscal.,Numérico (Decimal),Até 15 (com 2 decimais),100.50,3
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS) destacado no documento fiscal.,Numérico (Decimal),Até 15 (com 2 decimais),85.20,3
+cbenef,"Código de benefício fiscal ou regime diferenciado aplicado à operação (ex: alíquota zero, suspensão, redução).",Alfanumérico,Não especificado na fonte,CBS_ALQ_ZERO,3
+tpEmis,Tipo de emissão do documento fiscal (Normal ou Contingência).,"Numérico (1-Normal, 9-Contingência)",1,9,3
+CIB,Código de inscrição no Cadastro Imobiliário Brasileiro para identificação de bens imóveis urbanos e rurais.,Alfanumérico,Não especificado na fonte,A1B2C3D4,3
+CPF,Cadastro de Pessoas Físicas; identificação de adquirentes não contribuintes ou motoristas profissionais.,Numérico,11,00000000000,3
+IBS,Imposto sobre Bens e Serviços - Novo imposto de competência subnacional (Estados e Municípios).,Numérico / Alíquota,Variável,0.01 (1%),4
+CBS,Contribuição Social sobre Bens e Serviços - Nova contribuição federal comum ao IBS.,Numérico / Alíquota,Variável,0.05 (5%),4
+Split Payment,Mecanismo de recolhimento do IBS/CBS na liquidação financeira da operação.,Booleano / Indicador,1,1 (Sim),4
+NCM/SH,Nomenclatura Comum do Mercosul para classificação de mercadorias.,Alfanumérico,8,3004.90.99,4
+NBS,Nomenclatura Brasileira de Serviços para classificação de serviços.,Alfanumérico,9,1.01.01,4
+IS,Imposto Seletivo - Tributo sobre bens e serviços prejudiciais à saúde ou meio ambiente.,Numérico / Alíquota,Variável,"0.0025 (0,25%)",4
+NCM,Código da Nomenclatura Comum do Mercosul para identificação de produtos,Numérico,8,01012100,5
+uTrib,Unidade de medida tributável utilizada em operações de exportação,Alfanumérico,Até 6,KG,5
+uTrib (Descrição),Descrição por extenso da unidade de medida tributável,Texto,Varia,Quilograma,5
+inicioVigencia,Data de início da vigência da classificação NCM,Data (DD/MM/AAAA),10,01/01/2016,5
+fimVigencia,Data de fim da vigência da classificação NCM,Data (DD/MM/AAAA),10,01/02/2026,5
+uTrib (UN),Unidade de medida tributável: Unidade,Alfanumérico,2,UN,5
+uTrib (KG),Unidade de medida tributável: Quilograma,Alfanumérico,2,KG,5
+uTrib (TON),Unidade de medida tributável: Tonelada Métrica Líquida,Alfanumérico,3,TON,5
+uTrib (LT),Unidade de medida tributável: Litro,Alfanumérico,2,LT,5
+uTrib (M2),Unidade de medida tributável: Metro Quadrado,Alfanumérico,2,M2,5
+uTrib (M3),Unidade de medida tributável: Metro Cúbico,Alfanumérico,2,M3,5
+uTrib (MWHORA),Unidade de medida tributável: Megawatt Hora,Alfanumérico,6,MWHORA,5
+uTrib (PARES),Unidade de medida tributável: Pares,Alfanumérico,5,PARES,5
+uTrib (QUILAT),Unidade de medida tributável: Quilate,Alfanumérico,6,QUILAT,5
+cClassTrib,Situações tributadas integralmente pelo IBS e CBS.,Numérico,6,000001,6
+CST-IBS/CBS,Tributação integral,Numérico,3,000,6
+cClassTrib,"Exploração de via, observado o art. 11 da Lei Complementar nº 214, de 2025.",Numérico,6,000002,6
+cClassTrib,"Regime automotivo - projetos incentivados, observado o art. 311 da Lei Complementar nº 214, de 2025.",Numérico,6,000003,6
+cClassTrib,"Regime automotivo - projetos incentivados, observado o art. 312 da Lei Complementar nº 214, de 2025.",Numérico,6,000004,6
+cClassTrib,Operações do FGTS não realizadas pela Caixa Econômica Federal,Numérico,6,010001,6
+cClassTrib,"Planos de assistência funerária, observado o art. 236 da Lei Complementar nº 214, de 2025.",Numérico,6,011001,6
+cClassTrib,Serviços de transporte de bens até as zonas de processamento de exportação,Numérico,6,200001,6
+cClassTrib,Vendas de produtos destinados à alimentação humana (Cesta Básica),Numérico,6,200003,6
+cClassTrib,Fornecimento de dispositivos médicos (Anexo XII),Numérico,6,200004,6
+cClassTrib,Fornecimento dos medicamentos registrados na Anvisa,Numérico,6,200009,6
+cClassTrib,"Fornecimento de tampões higiênicos, absorventes higiênicos internos ou externos",Numérico,6,200013,6
+cClassTrib,"Fornecimento dos produtos hortícolas, frutas e ovos (Anexo XV)",Numérico,6,200014,6
+cClassTrib,Operação originada fora da ZFM que destine bem material industrializado,Numérico,6,200022,6
+cClassTrib,Operações com bens imóveis (Alíquota reduzida em 50%),Numérico,6,200046,6
+cClassTrib,Transferências entre estabelecimentos pertencentes ao mesmo contribuinte,Numérico,6,410002,6
+cClassTrib,Exportações de bens e serviços,Numérico,6,410004,6
+cClassTrib,Tributação monofásica sobre combustíveis,Numérico,6,620001,6
+,Imposto sobre Bens e Serviços (IBS),N (Numérico),1-15,Valor do IBS calculado,7
+,Contribuição sobre Bens e Serviços (CBS),N (Numérico),1-15,Valor da CBS calculada,7
+,Alíquota do IBS,N (Numérico),1-5,17.00,7
+,Alíquota da CBS,N (Numérico),1-5,8.80,7
+,Base de Cálculo do Imposto,N (Numérico),1-15,1000.00,7
+,Modelo do Documento Fiscal (NF-e/NFS-e),N (Numérico),2,55,Inferred
+,Nomenclatura Comum do Mercosul,N (Numérico),8,22030000,7
+,Origem da Mercadoria,N (Numérico),1,0 (Nacional),7
+,Sigla da Unidade da Federação,C (Alfanumérico),2,PR,7
+CST-IBS/CBS,Situações tributadas integralmente pelo IBS e CBS.,Padrão,3,000,8
+cClassTrib,"Exploração de via, observado o art. 11 da Lei Complementar nº 214, de 2025.",Padrão,6,000002,8
+cClassTrib,Regime automotivo - projetos incentivados (art. 311),Padrão,6,000003,8
+CST-IBS/CBS,Tributação com alíquotas uniformes - operações do FGTS,Uniforme setorial,3,010,8
+cClassTrib,Vendas de produtos destinados à alimentação humana (Anexo I) - Cesta Básica Nacional,Padrão,6,200003,8
+cClassTrib,Fornecimento de dispositivos médicos (Anexo XII) com alíquota zero,Padrão,6,200004,8
+cClassTrib,Fornecimento dos medicamentos registrados na Anvisa com alíquota zero,Padrão,6,200009,8
+cClassTrib,Locação de imóveis localizados nas zonas reabilitadas - alíquota reduzida em 80%,Padrão,6,200026,8
+cClassTrib,"Operações de locação, cessão onerosa e arrendamento de bens imóveis - redução 70%",Padrão,6,200027,8
+cClassTrib,Fornecimento dos serviços de educação (Anexo II) - redução 60%,Padrão,6,200028,8
+cClassTrib,Incorporação imobiliária submetida ao regime especial de tributação (RET),Fixa,6,220001,8
+cClassTrib,Isenção para serviços de transporte público coletivo rodoviário e metroviário,Sem alíquota,6,400001,8
+cClassTrib,Exportações de bens e serviços - Imunidade,Sem alíquota,6,410004,8
+cClassTrib,Tributação monofásica sobre combustíveis,Uniforme setorial,6,620001,8
+codTrib,Código de Tributação da DeRE para classificação de rubricas contábeis.,Numérico,9,110111001,9
+pIBSUF,Alíquota de incidência do IBS (Estado/Distrito Federal) embutida no cálculo.,Alfanumérico (Variável),Não especificado,{pIBSUF},9
+pIBSMun,Alíquota de incidência do IBS (Município) embutida no cálculo.,Alfanumérico (Variável),Não especificado,{pIBSMun},9
+pCBS,Alíquota de incidência da CBS embutida no cálculo da Base Líquida.,Alfanumérico (Variável),Não especificado,{pCBS},9
+Tabela 14,Plano de Contas Referencial – SPED para mapeamento de fatos geradores.,Referência Externa,Dinâmico,Consultar Plano ECF/ECD,9
+Tabela 21 - Código,Código da Atividade de Serviços Financeiros para DeRE.,Alfanumérico,3,01A,9
+Tabela 31 - Código,Código de Atividade de Planos de Assistência à Saúde.,Alfanumérico,3,03A,9
+Tabela 41 - Código,Código de Atividade de Concursos de Prognósticos.,Alfanumérico,3,01C,9
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS),Numérico (Moeda),15 (2 decimais),150.50,10
+vCBS,Valor da Contribuição Social sobre Bens e Serviços (CBS),Numérico (Moeda),15 (2 decimais),245.00,10
+pIBS,Alíquota efetiva do IBS para cálculo de crédito,Numérico (Percentual),5 (2 decimais),0.17,10
+pCBS,Alíquota efetiva da CBS para cálculo de crédito,Numérico (Percentual),5 (2 decimais),15.33,10
+vIBSFixo,Valor fixo do IBS para Microempreendedor Individual (MEI),Numérico (Moeda),15 (3 decimais no XML),0.006,10
+vCBSFixo,Valor fixo da CBS para Microempreendedor Individual (MEI),Numérico (Moeda),15 (3 decimais no XML),0.994,10
+indEscrituracao,Indicador de que o documento eletrônico representa a própria escrituração,Booleano / Código,1,1,10
+vBCIBS,Base de cálculo do IBS (Receita Bruta Mensal),Numérico (Moeda),15 (2 decimais),5000.00,10
+vBCCBS,Base de cálculo da CBS (Receita Bruta Mensal),Numérico (Moeda),15 (2 decimais),5000.00,10
+NCM/SH,Nomenclatura Comum do Mercosul / Sistema Harmonizado (Resolução Gecex 272/2021),String,8,0101.21.00,11
+NBS,"Nomenclatura Brasileira de Serviços, Intangíveis e Outras Operações que Produzam Variações no Patrimônio",String,9,1.0101.10.00,11
+CNPJ,Cadastro Nacional da Pessoa Jurídica - Inscrição para contribuintes e responsáveis pelo IBS/CBS,Numérico,14,12.345.678/0001-90,11
+CPF,Cadastro de Pessoas Físicas - Identificação de adquirentes e prestadores pessoas físicas,Numérico,11,123.456.789-00,11
+dPrevEnt,Data de previsão de entrega ou disponibilização informada no documento fiscal para fato gerador,Data,10,2027-01-01,11
+{tpAmb},Identificação do ambiente de destino (Produção ou Homologação),tp,1,12 ou 12,12
+{perApur},Período de apuração ao qual se referem as informações,per,7,2026-06,12
+{codTrib},Código de Tributação que conecta a contabilidade com as regras fiscais,c / cod,9,101010101,12
+{codBC},Código de Base de Cálculo para agregação de valores e aplicação de fórmulas,c / cod,4,1010,12
+{vApur},Valor apurado da conta contábil para fins de base de cálculo,v,1-15,1000.00,12
+{pCBS},Alíquota da Contribuição sobre Bens e Serviços,p,1-8,3.000000,12
+{pIBSMun},Alíquota do IBS Municipal,p,1-8,1.000000,12
+{indTribISS},Indicador de incidência de ISS para segregação de operações na transição,ind,1,ou 12,12
+{cCta},Código da conta analítica (concatenado com desdobramento),c / cod,1-30,110101001,12
+{vBCIBS},Valor da Base de Cálculo do IBS (após gross-down),v,1-15,112500.00,12
+cClassTrib,"Operações do FGTS não realizadas pela Caixa Econômica Federal, observado o art. 212 da Lei Complementar nº 214, de 2025.",Numérico,6,010001,13
+cClassTrib,Vendas de produtos que compõem a Cesta Básica Nacional de Alimentos (Anexo I).,Numérico,6,200003,13
+cClassTrib,"Fornecimento de medicamentos relacionados no Anexo XIV da Lei Complementar nº 214, de 2025.",Numérico,6,200009,13
+cClassTrib,Fornecimento de tampões e absorventes higiênicos (saúde menstrual).,Numérico,6,200013,13
+cClassTrib,Bares e Restaurantes (Alíquota reduzida em 40%).,Numérico,6,200047,13
+cClassTrib,Prestação de serviços de profissões intelectuais (Alíquota reduzida em 30%).,Numérico,6,200052,13
+ind_RedutorBC,Indicador de Redutor de Base de Cálculo (S/N).,Alfanumérico,1,S,13
+cClassTrib,Exportações de bens materiais.,Numérico,6,550001,13
+cClassTrib,Tributação monofásica sobre combustíveis.,Numérico,6,620001,13
+CST-IBS/CBS,Código de Situação Tributária para IBS e CBS conforme a Reforma Tributária.,Numérico,3,000,14
+cClassTrib,Código de Classificação Tributária detalhado para IBS/CBS.,Numérico,6,000001,14
+pRedIBS,Percentual de redução de alíquota do IBS.,Numérico,Variável,60.00,14
+pRedCBS,Percentual de redução de alíquota da CBS.,Numérico,Variável,60.00,14
+dIniVig,Data de início de vigência da regra tributária.,Data,10,01/01/2026,14
+ind_gMonoPadrao,Indicador de tributação monofásica padrão para combustíveis.,Booleano (Bit),1,1,14
+indNFSe,Indicador de aplicabilidade do código para Nota Fiscal de Serviço Eletrônica.,Booleano (Bit),1,1,14
+indNFe,Indicador de aplicabilidade do código para Nota Fiscal Eletrônica (Modelo 55).,Booleano (Bit),1,1,14
+indNFCe,Indicador de aplicabilidade para Nota Fiscal de Consumidor Eletrônica (Modelo 65).,Booleano (Bit),1,1,14
+cClassTrib LC,Referência ao artigo da Lei Complementar nº 214/25 que fundamenta a classificação.,Alfanumérico,Variável,Art. 125,14
+tpOper,"Tipo de operação do evento (Inclusão, Alteração ou Exclusão).",Numérico,1,1,15
+nrInsc,Número de inscrição do contribuinte (CNPJ raiz).,Caractere,8,12345678,15
+iniValid,Data de início da validade das informações no formato AAAA-MM-DD.,Data,10,2026-01-01,15
+regTribPrinc,Regime de tributação principal do contribuinte (IBS/CBS).,Numérico,1,1,15
+codTrib,"Código de tributação para fins de IBS, CBS e IS.",Numérico,9,220110001,15
+indTribISS,Indicador de sujeição ou vinculação ao ISSQN.,Numérico,1,0,15
+perApur,Período de apuração (Ano e Mês da competência da declaração).,Data,7,2026-01,15
+vApur,Valor base sobre o qual serão aplicadas as regras de tributação.,Numérico,4-18,1500.50,15
+nrRecibo,Número do recibo do arquivo a ser alterado ou excluído.,Caractere,31,1.1.0000000000000000000,15
+idAtivo,Número de identificação do título ou ativo financeiro.,Caractere,1-30,ATIVO123,15
+tpRetPisCofins,Tipo de Retenção de PIS/Cofins e CSLL para evitar repercussão na base de cálculo do IBS e da CBS.,Numérico,1,1,16
+finNFSe,Indicador de finalidade da NFS-e (0: Regular; 1: Nota de crédito; 2: Nota de débito).,Numérico,1,0,16
+CNPJ (Alfanumérico),Conversão do campo de CNPJ do tipo numérico para o formato alfanumérico.,Alfanumérico,14,ABC12345000199,16
+indFinal,Indicador de operação para uso ou consumo pessoal (limita creditamento).,Numérico,1,1,16
+opSimpNac,"Opção do Simples Nacional, incluindo o valor 4 para Optante Pendente.",Numérico,1,4,16
+regApIBSCBSSN,Regime de apuração do IBS/CBS escolhido pelo optante do Simples Nacional.,Numérico,1,1,16
+subitem 99.04,Código para identificação de fatos geradores de locação de bens móveis.,Numérico,4 ou 6,99.04.01,16
+codTrib,"Código de Tributação que define a regra fiscal (incidência, dedução, isenção) da conta.",N (Numérico),9,123456789,17
+iniValid,Mês e ano de início da validade das informações do evento (Início da vigência).,D (Data),7 (AAAA-MM),2026-01,17
+fimValid,Mês e ano de término da validade das informações do evento (Fim da vigência).,D (Data),7 (AAAA-MM),2026-12,17
+planoCtaRef,"Indicador do Plano de Contas Referencial adotado (COSIF, ANS, SUSEP, SPED).",N (Numérico),1,1 (COSIF),17
+cCtaInterna,Código da conta analítica na escrituração interna do contribuinte.,C (Caractere),1-60,1.01.01.01.001,17
+cDbrMista,Código de desdobramento para contas que possuem naturezas fiscais mistas.,N (Numérico),3,001,17
+indTribISS,Indicador de incidência de ISSQN para segregação de alíquotas de IBS/CBS.,N (Numérico),1,0 (Não sujeita ao ISS),17
+perApur,Período de apuração ao qual se refere a declaração.,D (Data),7 (AAAA-MM),2026-02,17
+tpOper,"Tipo de operação do evento: Inclusão, Alteração ou Exclusão.",N (Numérico),1,1 (Inclusão),17
+nrRecibo,Número do recibo que atesta o processamento com sucesso e cumprimento da obrigação.,C (Caractere),1-40,123.456.789-00,17
+,"Finalidade de emissão da NF-e (1=Normal, 2=Complementar, 3=Ajuste, 4=Devolução, 5=Crédito, 6=Débito)",Inteiro,1,1,18
+,"Tipo de Operação (0=Entrada, 1=Saída)",Inteiro,1,1,18
+,Chave de acesso da Nota Fiscal Eletrônica,Alfanumérico,44,3523...,18
+,Número de inscrição do adquirente ou fornecedor no CNPJ,Numérico,14,00.000.000/0001-00,18
+mod,Modelo do Documento Fiscal (ex: 55 para NF-e),Inteiro,2,55,18
+NCM,Nomenclatura Comum do Mercosul (utilizado para validação de crédito de consumo pessoal),Numérico,8,71131100,18
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS),Numérico (Decimal),15 (13 inteiros e 2 decimais),100.50,Inferred
+vCBS,Valor da Contribuição sobre Bens e Serviços (CBS),Numérico (Decimal),15 (13 inteiros e 2 decimais),50.25,Inferred
+Id,"Identificador único do evento XML, utilizado para assinatura e controle de unicidade.",Alfanumérico,Até 36,ID1123456780001952026081814300500001,19
+Signature,Assinatura Digital no padrão XMLDSig (Enveloped Signature).,Estrutura XML,Variável,,19
+X509Certificate,Certificado digital do assinante em codificação Base64.,Texto (Base64),Variável,MIIFzCCA7+gAwIBAgIQ...,19
+cnpjDeclarante,Número do CNPJ base do contribuinte declarante.,Numérico,8,12345678,19
+Reference URI,Referência ao atributo Id do elemento assinado no XML.,Texto,Variável,#ID123456789...,19
+DigestMethod,Algoritmo de resumo criptográfico utilizado (SHA-256).,Texto (URL),Variável,http://www.w3.org/2001/04/xmlenc#sha256,19
+serie,Série do Documento Fiscal,N,1 – 3,970-989 (Faixa PAA),20
+procEmi,Processo de emissão da NF-e (4=Emissão por PAA),N,1,4,20
+CNPJPAA,CNPJ do Provedor de Assinatura e Autorização,C,14,00000000000000,20
+tpEvento,Código do evento (Cancelamento/CC-e via PAA),N,6,110111,20
+CST,Código de Situação Tributária (IBS/CBS),Numérico,3,000,21
+cClassTrib,Código de Classificação Tributária,Numérico,6,000001,21
+CST 000,Tributação integral,Numérico,3,000,21
+CST 010,Tributação com alíquotas uniformes,Numérico,3,010,21
+CST 011,Tributação com alíquotas uniformes reduzidas,Numérico,3,011,21
+CST 200,Alíquota reduzida,Numérico,3,200,21
+CST 410,Imunidade e não incidência,Numérico,3,410,21
+CST 620,Tributação Monofásica,Numérico,3,620,21
+Tipo de Alíquota,"Identificador do tipo de alíquota aplicada (Fixa, Padrão, etc.)",Numérico,1,2,21
+cClassTrib 000001,Situações tributadas integralmente pelo IBS e CBS,Numérico,6,000001,21
+cClassTrib 410004,Exportações de bens e serviços,Numérico,6,410004,21
+evtInfoContrib,Evento utilizado para manutenção de informações cadastrais ou estruturais de contribuintes do IBS/CBS.,XML estruturado (Evento de Tabela),Variável (conforme XSD),http://www.dere.gov.br/schemas/evtInfoContrib/v1_0_1,22
+Id,"Atributo identificador único do evento, utilizado como referência para a assinatura digital.",ID / String,Variável (conforme XSD),ID123456789...,22
+X509Certificate,Elemento que contém as informações do certificado digital utilizado na assinatura (Padrão XMLDSig).,Base64,Variável,MIIGpDCCBYygAwIBAgIQ...,22
+protocolo,Número identificador retornado após a transmissão bem-sucedida de um lote de eventos.,String / Parâmetro de URL,Não especificado na fonte,1.23456789,22
+Authorization,Cabeçalho HTTP para autenticação nas APIs utilizando o padrão Bearer Token do Receita Integra.,String (Cabeçalho),Variável,Bearer TOKEN_RECEITA_INTEGRA,22
+Content-Type,Indica o formato do corpo da requisição enviada para a API.,String (Cabeçalho),15,application/xml,22
+expires_in,Tempo de validade do token de acesso em segundos.,Inteiro (JSON),Variável,3600,22
+access_token,Token de acesso OAuth 2.0 utilizado para autenticar as chamadas às APIs da DeRE.,String (JSON),Variável,TOKEN_RETORNADO,22
+cProd,Código do produto ou serviço,Alfanumérico,1-60,123456,23 (Inferred)
+vBC,Valor da Base de Cálculo do Imposto,Numérico,1-15 (2 casas decimais),100.00,23
+pICMS (ou pIBS/CBS),Alíquota do imposto,Numérico,1-7 (2 a 4 casas decimais),1.65,23
+vICMS (ou vIBS/CBS),Valor do Imposto,Numérico,1-15 (2 casas decimais),10.00,23
+CST,Código de Situação Tributária,Numérico,2-3,00,23 (Inferred)
+NCM,Nomenclatura Comum do Mercosul,Numérico,8,84713012,23 (Inferred)
+CFOP,Código Fiscal de Operações e Prestações,Numérico,4,5102,23 (Inferred)
+indEscala,Indicador de Produção em Escala Relevante,Texto/Enumerado,1,S,23 (Inferred)
+vCredPresumido,Valor do Crédito Presumido,Numérico,1-15,90.00,23
+IBS,"Imposto sobre Bens e Serviços - Tributo não cumulativo cobrado sobre o consumo, destacado no documento fiscal.",Numérico / Decimal,15 (com 2 casas decimais),150.00,24
+CBS,"Contribuição sobre Bens e Serviços - Tributo federal não cumulativo sobre o consumo, cobrado por fora.",Numérico / Decimal,15 (com 2 casas decimais),85.50,24
+vAliqIBS,Alíquota do IBS aplicada sobre a base de cálculo na operação de saída.,Numérico / Decimal,5 (com 2 ou 4 casas decimais),17.70,24
+vAliqCBS,Alíquota da CBS aplicada sobre a base de cálculo na operação de saída.,Numérico / Decimal,5 (com 2 ou 4 casas decimais),8.80,24
+splitPayment,Mecanismo de segregação e recolhimento automático do tributo pela instituição financeira na liquidação.,Booleano / Indicador,1,1,24
+cCredApro,Conta específica para controle de crédito fiscal a apropriar (conforme Decreto nº 12.955/2026).,Alfanumérico,60,CRED_IBS_2026,24
+f Gerador,"Identificação do fato gerador ocorrido, especialmente relevante para o período de teste operacional.",Data (AAAA-MM-DD),10,2026-01-15,24
+vCBS,"Valor da Contribuição sobre Bens e Serviços (CBS). Campo destinado ao destaque da alíquota-teste de 0,9% para validação sistêmica.",Numérico (Decimal),15 (até 2 casas decimais),0.90,25
+vIBS,"Valor do Imposto sobre Bens e Serviços (IBS). Campo destinado ao destaque da alíquota-teste de 0,1% para validação subnacional.",Numérico (Decimal),15 (até 2 casas decimais),0.10,25
+pCBS,Alíquota da CBS em percentual. Utilizada para o cálculo do valor a ser retido ou destacado.,Numérico (Decimal),5 (até 4 casas decimais),0.0090,25
+pIBS,Alíquota do IBS em percentual. Utilizada para o cálculo do valor a ser retido ou destacado.,Numérico (Decimal),5 (até 4 casas decimais),0.0010,25
+NCM,Nomenclatura Comum do Mercosul. Fundamental para classificação e verificação de alíquotas zero ou reduzidas.,Numérico,8,30049099,25
+NBS,Nomenclatura Brasileira de Serviços. Utilizada na prestação de serviços para fins de incidência do novo IVA.,Alfanumérico,9,1.01.01,25
+indSplitPayment,Indicador de Split Payment. Identifica se a operação está sujeita à separação instantânea do imposto no momento do pagamento.,Booleano/Indicador,1,1 (Sim),25
+CST,Código de Situação Tributária do IBS e da CBS,Numérico,3,000 (Tributação integral),26
+cClassTrib,Classificação Tributária do IBS e da CBS,Numérico,Não consta na fonte,Os três primeiros dígitos são idênticos ao CST,26
+cCredPres,Código da Classificação do Crédito Presumido do IBS e da CBS,Numérico,Não consta na fonte,Código 1 (Crédito presumido aquisição bens/serviços produtor rural),26
+pRedIBS,Percentual de redução da alíquota do IBS,Percentual,Não consta na fonte,Redução de 60%,26
+pRedCBS,Percentual de redução da alíquota da CBS,Percentual,Não consta na fonte,Redução de 30%,26
+dIniVig,Data inicial da vigência do cClassTrib,Data,Não consta na fonte,2026-01-01,26
+dFimVig,Data final da vigência do cClassTrib,Data,Não consta na fonte,9999-12-31,26
+tpRBSN,Formas de receita bruta aplicáveis aos contribuintes do Simples Nacional,Texto / Código,Não consta na fonte,Não consta na fonte,26
+tpAmb,"Identificação do Ambiente (1-Produção, 2-Produção Restrita/Homologação)",Numérico,1,1,27
+tpOper,"Tipo de Operação (1-Inclusão, 2-Alteração, 3-Exclusão)",Numérico,1,1,27
+codTrib,Código de Tributação IBS/CBS associado à conta analítica,Numérico,9,120130001,27
+nrRecibo,Número do recibo do evento que está sendo alterado ou excluído,Alfanumérico,31,1011-202606-0000000000000000001,27
+cCta,Código da conta contábil (concatenação da conta interna com desdobramento),Alfanumérico,Não especificado,1010101000,27
+indCta,"Indicador da natureza da conta (S-Sintética, A-Analítica)",Alfanumérico / Caractere,1,A,27
+perApur,Período de Apuração do evento fiscal,Alfanumérico (AAAAMM),6,202606,27
+nrInsc,Número de Inscrição do Contribuinte (CNPJ),Alfanumérico,14,12345678000190,27
+id,Identificador único do evento gerado pelo contribuinte,Alfanumérico,42,DeRE10111123456780001902026062210000000001,27
+vSaldoFinal,Valor do saldo final da conta contábil no período,Numérico (Decimal),Não especificado,1500.50,27
+IBS,Imposto sobre Bens e Serviços (Nova classificação da Reforma Tributária),Inferred,Inferred,CST 01 (Operação Tributada),"28, 29"
+CBS,Contribuição Social sobre Bens e Serviços (Nova classificação da Reforma Tributária),Inferred,Inferred,CST 01 (Operação Tributada),"28, 29"
+vProd,Valor Total dos Produtos e Serviços,Inferred,1-15 (2 decimais),5000.00,29
+CST,Código de Situação Tributária (Adequado para IBS/CBS),Inferred,2,00,"28, 29"
+vBC,Base de Cálculo do Imposto,Inferred,1-15 (2 decimais),5000.00,29
+pIBS,Alíquota do IBS (Parâmetro de Validação ERP),Inferred,1-5 (2 ou 4 decimais),17.00,"28, 29"
+pCBS,Alíquota da CBS (Parâmetro de Validação ERP),Inferred,1-5 (2 ou 4 decimais),8.80,"28, 29"
+vIBS,Valor do IBS apurado,Inferred,1-15 (2 decimais),850.00,29
+vCBS,Valor da CBS apurada,Inferred,1-15 (2 decimais),440.00,29
+mod,Modelo do Documento Fiscal (NF-e/NFS-e),Inferred,2,55,"28, 29"
+CST-IBS/CBS,Código de Situação Tributária do IBS e da CBS,N,3,000 (Tributação integral),30
+ind_gIBS CBS,Indicador de exigência de guia IBS e CBS,N,1,1 (Exige),30
+ind_gIBS CBSMono,Indicador de exigência de guia IBS/CBS para tributação monofásica,N,1,0 (Não é permitido),30
+ind_gRed,Indicador de exigência de alíquota reduzida,N,1,0,30
+ind_gDif,Indicador de exigência de diferimento,N,1,1,30
+ind_gTra nsfCred,Indicador de exigência de transferência de crédito,N,1,0,30
+ind_gCredPre sIBSZFM,Indicador de exigência de crédito presumido de IBS na ZFM,N,1,0,30
+ind_gAjusteCompet,Indicador de exigência de ajuste de competência,N,1,0,30
+ind_RedutorBC,Indicador de exigência de redutor de base de cálculo,N,1,1,30
+CPF,Cadastro de Pessoas Físicas,N (Inferred),11 (Inferred),12345678901,31
+CNPJ,Cadastro Nacional da Pessoa Jurídica,N (Inferred),14 (Inferred),12345678000190,31
+vCBS (Inferred),Valor da Contribuição Social sobre Bens e Serviços,Numérico (Inferred),"13,2 (Inferred)",150.00,32
+vIBS (Inferred),Valor do Imposto sobre Bens e Serviços,Numérico (Inferred),"13,2 (Inferred)",100.00,32
+vIS (Inferred),Valor do Imposto Seletivo,Numérico (Inferred),"13,2 (Inferred)",50.00,32
+CNPJ,Cadastro Nacional da Pessoa Jurídica (Alfanumérico),Alfanumérico,14,ABC12345000199,32
+vSplitPayment (Inferred),Valor destinado ao Split Payment,Numérico (Inferred),"13,2 (Inferred)",250.00,32
+ROC (Inferred),Registro de Operação de Consumo,Texto (Inferred),Variável (Inferred),ROC123456,32
+vCashback (Inferred),Valor de devolução parcial de tributos a pessoas físicas,Numérico (Inferred),"13,2 (Inferred)",25.50,32
+vCBS,Valor da Contribuição sobre Bens e Serviços (CBS),N,13.2,100.00,Inferred
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS),N,13.2,150.00,Inferred
+pIBS,Alíquota do IBS,N,3.2 - 5.2,17.00,Inferred
+pCBS,Alíquota da CBS,N,3.2 - 5.2,8.80,Inferred
+cUF,Código da Unidade da Federação,N,2,35,33
+FCP,Alíquota do Fundo de Combate à Pobreza,N,1.2 - 1.4,2.00,33
+mod,Modelo do Documento Fiscal (NF-e/NFC-e),N,2,55,Inferred
+DPS,Declaração de Prestação de Serviços (NFS-e Nacional),S,1-20,DPS123,Inferred
+origem,Dígito da Tabela A - Origem da mercadoria ou serviço,Numérico,1,0 (Nacional),34
+CST,Código de Situação Tributária do ICMS (ABB),Numérico,3,"000 (Nacional, tributada integralmente)",34
+CST,Código de Situação Tributária de IBS e CBS,Numérico,3,000 (Tributação Integral),34
+cClassTrib,Classificação Tributária vinculada ao dispositivo da lei (Reforma Tributária),Numérico,6,000001,34
+CST PIS/COFINS,Código de Situação Tributária para PIS e COFINS,Numérico,2,01 (Operação Tributável à Alíquota Básica),34
+CST IPI,Código de Situação Tributária para IPI,Numérico,2,50 (Saída tributada),34
+CRT,Código de Regime Tributário,Numérico,1,3 (Regime Normal),34
+tpOper,"Tipo de operação do evento: 1-Inclusão, 2-Alteração, 3-Exclusão.",Numérico (N),1,1,35
+nrInsc,Número de inscrição do contribuinte (CNPJ raiz).,Alfanumérico (C),8,12345678,35
+regTribPrinc,"Regime de tributação principal: 1-Financ., 2-Saúde, 3-Prognósticos, 9-Outros.",Numérico (N),1,1,35
+codTrib,"Código de tributação para fins de IBS, CBS e IS.",Numérico (N),9,123456789,35
+cCta,Código completo da conta (cCtaInterna + cDbrMista).,Alfanumérico (C),1-53,10101000,35
+cCtaRef,"Código da conta do plano de contas referencial (COSIF, ANS, SUSEP ou SPED).",Alfanumérico (C),1-13,1010101000123,35
+tpAmb,"Identificação do ambiente: 1-Produção, 2-Produção restrita.",Numérico (N),1,1,35
+iniValid,Data de início da validade das informações.,Data (D),10,2026-05-29,35
+indTribISS,"Indicador de sujeição ou vinculação ao ISSQN: 0-Não, 1-Sim.",Numérico (N),1,0,35
+id,Identificador que representa unicamente o evento.,Alfanumérico (C),42,ID123456789012345678901234567890123456789012,35
+modFrete,Modalidade do frete,Numérico,1,9 (Sem frete),36
+m3,Volume medido em metros cúbicos de gás,Numérico,Não especificado,1000,36
+FATOR PCS,Fator de ajuste do poder calorífico superior,Numérico,10 casas decimais,1.0373021790,36
+CONTRATO,Número do contrato de comercialização ou prestação de serviço,Alfanumérico,Não especificado,CTR-2026-001,36
+CFOP,Código Fiscal de Operações e Prestações (Transporte Interestadual),Numérico,4,6352,36
+CFOP,Código Fiscal de Operações e Prestações (Baixa de estoque por perda),Numérico,4,5927,36
+infAdic,Informações Complementares (p/ AJUSTE SINIEF 19/26),Alfanumérico,Até 2000,AJUSTE SINIEF 19/26; M3: 500; FATOR PCS: 1.0; CONTRATO: 123,36
+cANP,Código ANP do Ponto de Entrada ou Saída,Numérico,Não especificado,210203001,36
+NFS-e,Nota Fiscal de Serviço eletrônica de padrão nacional,XML/API,Variável,Emissor Nacional,37
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS),Numérico (N),"15, 2 (vDec)",100.00,Inferred
+vCBS,Valor da Contribuição sobre Bens e Serviços (CBS),Numérico (N),"15, 2 (vDec)",50.00,Inferred
+CST,Código de Situação Tributária (incluindo novas categorias IBS/CBS),Alfanumérico (C),2 ou 3,00,Inferred
+pIBS,Alíquota do IBS (Imposto sobre Bens e Serviços),Numérico (N),"5, 2 ou 7, 4",17.00,Inferred
+pCBS,Alíquota da CBS (Contribuição sobre Bens e Serviços),Numérico (N),"5, 2 ou 7, 4",8.80,Inferred
+tpEmis,Tipo de Emissão (Contingência Off-line para CT-e OS),Numérico (N),1,9,38
+qrCode,Código bidimensional com mecanismo de autenticação digital no DACTE,Alfanumérico (C),100-2000,https://www.sefaz.gov.br...,38
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS),Numérico (Decimal),15 (2 decimais),150.00,39
+vCBS,Valor da Contribuição sobre Bens e Serviços (CBS),Numérico (Decimal),15 (2 decimais),120.50,39
+pIBS,Alíquota do IBS,Numérico (Decimal),7 (4 decimais),17.7000,39
+pCBS,Alíquota da CBS,Numérico (Decimal),7 (4 decimais),8.8000,39
+cListServ,Código do Item da Lista de Serviços (LC 116/03),Alfanumérico,5,01.01,40
+mod,Modelo do Documento Fiscal (NF-e/NFS-e/NFGas),Numérico,2,55,41
+tpLocalDestino,Indicador de tributação no destino do frete/serviço,Numérico,1,1,39
+refNFe,Chave de acesso das NF-e de remessa referenciadas no documento fiscal.,String / Numérico,44,35230100000000000000550010000000011234567890,42
+infAdFisco,Informações Adicionais de Interesse do Fisco para indicação de termos de ajustes ou benefícios.,String / Alfanumérico,1-2000,NF-e emitida nos termos do Ajuste SINIEF 15/2020,42
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS) incidente na operação (Inferred).,Numérico,1-15 (2 decimais),150.50,43
+vCBS,Valor da Contribuição sobre Bens e Serviços (CBS) incidente na operação (Inferred).,Numérico,1-15 (2 decimais),280.75,43
+indSplitPayment,Indicador de operacionalização do split payment para recolhimento automático (Inferred).,Booleano / Inteiro,1,1,"43, 44"
+CFOP,Código Fiscal de Operações e Prestações para retorno de mercadoria ou bem.,String / Numérico,4,5915,42
+vIS,Valor do Imposto Seletivo (IS) incidente sobre bens prejudiciais (Inferred).,Numérico,1-15 (2 decimais),50.00,43
+IBS,Imposto sobre Bens e Serviços (Competência Estadual e Municipal),Inferred: Decimal,"Inferred: 13,2",0.1325,45
+CBS,Contribuição sobre Bens e Serviços (Competência Federal),Inferred: Decimal,"Inferred: 13,2",0.0880,45
+RedutorAjuste,Valor deduzido da base de cálculo correspondente ao custo de aquisição e construção,Inferred: Decimal,"Inferred: 15,2",500000.00,45
+RedutorSocial,Dedução fixa na base de cálculo para imóveis residenciais novos ou lotes,Inferred: Decimal,"Inferred: 15,2",100000.00,45
+CIB,Cadastro Imobiliário Brasileiro (CPF dos Imóveis),Inferred: Alfanumérico,Inferred: 14,BR123456789012,46
+CNPJ,Cadastro Nacional da Pessoa Jurídica (Padrão Alfanumérico),Alfanumérico,14,12ABC345000199,45
+codBC,"Código da Base de Cálculo utilizado para consolidar as regras de formação das bases do IBS, CBS e IS.",Numérico (Inferred),Variável (Inferred),Tabela 12,47
+codTrib,Código de Tributação para escrituração de valores e segregação de receitas (ex: transição PIS/Cofins).,Alfanumérico (Inferred),9,130140001,47
+D-1101,Evento de Balancete Mensal para captura de movimentação de contas analíticas e aferição de tributos.,Estrutural / XML (Inferred),Não especificado (Inferred),,47
+D-1106,Identificação de Aplicações Financeiras vinculadas a reservas técnicas para composição da base de cálculo.,Estrutural / XML (Inferred),Não especificado (Inferred),,47
+D-1199,Evento de Fechamento Mensal para sinalizar a conclusão da transmissão da escrituração.,Estrutural / XML (Inferred),Não especificado (Inferred),,47
+D-2101,Débito em Operações com Títulos de Dívida com Oferta Pública.,Estrutural / XML (Inferred),Não especificado (Inferred),,47
+perApur,Período de Apuração declarado no cabeçalho do evento para validação de competência.,Data (AAAA-MM) (Inferred),7 (Inferred),2026-06,47
+nrRecibo,Número do recibo anterior obrigatório em operações de alteração ou exclusão.,Alfanumérico (Inferred),41 (Inferred),1.1.22062026.12345,47
+tpEmis,Tipo de Emissão do documento fiscal (ex: contingência off-line).,Numérico (Inferred),1,9 (Contingência),48
+CNPJ,Número de identificação do contribuinte (validado via Módulo 11).,Numérico,14,00000000000191,47
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS),Numérico,1 a 15 (2 decimais),150.00,"49, 50"
+vCBS,Valor da Contribuição sobre Bens e Serviços (CBS),Numérico,1 a 15 (2 decimais),120.00,"49, 51"
+indSplit,Indicador de recolhimento via Split Payment,Booleano,1,1,49
+pIBS,Alíquota do IBS (Imposto sobre Bens e Serviços),Numérico,1 a 5 (2 a 4 decimais),12.00,"50, 52"
+pCBS,Alíquota da CBS (Contribuição sobre Bens e Serviços),Numérico,1 a 5 (2 a 4 decimais),9.25,"50, 51"
+cClassifIBS,Código de classificação tributária do IBS,Alfanumérico,2,01,"50, 52"
+vBCIBS,Base de cálculo do IBS,Numérico,1 a 15 (2 decimais),1000.00,"50, 51"
+vBCCBS,Base de cálculo da CBS,Numérico,1 a 15 (2 decimais),1000.00,"50, 51"
+indSN,Indicador de apuração de IBS/CBS por fora do Simples Nacional,Booleano,1,1,52
+id,Identificador único do evento (Atributo ID),String (Alfanumérico),42,DeRE10011000000000000002026010112000000001,53
+tpAmb,Identificação do Ambiente (1 - Produção; 2 - Produção Restrita),Numérico,1,1,53
+tpOper,Tipo de Operação (1 - Inclusão; 2 - Alteração; 3 - Exclusão),Numérico,1,1,53
+nrInsc,Número de Inscrição do Contribuinte (CNPJ ou CPF),String (Numérico),8 (se CNPJ raiz) ou 14,12345678,53
+codTrib,Código de tributo informado para a conta no sistema,String (Numérico),9,100000001,53
+cCta,Código da conta contábil,String (Alfanumérico),Não especificado,101010100,53
+cDbrMista,Código de desdobramento da conta,String (Numérico),3,000,53
+perApur,Período de apuração dos tributos (IBS/CBS),String (Data),7 (AAAA-MM),2026-01,53
+servFinac,Grupo de informações para o regime de Serviços Financeiros,Grupo (XML),N/A,...,53
+plAssistSaude,Grupo de informações para o regime de Plano de Assistência à Saúde,Grupo (XML),N/A,...,53
+prognosticos,Grupo de informações para o regime de Concursos de Prognósticos,Grupo (XML),N/A,...,53
+tpNFCredito,"Tipo de nota de crédito (ajustes, devolução, transferência etc.).",String (Inferred),2 (Inferred),04 (Redução de valores),54
+tpAmb,Tipo de ambiente de processamento (Produção ou Homologação).,String (Inferred),1,1 (Produção),54
+finNFe,Finalidade de emissão da NF-e (Código 6=Nota de débito),Numérico (Inferred),1 (Inferred),6,55
+tpNFDebito,Tipo de Nota de Débito (Código 06=Pagamento antecipado),Numérico (Inferred),2 (Inferred),06,55
+natOp,Descrição da Natureza da Operação,Alfanumérico (Inferred),1-60 (Inferred),Venda para entrega futura - Pagamento antecipado,55
+CFOP,Código Fiscal de Operações e Prestações,Numérico (Inferred),4 (Inferred),5.922,55
+refNFe,Chave de acesso da NF-e referenciada,Numérico (Inferred),44 (Inferred),35231000000000000000550010000000011234567890,55
+tpNFDebito,Tipo de Nota de Débito (Código 07=Perda em estoque),Numérico (Inferred),2 (Inferred),07,55
+finNFe,Finalidade de emissão da NF-e (Código 5=Nota de crédito),Numérico (Inferred),1 (Inferred),5,55
+tpNFCredito,Tipo de Nota de Crédito (Código 04=Redução de valores ou quantidades),Numérico (Inferred),2 (Inferred),04,55
+tpNFCredito,Tipo de Nota de Crédito (Código 03=Retorno por Recusa Total),Numérico (Inferred),2 (Inferred),03,55
+tpNFCredito,Tipo de Nota de Crédito (Código 06=Retorno por Recusa Parcial),Numérico (Inferred),2 (Inferred),06,55
+tpNFDebito,Tipo de Nota de Débito (Código 09=Retorno por Recusa Parcial),Numérico (Inferred),2 (Inferred),09,55
+infAdFisco,Informações Adicionais de Interesse do Fisco,Alfanumérico (Inferred),1-2000 (Inferred),Justificativa da baixa do estoque ou redução de valor,55
+cCredPres,Crédito presumido da aquisição de bens e serviços de produtor rural e produtor rural integrado não contribuinte (Art. 168 LC 214/2025),Inteiro (N),1 a 2,1,56
+cCredPres,Crédito presumido da aquisição de serviço de transportador autônomo de carga pessoa física não contribuinte (Art. 169 LC 214/2025),Inteiro (N),1 a 2,2,56
+cCredPres,Crédito presumido da aquisição de resíduos e materiais destinados à reciclagem adquiridos de pessoa física/cooperativa (Art. 170 LC 214/2025),Inteiro (N),1 a 2,3,56
+cCredPres,Crédito presumido da aquisição de bens móveis usados de pessoa física para revenda (Art. 171 LC 214/2025),Inteiro (N),1 a 2,4,56
+pAliqCredPresCBS,Alíquota de Crédito Presumido da CBS (Cálculo variável conforme regime ou anuidade),Decimal (N),1 a 15,0.0750,56
+pAliqCredPresIBS,Alíquota de Crédito Presumido do IBS (Calculada anualmente ou fixa por região),Decimal (N),1 a 15,0.1350,56
+cClass,Código de classificação da nota referenciada para fins de crédito/alíquota,String (C),6,410014,56
+dIniVig,Data de início da vigência do parâmetro tributário de IBS/CBS,Data (AAAA-MM-DD),10,2027-01-01,56
+ind_Deduz CredPres,Indicador se o crédito presumido deve ser deduzido (0=Não; 1=Sim),Booleano/Inteiro (N),1,1,56
+cCredPres,Crédito presumido no regime automotivo (Art. 311 LC 214/2025),Inteiro (N),1 a 2,5,56
+cClassTrib,"Código de Classificação Tributária do IBS e da CBS que traduz a regra de tributação aplicável (integral, reduzida, imunidade, etc.).",Numérico,6,000001,"57, 58"
+CST-IBS/CBS,"Código de Situação Tributária específico para o IBS e a CBS, compondo os três primeiros dígitos do cClassTrib.",Numérico,3,000,"57, 58"
+planoCtaRef,Código do Plano de Contas Referencial (inclusão do domínio 5 - PREVIC),Inteiro / Domínio,1,5,59
+vVarMensal,Valor da variação mensal na carteira de ativos (permite sinal negativo),Numérico (Decimal),4-19,-1500.50,59
+CST-IBS/CBS,Código de Situação Tributária para IBS e CBS (Tributação integral),Numérico,3,000,60
+CST-IBS/CBS,Código de Situação Tributária para IBS e CBS (Alíquota reduzida),Numérico,3,200,60
+CST-IBS/CBS,Código de Situação Tributária para IBS e CBS (Isenção),Numérico,3,400,60
+CST-IBS/CBS,Código de Situação Tributária para IBS e CBS (Imunidade e não incidência),Numérico,3,410,60
+CST-IBS/CBS,Código de Situação Tributária para IBS e CBS (Diferimento),Numérico,3,510,60
+CST-IBS/CBS,Código de Situação Tributária para IBS e CBS (Suspensão),Numérico,3,550,60
+CST-IBS/CBS,Código de Situação Tributária para IBS e CBS (Tributação monofásica),Numérico,3,620,60
+client_id,Identificador da empresa para autenticação via OAuth 2.0 (Receita Integra),Alfanumérico,Não especificado,client_id_exemplo_123,61
+client_secret,Chave secreta da empresa para autenticação via OAuth 2.0 (Receita Integra),Alfanumérico,Não especificado,secret_exemplo_456,61
+Authorization,Cabeçalho HTTP para envio do token de acesso (Bearer Token),String,Não especificado,Bearer <access_token>,61
+NFS-e (Grupo Locação),Grupo específico para registro de operações de locação de bens móveis,Estrutura de dados (XML),Até 1.000 itens,Referente a Nota Técnica 009,62
+mod,"Modelo do Documento Fiscal (ex: 55 para NF-e, 65 para NFC-e)",Numérico (Inferred),2,55,63
+CNPJ,Cadastro Nacional da Pessoa Jurídica (formato alfanumérico),Alfanumérico (Inferred),14,ABC12345000101,64
+IBS,Imposto sobre Bens e Serviços,Numérico / Decimal,15 (2 decimais),"1.848,00",65
+CBS,Contribuição sobre Bens e Serviços,Numérico / Decimal,15 (2 decimais),"1.848,00",65
+CNPJ,Cadastro Nacional da Pessoa Jurídica do emitente/concessionária,Numérico,14,00.000.000/0001-00,"66, 67"
+NFS-e Via,Nota Fiscal de Serviço eletrônica de Exploração de Via,Documento Digital,Não especificado,XML da NFS-e Via,67
+RPV,Registro de Passagem Veicular (documento auxiliar),Documento Auxiliar,Variável,Chave de acesso / QR Code,67
+DANFSe Via,Documento Auxiliar da NFS-e Via,PDF / Documento Eletrônico,Variável,Representação gráfica da NFS-e,67
+CIB,Cadastro Imobiliário Brasileiro (CPF dos imóveis),Alfanumérico,Não especificado,Identificador único do imóvel,65
+Sinter,Sistema Nacional de Gestão de Informações Territoriais,Sistema de Dados,Não especificado,Central de dados de imóveis,65
+NFS-e,Nota Fiscal de Serviços Eletrônica,Documento Fiscal Eletrônico,Not in source,DPS,1
+Chave de Acesso,Identificação única do documento fiscal eletrônico,Numérico,Not in source,CNPJ do emitente + Modelo + Série + Número,1
+IBS,Imposto sobre Bens e Serviços (Reforma Tributária),Alíquota / Valor,Not in source,0.1% (em 2026),1
+CBS,Contribuição sobre Bens e Serviços,Alíquota / Valor,Not in source,0.9% (em 2027),1
+NBS,Nomenclatura Brasileira de Serviços,Alfanumérico,Not in source,1.2205.12.00,1
+cCIB,Código de Inscrição no Cadastro Imobiliário Brasileiro (CIB) para operações imobiliárias.,Alfanumérico,Not in source,SP12345678,2
+DTE,Domicílio Tributário Eletrônico unificado para comunicação entre administrações tributárias e sujeitos passivos.,Eletrônico / Digital,Not in source,Acesso via portal gov.br,4
+UPF,Unidade Padrão Fiscal dos Tributos sobre Bens e Serviços para cálculo de penalidades.,Moeda (BRL),Not in source,200.00,4
+CGIBS,Comitê Gestor do Imposto sobre Bens e Serviços - Entidade responsável pela administração do IBS.,Identificador de Órgão,Not in source,CGIBS-Nacional,4
+Multa Lançamento Ofício,Penalidade padrão sobre o valor do tributo não declarado ou declarado a menor.,Percentual,Not in source,75%,4
+aliqIBS,Alíquota aplicada para fins de determinação do débito do IBS (Alíquota de Referência ou Diferenciada),Decimal,Not in source,17.7 (Inferred),11
+vBC_IBS,Base de Cálculo do IBS compreendendo o valor integral cobrado pelo fornecedor a qualquer título,Decimal,Not in source,1000.00,11
+pRedIBS,Percentual de redução de alíquota do IBS.,Numérico,Not in source,60,13
+pRedCBS,Percentual de redução de alíquota da CBS.,Numérico,Not in source,60,13
+gPgtoVinc,Grupo de vinculação de pagamentos para infraestrutura de split payment.,Grupo,Até 99 transações,Not in source,16
+gUnidImob,Grupo para referenciar unidades imobiliárias em operações com bens imóveis.,Grupo,Até 99 registros,Not in source,16
+bensMoveis,Reestruturação do grupo de identificação de bens móveis.,Grupo,Até 1.000 registros,Not in source,16
+infoContrib,"Grupo de informações do contribuinte, incluindo identificação e regimes.",G (Grupo),Not in source,,17
+tpAtividade,Tipo de atividade realizada pelo contribuinte vinculada aos regimes específicos.,C (Caractere),Not in source,1 (Operações de Crédito),17
+,Grupo de tributação do IBS e da CBS (Tag UB12),Estruturado (Grupo),Não especificado,Not in source,18
+infPAA,Grupo de Informação do Provedor de Assinatura e Autorização,G,N/A,Not in source,20
+SignatureValue,Assinatura digital padrão RSA (Base64),C,Not in source,MIIEvgIBADANBgkqhkiG...,20
+RSAKeyValue,Chave Pública no padrão XML RSA Key,G,N/A,Not in source,20
+Exponent,Expoente da chave pública RSA,C,Not in source,AQAB,20
+autXML,Pessoas autorizadas a acessar o XML da NF-e (PAA),G,N/A,Not in source,20
+IBS/CBS (Inferred),Nova classificação de impostos para Reforma Tributária,N/A,Not in source,IBS/CBS,23
+UB,Grupo de informações para o Imposto Seletivo,Estrutura XML,Variável,Not in source,34
+gLocBensMovel,Grupo específico para locação de bens móveis (NFS-e),Grupo,Até 1000 registros,Not in source,39
+cClassTrib,Classificação tributária do item para fins de IBS/CBS.,String (Inferred),Not in source,101,54
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS).,Numérico (Inferred),Not in source,150.00,54
+vCBS,Valor da Contribuição sobre Bens e Serviços (CBS).,Numérico (Inferred),Not in source,120.50,54
+vIS,Valor do Imposto Seletivo (IS).,Numérico (Inferred),Not in source,45.00,54
+pAliqEfetRegCBS,Alíquota efetiva de referência da CBS em operações incentivadas.,Numérico (Inferred),Not in source,8.80,54
+vTribRegCBS,Valor da CBS que seria devido fora da área incentivada.,Numérico (Inferred),Not in source,100.00,54
+tpALCZFMCBS,Tipo de operação em Área de Livre Comércio ou Zona Franca para CBS.,String (Inferred),Not in source,1,54
+nProcSuframa,Número do processo aprovado na Suframa.,String (Inferred),Not in source,999999999,54
+IBS,Imposto sobre Bens e Serviços (competência estadual/municipal) com destaque individualizado no documento fiscal.,Decimal / Percentual,Not in source,"0,10% (2026)","58, 68"
+CBS,Contribuição Social sobre Bens e Serviços (competência federal) com destaque individualizado no documento fiscal.,Decimal / Percentual,Not in source,"0,90% (2026)","58, 68"
+NBS,"Nomenclatura Brasileira de Serviços, Intangíveis e Outras Operações associada à tabela oficial de cClassTrib.",Alfanumérico,Not in source,1.0101.10.00,58
+cCtaRef,Código da Conta Contábil no Plano de Contas Referencial,Alfanumérico,Not in source,Tabela 24,59
+perApur,Período de Apuração da Identificação de Aplicações Financeiras,Data (Mês/Ano),Not in source,082026,59
+vSaldoFinal,Valor do Saldo Final do Ativo,Numérico (Decimal),Not in source,50000.00,59
+vApur,Valor do cálculo de apuração (vRendPerReceb + vRendLiqResg),Numérico (Decimal),Not in source,2500.00,59
+nrReciboPGCC,Número do recibo do evento D-1011 (Plano Geral de Contas Comentado),Alfanumérico,Not in source,1.20260818.123456,59
+infoAdic,Grupo de informações adicionais de retorno dos totalizadores,Grupo (XML),Not in source,,59
+vICMS,Valor do destaque do ICMS na NF-e,Numérico (Inferred),Not in source,180.00,69
+dest,Grupo de Identificação do Destinatário da Nota Fiscal eletrônica com informações da NF-e original,Estrutura XML (Inferred),Not in source,...,69
+vIBS,Valor do Imposto sobre Bens e Serviços (IBS) incidente na operação,Numérico (Inferred),Not in source,100.00,"63, 70"
+vCBS,Valor da Contribuição sobre Bens e Serviços (CBS) incidente na operação,Numérico (Inferred),Not in source,85.50,"63, 70"
+NFS-e,Nota Fiscal de Serviços Eletrônica de padrão nacional,Documento Digital (Inferred),Not in source,Emissão via DPS,"63, 70"
+D-1101,Evento de Balancete Mensal na Declaração de Regimes Específicos (DeRE),Evento Contábil (Inferred),Not in source,D-1101,63
+D-1199,Evento de Fechamento Mensal na Declaração de Regimes Específicos (DeRE),Evento Contábil (Inferred),Not in source,D-1199,63
+CIB,Cadastro Imobiliário Brasileiro - Identificação de imóveis urbanos e rurais no XML,Alfanumérico,Not in source,Not in source,11
+DeRE,Declaração de Serviços Financeiros e Assistência à Saúde para apropriação de créditos,Estrutura de dados XML,Not in source,Not in source,11
+vAjusteBC,Grupo unificado para ajustes de base de cálculo do IBS e da CBS.,Grupo,Not in source,Not in source,16
+gTribSN,Grupo para discriminar alíquotas e valores de IBS/CBS devidos pelo optante do Simples Nacional.,Grupo,Not in source,Not in source,16
+Modulus,Módulo da chave pública RSA,C,Not in source,Not in source,20

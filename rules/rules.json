@@ -1,0 +1,2790 @@
+{
+  "rgi": [
+    {
+      "id": "RGI 1",
+      "titulo": "Texto das posições e das Notas de Seção ou de Capítulo",
+      "texto": "A classificação é determinada pelo texto das posições e pelas Notas de Seções ou de Capítulos pertinentes e, desde que as posições ou Notas não disponham de outro modo, pelas Regras Gerais seguintes.",
+      "quando": "É sempre a primeira regra aplicada. Se o texto da posição descreve a mercadoria e nenhuma Nota a exclui, a classificação está resolvida aí — não se recorre às demais regras.",
+      "efeito": "fundamento_principal"
+    },
+    {
+      "id": "RGI 2(a)",
+      "titulo": "Artigos não terminados ou inacabados / não montados",
+      "texto": "Qualquer referência a uma matéria nos artigos dela feitos abrange a matéria não trabalhada ou semielaborada. Qualquer referência a um artigo determinado abrange esse artigo incompleto ou inacabado, desde que tenha a característica essencial do completo; abrange também o artigo completo já montado ou montado para montagem futura.",
+      "quando": "O produto chega desmontado, incompleto, em kit de montagem ou é uma versão 'sem' algum acessório, mas mantém a característica essencial do produto acabado.",
+      "efeito": "manter_codigo_do_produto_acabado"
+    },
+    {
+      "id": "RGI 2(b)",
+      "titulo": "Misturas e combinações de matérias",
+      "texto": "Qualquer referência a uma matéria determinada abrange as misturas ou combinações dessa matéria com outras matérias. Os artigos constituídos por mais de uma matéria são classificados segundo os critérios da RGI 3.",
+      "quando": "O produto é composto por duas ou mais matérias (ex.: garrafa de vidro com tampa de plástico, cabo de madeira com lâmina de aço).",
+      "efeito": "encaminhar_para_RGI3"
+    },
+    {
+      "id": "RGI 3(a)",
+      "titulo": "Especificidade prevalece sobre genericidade",
+      "texto": "A posição que descreva mais especificamente um artigo é preferível àquelas que o descrevam de modo genérico.",
+      "quando": "Dois ou mais códigos parecem caber e ao menos um é nominal (ex.: 'automóveis' prevalece sobre 'veículos'; 'óculos de sol' prevalece sobre 'artigos de plástico').",
+      "efeito": "escolher_mais_especifico"
+    },
+    {
+      "id": "RGI 3(b)",
+      "titulo": "Característica essencial (artigos mistos, conjuntos para venda a retalho)",
+      "texto": "No caso de misturas, compostos e artigos constituídos por matérias diferentes, bem como dos conjuntos apresentados para venda a retalho, classificar pela matéria ou componente que confira a característica essencial.",
+      "quando": "Kit, caixa presente, comboio de produtos, aparelho com acessórios — identificar o elemento que dá a função principal e o valor do conjunto.",
+      "efeito": "classificar_pelo_elemento_essencial"
+    },
+    {
+      "id": "RGI 3(c)",
+      "titulo": "Critério residual: código mais elevado em ordem numérica",
+      "texto": "Quando nem a RGI 3(a) nem a 3(b) permitirem classificar, o artigo é classificado pelo código mais elevado em ordem numérica, entre os que suscetíveis de ser aplicáveis.",
+      "quando": "Empates reais: duas posições igualmente elegíveis e sem característica essencial identificável.",
+      "efeito": "maior_codigo_numerico"
+    },
+    {
+      "id": "RGI 6",
+      "titulo": "Aplicação às subposições e subitens",
+      "texto": "A classificação legal nas subposições das diferentes posições será determinada de acordo com os textos dessas subposições e Notas correspondentes, aplicadas as Regras anteriores mutatis mutandis, mas considerando-se apenas comparações de subposições do mesmo nível.",
+      "quando": "Depois de fixada a posição de 4 dígitos pela RGI 1, escolhe-se item (1º desdobramento) e subitem (2º desdobramento) comparando apenas códigos do mesmo nível.",
+      "efeito": "comparacao_no_mesmo_nivel"
+    },
+    {
+      "id": "RLI",
+      "titulo": "Regras Legais Internacionais / texto legal do item",
+      "texto": "Notas Complementares e Disposições Internacionais (Notas Legais) da TEC e da NCM, aprovadas na Consolidação do Gecex, prevalecem sobre critérios doutrinários e integram o fato gerador do imposto de importação e do IPI.",
+      "quando": "Sempre, antes de fechar o código: verificar Notas Legais e Ex-tarifários aplicáveis à posição.",
+      "efeito": "verificar_notas_legais"
+    }
+  ],
+  "notas_legais": [
+    {
+      "alcance": "Capítulo 84 — Nota 1(e)",
+      "texto": "Máquinas, aparelhos e material para trabalhar pedra, com as funções dos artigos das posições 68.04, 68.05 ou do Capítulo 82, classificam-se nessas posições e não no Capítulo 84.",
+      "ncms": [
+        "6804.21.11",
+        "6804.30.00",
+        "6805.20.00",
+        "8207.50.11"
+      ]
+    },
+    {
+      "alcance": "Capítulo 84 — Nota 1(f)",
+      "texto": "Rolamentos, árvores de transmissão e manivelas, cubos e rodas dentadas (que não integrem redutores) classificam-se no Capítulo 84 apenas se cumprirem a Seção XV Nota 2; as rodas dentadas de madeira ou plástico vão para seus capítulos de matéria.",
+      "ncms": [
+        "8482.10.10",
+        "8483.40.10",
+        "3926.90.90",
+        "4421.99.00"
+      ]
+    },
+    {
+      "alcance": "Capítulo 84 — Nota 1(g)/(i)/(j)",
+      "texto": "O Capítulo 84 não abrange: máquinas para filtrar/depurar bebidas alcoólicas ou não (84.38 quando industriais), elevadores de cadeira, artigos do Capítulo 85 (motores, bombas elétricas integradas), nem máquinas de escrever/vestuário.",
+      "ncms": [
+        "8438.10.00",
+        "8428.10.00",
+        "8501.31.10"
+      ]
+    },
+    {
+      "alcance": "Capítulo 85 — Nota 1",
+      "texto": "O Capítulo 85 não abrange artigos elastoméricos para limpeza (Cap. 40), mangueiras e juntas de plástico (Cap. 39) nem escovas com parte elétrica incorporada classificáveis no Cap. 96 conforme a função principal.",
+      "ncms": [
+        "4016.99.90",
+        "3917.32.90",
+        "9603.50.00"
+      ]
+    },
+    {
+      "alcance": "Capítulo 87 — Nota 1",
+      "texto": "O Capítulo 87 não abrange bicicletas e veículos de brinquedo concebidos para crianças, nem artefatos flutuantes (Capítulos 89) e material rodante sobre trilhos (Cap. 86). Veículo de recreio sem caráter de transporte pode ir para o Cap. 95.",
+      "ncms": [
+        "9503.00.10",
+        "8712.00.90",
+        "8903.99.00"
+      ]
+    },
+    {
+      "alcance": "Capítulo 90 — Notas 1(a)/(d)/(e)",
+      "texto": "O Capítulo 90 não abrange: luvas, aventais e artigos de borracha/plástico para proteção médica (40.15 ou 39.26); mobiliário ortopédico e canadianas (94.02); cintos de segurança e airbags (87.08); bombas e seringas de uso médico quando apresentadas com agulha e de uso não descartável conforme Nota.",
+      "ncms": [
+        "4015.19.00",
+        "3926.20.00",
+        "9402.90.20",
+        "8708.21.00"
+      ]
+    },
+    {
+      "alcance": "Capítulo 94 — Notas 1(a) e 2",
+      "texto": "O Cap. 94 não abrange espelhos, luminárias e móveis de vidro/artigo avulso não montado; e a Nota 2 diz que os artigos 94.01 a 94.03 aplicam-se apenas a artigos do tipo utilizáveis como assentos, mobiliário para instalações e camas/artigos de dormir.",
+      "ncms": [
+        "7009.92.00",
+        "7013.99.00",
+        "9401.80.00",
+        "9403.60.00"
+      ]
+    },
+    {
+      "alcance": "Capítulo 95 — Nota 1(p) e Notas de Seção XCVI",
+      "texto": "O Capítulo 95 não abrange: vestuário e luvas desportivos (Cap. 40/43/61/62/63), óculos e proteções de uso desportivo (Cap. 90), nem veículos de competição (Seção XVII).",
+      "ncms": [
+        "6116.10.00",
+        "9004.10.00",
+        "8703.23.10"
+      ]
+    },
+    {
+      "alcance": "Seção XI — Notas 2 e 3 (têxteis)",
+      "texto": "Os artigos de mistura de duas ou mais matérias têxteis classificam-se como se fossem constituídos exclusivamente pela matéria têxtil que lhes confira o peso predominante; na ausência de predominância e quando nenhuma matéria atingir os pesos legalmente exigidos, aplica-se a RGI 3(c) (maior código numérico).",
+      "ncms": [
+        "6109.10.00",
+        "6109.90.00",
+        "6204.62.00",
+        "6211.43.00"
+      ]
+    },
+    {
+      "alcance": "Seção XVI — Notas 2 e 3 (partes e multifuncionais)",
+      "texto": "Nota 2: partes identificáveis como próprias ou especiais para uma só tipo de máquina classificam-se com a máquina; partes de uso geral voltam ao seu capítulo de matéria. Nota 3: máquinas compostas por elementos para desempenhar uma função única determinada classificam-se pela função principal; caso contrário, pela RGI 3(c).",
+      "ncms": [
+        "8471.60.59",
+        "3926.90.90",
+        "8443.32.99"
+      ]
+    }
+  ],
+  "armadilhas": [
+    {
+      "id": "plastico_vs_funcao",
+      "titulo": "Artefato de plástico: critério material antes da função",
+      "quando": [
+        "artefato"
+      ],
+      "materiais": [
+        "plástico",
+        "polipropileno",
+        "polietileno",
+        "pvc",
+        "acrílico",
+        "silicone",
+        "nylon"
+      ],
+      "capitulos": [
+        "39"
+      ],
+      "acao": "avaliar_criterio_material",
+      "explicacao": "Antes de procurar o artefato pelo uso, verifique se há posição de matéria que o cubra (Cap. 39). Vassoura, balde, cabide, pasta, utensílio de mesa e manyto de plástico vão para Cap. 39/46, não para a posição do 'objeto' em Cap. 96, salvo se houver posição nominal específica (ex.: 9603 para vassouras e escovas, que descreve expressamente o artigo).",
+      "candidatos": [
+        "3924.10.00",
+        "3924.90.00",
+        "3923.21.10",
+        "3926.90.90",
+        "3926.90.40",
+        "9603.29.00"
+      ],
+      "fonte": "RGI 1 + Seção VII Nota 2 e texto das posições 39.24/39.26",
+      "exceto_quando": [
+        "cadeira",
+        "poltrona",
+        "sofa",
+        "mesa de escritorio",
+        "escrivaninha",
+        "movele",
+        "armario",
+        "cama",
+        "estofado"
+      ]
+    },
+    {
+      "id": "mesa_por_materia",
+      "titulo": "Artigos de mesa e cozinha mudam de capítulo conforme a matéria",
+      "quando": [
+        "serviço de mesa",
+        "utensílio de cozinha",
+        "prato",
+        "tigela",
+        "xícara",
+        "caneca",
+        "tábua",
+        "utensilios de mesa"
+      ],
+      "acao": "exigir_material",
+      "explicacao": "A função 'servir/conter' não define o código: o que define é a matéria. Um conjunto de mesa tem cinco códigos possíveis e escolher errado altera IPI e II.",
+      "candidatos": [
+        "6911.10.10",
+        "6912.00.00",
+        "7013.28.00",
+        "7013.37.00",
+        "3924.10.00",
+        "4419.11.00",
+        "4419.90.00",
+        "4421.91.00"
+      ],
+      "fonte": "RGI 1 (posições nominais por matéria) + RGI 3(b) se apresentação mista",
+      "exceto_quando": [
+        "cadeira",
+        "poltrona",
+        "sofa",
+        "estofado",
+        "giratoria"
+      ]
+    },
+    {
+      "id": "partes_e_acessorios",
+      "titulo": "Peça de reposição: própria, de uso geral ou com código próprio",
+      "quando": [
+        "peça",
+        "parte",
+        "acessório",
+        "acessorio",
+        "componente",
+        "reposicao",
+        "sobressalente"
+      ],
+      "acao": "testar_tres_perguntas",
+      "explicacao": "Ordem de exame (Seção XVI Notas 2 e 3): (1) o item tem posição própria? classifique nela; (2) é de uso geral (parafuso, mola, junta, corrente, artigo de metal comum)? vai para o capítulo da matéria; (3) é própria/exclusiva de uma máquina? acompanha a máquina. Responder as três evita o clássico 'parafuso classificado como parte de máquina'.",
+      "penalizar_prefijos": [
+        "84",
+        "85"
+      ],
+      "candidatos": [
+        "3926.90.90",
+        "4016.99.90",
+        "7318.15.00",
+        "8471.60.59"
+      ],
+      "fonte": "Seção XV Nota 2 + Seção XVI Notas 2(a)(b)(c) e 3"
+    },
+    {
+      "id": "malha_vs_confeccionado",
+      "titulo": "Vestuário: 61 (malha) × 62 (não tecido) e depois a fibra",
+      "quando": [
+        "camiseta",
+        "camisa",
+        "blusa",
+        "calca",
+        "short",
+        "vestido",
+        "moletom",
+        "jaqueta",
+        "cueca",
+        "meia",
+        "roupa intima"
+      ],
+      "acao": "exigir_processo_e_composicao",
+      "explicacao": "Dois exames obrigatórios: o tecido é de malha (tear de malharia → Cap. 61) ou plano (→ Cap. 62)? E qual a fibra de peso predominante (Seção XI Notas 2/3)? Sem a composição percentual informada na etiqueta, qualquer 8 dígitos é chute.",
+      "candidatos": [
+        "6109.10.00",
+        "6109.90.00",
+        "6203.42.00",
+        "6204.62.00",
+        "4203.10.00"
+      ],
+      "fonte": "RGI 1 + Seção XI Notas 2 e 3"
+    },
+    {
+      "id": "eletrico_vs_brinquedo",
+      "titulo": "Scooter, patinete e similares: veículo ou brinquedo",
+      "quando": [
+        "scooter",
+        "patinete",
+        "monociclo eletrico",
+        "hoverboard",
+        "minibike"
+      ],
+      "acao": "analisar_finalidade_e_potencia",
+      "explicacao": "Patinete/veículo com motor elétrico concebido para transporte de pessoas cai na Seção XVII (87.11, IPI 35%); patinete infantil de brinquedo vai para 9503.00.10. Potência, velocidade máxima, homologação e público-alvo decidem, e o impacto no IPI é brutal.",
+      "candidatos": [
+        "8711.60.00",
+        "9503.00.10",
+        "8712.00.90"
+      ],
+      "fonte": "RGI 1 + Capítulo 95 Nota 1 + Capítulo 87 Nota 1"
+    },
+    {
+      "id": "medico_vs_material",
+      "titulo": "Artigo hospitalar: capítulo 90 não é 'tudo que é médico'",
+      "quando": [
+        "hospitalar",
+        "clinico",
+        "cirurgico",
+        "ortopedico",
+        "massagem",
+        "protese"
+      ],
+      "acao": "lir_as_notas_do_cap_90",
+      "explicacao": "Luvas e aventais de borracha/plástico de proteção, mobiliário ortopédico e canadianas ficam fora do Cap. 90 (voltam a 40.15/39.26/94.02). Artigos que somente corrigem deformidade por uso médico vão a 90.21.",
+      "candidatos": [
+        "4015.19.00",
+        "3926.20.00",
+        "9402.90.20",
+        "9021.10.10",
+        "9019.20.90"
+      ],
+      "fonte": "Capítulo 90 Notas 1(a), 1(d), 1(e) e posição 90.21"
+    },
+    {
+      "id": "multifuncional",
+      "titulo": "Aparelho multifunção: função principal comanda",
+      "quando": [
+        "multifuncional",
+        "impressora multifuncao",
+        "all in one",
+        "combinado",
+        "micro-ondas com grill",
+        "lava e seca"
+      ],
+      "acao": "definir_funcao_principal",
+      "explicacao": "Seção XVI Nota 3: máquinas concebidas para desempenhar uma função única determinada classificam-se pela função principal; se não for possível definir, usa-se a RGI 3(c). No 'lava e seca' e na multifuncional, o peso estatístico/fiscal da função dominante decide.",
+      "candidatos": [
+        "8443.32.99",
+        "8450.11.00",
+        "8516.50.00",
+        "8418.10.00"
+      ],
+      "fonte": "Seção XVI Nota 3 + RGI 3(b)/3(c)"
+    },
+    {
+      "id": "preparado_alimenticio",
+      "titulo": "Mistura alimentícia: do 16 ao 21 e a regra do ingrediente",
+      "quando": [
+        "salgado",
+        "preparado",
+        "snack",
+        "biscoito",
+        "mingau",
+        "suplemento",
+        "bebida em pe",
+        "mistura"
+      ],
+      "acao": "aplicar_notas_de_ingrediente",
+      "explicacao": "Preparações alimentícias não viram '2106.90' por serem variadas: existem posições e notas que mandam pelo conteúdo (carne → Cap. 16; farinhas/cereais torrados → Cap. 19; extratos de café/chicória → 21.01; suplementos → 2106.90.30). Só se usa 2106.90.90 quando nenhuma posição anterior alcançar.",
+      "candidatos": [
+        "1905.31.00",
+        "1901.10.30",
+        "1901.10.20",
+        "2106.90.30",
+        "2106.90.90",
+        "2005.99.00"
+      ],
+      "fonte": "Cap. 19 Nota 1, Cap. 21 Nota 1, RGI 1"
+    },
+    {
+      "id": "farmaco_vs_cosmetico",
+      "titulo": "Medicamento, cosmético ou produto de higiene",
+      "quando": [
+        "pomada",
+        "creme",
+        "locao",
+        "gel",
+        "suplemento",
+        "vitamina",
+        "shampoo",
+        "sabonete",
+        "fralda"
+      ],
+      "acao": "verificar_apresentacao_e_finalidade_terapeutica",
+      "explicacao": "O Cap. 30 exige tratamento terapêutico ou profilático e dosagem de venda a retalho; produto de toucador/higiene fica no Cap. 33/34 mesmo com ativo ('cicatrizante' não basta). Fraldas e absorventes higiênicos têm posição nominal em 9619.00.00.",
+      "candidatos": [
+        "3004.90.99",
+        "3304.99.90",
+        "3401.11.90",
+        "9619.00.00",
+        "2106.90.30"
+      ],
+      "fonte": "Capítulo 30 Notas 1 e 3 + posição 96.19"
+    },
+    {
+      "id": "software_e_suporte",
+      "titulo": "Programa de computador e meio de gravação",
+      "quando": [
+        "software",
+        "licenca",
+        "aplicativo",
+        "pendrive",
+        "cartao de memoria",
+        "hd externo",
+        "ssd"
+      ],
+      "acao": "distinguir_suporte_de_conteudo",
+      "explicacao": "Suporte de gravação vazio vai para 85.23; programa/sistema embarcado pode acompanhar a máquina; unidades de armazenamento são itens próprios de 8471.70 (SSD em 8471.70.40). Verificar também o regime de 'software não associado a suporte' para ISS/ICMS e o Ex-tarifário.",
+      "candidatos": [
+        "8471.70.40",
+        "8471.70.20",
+        "8523.49.90",
+        "8523.51.90"
+      ],
+      "fonte": "Cap. 84 Nota 1(k) / Cap. 85 posição 85.23"
+    },
+    {
+      "id": "utensilio_eletrico",
+      "titulo": "Aquecer/refrigerar: 84 vs 85 e o elemento elétrico",
+      "quando": [
+        "ventilador",
+        "aquecedor",
+        "bebedouro",
+        "cafeteira",
+        "chaleira",
+        "ferro de passar",
+        "grill",
+        "fritadeira eletrica",
+        "aspirador"
+      ],
+      "acao": "verificar_se_a_funcao_e_de_mat_ou_eletrica",
+      "explicacao": "Ventilador (84.14) e bomba são posições do Cap. 84 mesmo elétricos, enquanto aquecedor de imersão, cafeteira, ferro, air-fryer e aspirador têm posição própria no Cap. 85. Errar a fronteira 84/85 é o erro mais comum em eletro.",
+      "candidatos": [
+        "8414.51.10",
+        "8414.59.90",
+        "8421.39.90",
+        "8516.10.00",
+        "8516.60.00",
+        "8508.11.00",
+        "8418.10.00"
+      ],
+      "fonte": "Cap. 84 Notas 1(l) e 6 + Cap. 85 Notas 1 e 4"
+    },
+    {
+      "id": "embalagem_e_kit",
+      "titulo": "Embalagem, brindes e conjuntos de venda a retalho",
+      "quando": [
+        "kit",
+        "caixa presente",
+        "combo",
+        "cesta",
+        "brinde",
+        "embalagem",
+        "pacote promocional"
+      ],
+      "acao": "conjunto_retalho",
+      "explicacao": "Embalagem apresentada com o produto acompanha o produto. Conjunto para venda a retalho só se classifica pelo componente essencial se os itens forem complementares, ofertados juntos e não se contradisserem em termos de importação — caso contrário, classifica-se item a item.",
+      "candidatos": [
+        "3923.21.10",
+        "4819.10.00",
+        "4202.92.00"
+      ],
+      "fonte": "RGI 5(b) + RGI 3(b)"
+    },
+    {
+      "id": "notebook_especificacoes",
+      "titulo": "Notebook: o desdobramento de 8471.30 depende de peso e área de tela",
+      "quando": [
+        "notebook",
+        "laptop",
+        "ultrabook",
+        "portátil"
+      ],
+      "acao": "exigir_medidas_de_peso_e_tela",
+      "explicacao": "Dentro de 8471.30, o item/subitem é definido por peso e área da tela (ex.: <350 g com tela ≤140 cm² × 3,5 kg com tela entre 140 e 560 cm²). Com apenas 'notebook i7 16GB' não há como fechar o 8º dígito — e a diferença muda II (Ex-tarifário) e o Catálogo de Produtos.",
+      "candidatos": [
+        "8471.30.11",
+        "8471.30.12",
+        "8471.30.19",
+        "8471.30.90",
+        "8471.41.00"
+      ],
+      "fonte": "RGI 6 (comparação no mesmo nível) + texto dos subitens de 8471.30"
+    },
+    {
+      "id": "produto_completo_vs_partes",
+      "titulo": "Produto completo não se classifica pela posição de partes",
+      "quando": [
+        "aparelho completo",
+        "conjunto completo",
+        "equipamento completo",
+        "aparelho inteiro",
+        "unidade completa",
+        "produto completo"
+      ],
+      "penalizar_prefijos": [
+        "8415.90"
+      ],
+      "acao": "priorizar_posicao_propria",
+      "explicacao": "Parte só acompanha a máquina quando o que se importa/vende É a parte. Se o item é o aparelho completo (mesmo o split-system, composto de unidade interna + externa), a posição é a do aparelho (84.15) — 'Partes' (8415.90) é só para a unidade isolada. Se a descrição traz o nome da peça ('unidade evaporadora', 'unidade condensadora'), a posição de partes é a correta e nada é penalizado.",
+      "fonte": "Seção XVI Nota 2(a) e posição 84.15 (texto oficial da tabela)",
+      "nao_quando": [
+        "peca",
+        "parte",
+        "acessorio",
+        "componente",
+        "reposicao",
+        "sobressalente",
+        "unidade evaporadora",
+        "unidade condensadora",
+        "somente a unidade",
+        "apenas a unidade"
+      ],
+      "candidatos": []
+    },
+    {
+      "id": "assento_material_estrutura",
+      "titulo": "Assento: o 8º dígito depende do material e de ser estofado",
+      "quando": [
+        "cadeira",
+        "cadeiras",
+        "poltrona",
+        "assento",
+        "assentos",
+        "sofa"
+      ],
+      "acao": "exigir_material",
+      "candidatos": [
+        "9401.31.00",
+        "9401.39.00",
+        "9401.61.00",
+        "9401.69.00",
+        "9401.71.00",
+        "9401.79.00",
+        "9401.80.00"
+      ],
+      "explicacao": "A posição 94.01 ('Assentos (exceto os da posição 94.02), mesmo transformáveis em camas, e suas partes') se desdobra por matéria e acabamento — de madeira (9401.31/41/51/61/91), estofados (9401.61, 9401.71), outros (9401.39/69/79/80). Descrições de catálogo que só dizem 'cadeira giratória estofada de escritório' não informam a estrutura (madeira/metal) e, por isso, o 8º dígito não pode ser fechado sem ficha técnica.",
+      "fonte": "texto oficial da posição 94.01 e subitens 9401.3x/6x/7x da Tabela NCM vigente"
+    },
+    {
+      "id": "pneu_novo_vs_regeneravel",
+      "titulo": "Pneu novo (40.11) não é o mesmo que recapado/reaproveitável (40.12)",
+      "quando": [
+        "pneu",
+        "pneus",
+        "pneumatico",
+        "aro"
+      ],
+      "nao_quando": [
+        "recapado",
+        "regeneravel",
+        "reaproveitavel",
+        "carepagem",
+        "usado",
+        "remold",
+        "retread",
+        "reformado"
+      ],
+      "penalizar_prefijos": [
+        "4012"
+      ],
+      "acao": "verificar_estado_do_pneu",
+      "candidatos": [
+        "4011.10.00",
+        "4011.20.10",
+        "4011.20.90",
+        "4011.40.00",
+        "4011.50.00"
+      ],
+      "explicacao": "40.11 cobre 'pneumáticos novos' e 40.12 cobre 'pneumáticos usados ou reutilizáveis (recapados ou com carepagem)'. A descrição comercial raramente diz isso — e a palavra 'radial' não está na tabela e não separa os dois. Sem o estado do pneu, o 4º dígito é chute.",
+      "fonte": "textos oficiais das posições 40.11 e 40.12 da Tabela NCM vigente"
+    },
+    {
+      "id": "split_e_unidade_isolada",
+      "titulo": "'Split' no anúncio costuma ser a unidade isolada, não o aparelho completo",
+      "quando": [
+        "split",
+        "hi wall",
+        "hi-wall",
+        "teto",
+        "janela",
+        "piso"
+      ],
+      "candidatos": [
+        "8415.10.11",
+        "8415.10.19",
+        "8415.10.90",
+        "8415.90.10",
+        "8415.90.20"
+      ],
+      "acao": "confirmar_se_e_unidade_isolada",
+      "explicacao": "Em 84.15 a subposição 8415.10 cobre 'do tipo concebido para ser fixado numa janela, parede, teto ou piso, formando um corpo único ou do tipo split-system'; 8415.90 é '- Partes' (unidades evaporadoras/condensadoras isoladas). No varejo, o anúncio 'split hi wall 12.000 BTUs' pode ser tanto o kit completo quanto só a evaporadora. Confirme no cadastro do fornecedor o que compõe o item antes de fechar o 6º dígito.",
+      "fonte": "textos oficiais da posição 84.15 e subposições 8415.10/8415.90 da Tabela NCM vigente"
+    }
+  ],
+  "sinonimos": {
+    "notebook": [
+      "máquina automática",
+      "processamento",
+      "dados",
+      "portátil",
+      "tela",
+      "peso"
+    ],
+    "laptop": [
+      "máquina automática",
+      "processamento",
+      "dados",
+      "portátil",
+      "tela",
+      "peso"
+    ],
+    "celular": [
+      "telefone"
+    ],
+    "smartphone": [
+      "telefone"
+    ],
+    "fone": [
+      "auscultador"
+    ],
+    "earphone": [
+      "auscultador"
+    ],
+    "headphone": [
+      "auscultador"
+    ],
+    "caixa de som": [
+      "alto-falantes",
+      "caixas acústicas"
+    ],
+    "speaker": [
+      "alto-falante"
+    ],
+    "smart tv": [
+      "televisor"
+    ],
+    "televisão": [
+      "televisor"
+    ],
+    "air fryer": [
+      "fritadeira",
+      "elétrico"
+    ],
+    "geladeira": [
+      "refrigerador",
+      "máquina",
+      "gelo"
+    ],
+    "freezer": [
+      "congelador",
+      "máquina",
+      "gelo"
+    ],
+    "tanque": [
+      "máquina",
+      "lavar"
+    ],
+    "bebedouro": [
+      "refrigerador",
+      "dispensador",
+      "água"
+    ],
+    "climatizador": [
+      "ar",
+      "condicionado"
+    ],
+    "aspirador": [
+      "aspirador",
+      "limpeza"
+    ],
+    "parafusadeira": [
+      "furadeira",
+      "aparelho"
+    ],
+    "furadeira": [
+      "aparelho"
+    ],
+    "power bank": [
+      "acumulador",
+      "recarga"
+    ],
+    "carregador": [
+      "transformador",
+      "corrente",
+      "elétrica",
+      "fonte"
+    ],
+    "mouse": [
+      "apontador",
+      "unidade",
+      "entrada"
+    ],
+    "teclado": [
+      "unidade",
+      "entrada",
+      "dados"
+    ],
+    "hd": [
+      "unidade",
+      "discos",
+      "magnéticos"
+    ],
+    "ssd": [
+      "unidade",
+      "discos",
+      "estado",
+      "sólido"
+    ],
+    "pen drive": [
+      "memória",
+      "suporte"
+    ],
+    "camiseta": [
+      "t-shirt",
+      "vestuário"
+    ],
+    "blusa": [
+      "camisa",
+      "vestuário"
+    ],
+    "short": [
+      "calção",
+      "vestuário"
+    ],
+    "legging": [
+      "calça",
+      "vestuário"
+    ],
+    "bermuda": [
+      "calção",
+      "vestuário"
+    ],
+    "jaqueta": [
+      "casaco",
+      "vestuário"
+    ],
+    "corta-vento": [
+      "casaco",
+      "vestuário"
+    ],
+    "tênis esportivo": [
+      "calçado"
+    ],
+    "sapato": [
+      "calçado"
+    ],
+    "bota": [
+      "calçado"
+    ],
+    "chinelo": [
+      "calçado"
+    ],
+    "sapatilha": [
+      "calçado"
+    ],
+    "tênis casual": [
+      "calçado"
+    ],
+    "bolsa": [
+      "artigo",
+      "viagem"
+    ],
+    "mochila": [
+      "artigo",
+      "viagem"
+    ],
+    "carteira": [
+      "artigo",
+      "couro"
+    ],
+    "mala": [
+      "artigo",
+      "viagem"
+    ],
+    "cinto": [
+      "artigo",
+      "vestuário"
+    ],
+    "guarda-chuva": [
+      "sombrinha"
+    ],
+    "fralda": [
+      "absorvente",
+      "higiene"
+    ],
+    "lenço umedecido": [
+      "guardanapo",
+      "papel"
+    ],
+    "papel higiênico": [
+      "papel",
+      "higiênico"
+    ],
+    "copo plástico": [
+      "artigo",
+      "mesa"
+    ],
+    "canudo": [
+      "artigo",
+      "plástico"
+    ],
+    "cabide": [
+      "artigo",
+      "plástico"
+    ],
+    "balde": [
+      "artigo",
+      "plástico"
+    ],
+    "vassoura": [
+      "escova",
+      "limpeza"
+    ],
+    "pano de chão": [
+      "rodilhas",
+      "esfregões"
+    ],
+    "esfregão": [
+      "rodilhas",
+      "pano"
+    ],
+    "luva": [
+      "vestuário"
+    ],
+    "suplemento": [
+      "preparação",
+      "alimentícia"
+    ],
+    "whey": [
+      "proteína",
+      "soro",
+      "leite",
+      "preparação"
+    ],
+    "creatina": [
+      "preparação",
+      "alimentícia"
+    ],
+    "vitamina": [
+      "medicamento",
+      "preparação"
+    ],
+    "xampu": [
+      "cabelo",
+      "preparação"
+    ],
+    "sabonete": [
+      "pasta",
+      "sabões",
+      "banho"
+    ],
+    "desodorante": [
+      "tocador",
+      "higiene"
+    ],
+    "perfume": [
+      "essência",
+      "perfumada"
+    ],
+    "protetor solar": [
+      "preparação",
+      "pele",
+      "sol"
+    ],
+    "vinho": [
+      "mosto",
+      "fermentado",
+      "uva"
+    ],
+    "cerveja": [
+      "malte",
+      "bebida"
+    ],
+    "refrigerante": [
+      "bebidas",
+      "não",
+      "alcoólicas"
+    ],
+    "suco": [
+      "sumos",
+      "frutas",
+      "hortaliças"
+    ],
+    "café": [
+      "torrado",
+      "cafeína"
+    ],
+    "achocolatado": [
+      "cacau",
+      "preparações"
+    ],
+    "biscoito": [
+      "bolachas",
+      "biscoitos"
+    ],
+    "macarrão": [
+      "massa",
+      "alimentícia"
+    ],
+    "arroz": [
+      "arroz",
+      "descascado"
+    ],
+    "feijão": [
+      "leguminosa"
+    ],
+    "óleo": [
+      "gordura",
+      "vegetal"
+    ],
+    "manteiga": [
+      "manteiga",
+      "gorduras",
+      "leite"
+    ],
+    "queijo": [
+      "queijos",
+      "coalhos"
+    ],
+    "iogurte": [
+      "leite",
+      "iogurte"
+    ],
+    "pneus": [
+      "pneu",
+      "borracha"
+    ],
+    "parabrisa": [
+      "vidro",
+      "segurança"
+    ],
+    "amortecedor": [
+      "peça",
+      "suspensão"
+    ],
+    "farol": [
+      "iluminação",
+      "veículo"
+    ],
+    "assento": [
+      "cadeira",
+      "banco"
+    ],
+    "sofá": [
+      "assento",
+      "estofado",
+      "mobiliário",
+      "móvel"
+    ],
+    "cadeira gamer": [
+      "assento",
+      "giratória"
+    ],
+    "mesa": [
+      "mobiliário",
+      "móvel"
+    ],
+    "guarda-roupa": [
+      "mobiliário",
+      "móvel"
+    ],
+    "estante": [
+      "mobiliário",
+      "móvel"
+    ],
+    "berço": [
+      "móvel"
+    ],
+    "colchão": [
+      "artigo de dormir",
+      "acolchoado"
+    ],
+    "luminária": [
+      "aparelho",
+      "iluminação"
+    ],
+    "abajur": [
+      "lâmpada",
+      "mobiliário"
+    ],
+    "spot": [
+      "aparelhos",
+      "iluminação",
+      "lâmpadas"
+    ],
+    "refletor": [
+      "aparelhos",
+      "iluminação"
+    ],
+    "pisca-pisca": [
+      "guirlandas",
+      "luzes",
+      "elétricas",
+      "iluminação"
+    ],
+    "fita led": [
+      "condutores",
+      "isolados",
+      "elétricos",
+      "iluminação"
+    ],
+    "tomada": [
+      "conector",
+      "material",
+      "elétrico"
+    ],
+    "extensão": [
+      "condutor",
+      "elétrico"
+    ],
+    "cabo": [
+      "condutor",
+      "elétrico"
+    ],
+    "adaptador": [
+      "conector"
+    ],
+    "filtro de linha": [
+      "conector",
+      "elétrico"
+    ],
+    "nobreak": [
+      "no-break",
+      "fonte",
+      "ininterrupta",
+      "corrente",
+      "alternada",
+      "estático"
+    ],
+    "placa de energia solar": [
+      "célula",
+      "fotovoltaica"
+    ],
+    "câmera": [
+      "aparelho",
+      "fotográfico"
+    ],
+    "drone": [
+      "aeronave",
+      "não",
+      "tripulada"
+    ],
+    "relógio": [
+      "aparelho",
+      "medição",
+      "tempo"
+    ],
+    "capacete": [
+      "chapelaria",
+      "artigo",
+      "proteção"
+    ],
+    "bico": [
+      "chapelaria"
+    ],
+    "chupeta": [
+      "artigo",
+      "bebê"
+    ],
+    "mamadeira": [
+      "artigo",
+      "bebê"
+    ],
+    "andador": [
+      "artigo",
+      "bebê"
+    ],
+    "caixote": [
+      "embalagem",
+      "madeira"
+    ],
+    "palete": [
+      "artigo",
+      "madeira"
+    ],
+    "saco": [
+      "sacos",
+      "bolsas"
+    ],
+    "papel": [
+      "cartão",
+      "papelão"
+    ],
+    "caixa de papelão": [
+      "cartão",
+      "ondulado"
+    ],
+    "guardanapo": [
+      "lenço",
+      "papel"
+    ],
+    "copo descartável": [
+      "artigo",
+      "papel"
+    ],
+    "canudo papel": [
+      "artigo",
+      "papel"
+    ],
+    "chave": [
+      "ferramenta"
+    ],
+    "alicate": [
+      "ferramenta"
+    ],
+    "ferramenta manual": [
+      "ferramenta"
+    ],
+    "disco de corte": [
+      "rebo"
+    ],
+    "broca": [
+      "ferramenta"
+    ],
+    "solda": [
+      "eletrodo",
+      "material"
+    ],
+    "tinta": [
+      "tintas",
+      "vernizes",
+      "cores",
+      "pigmentos"
+    ],
+    "selante": [
+      "mástiques",
+      "colas"
+    ],
+    "cola": [
+      "colas",
+      "adesivos"
+    ],
+    "cimento": [
+      "argamassa",
+      "cemento"
+    ],
+    "porcelanato": [
+      "pavimento",
+      "cerâmica"
+    ],
+    "tubo pvc": [
+      "tubo",
+      "acessório",
+      "plástico"
+    ],
+    "registro": [
+      "torneiras",
+      "válvulas",
+      "reguladores"
+    ],
+    "torneira": [
+      "torneiras",
+      "abluções"
+    ],
+    "válvula": [
+      "torneira",
+      "registros"
+    ],
+    "bomba": [
+      "bombas",
+      "bombas centrífugas"
+    ],
+    "motor": [
+      "motores",
+      "geradores",
+      "conjuntos"
+    ],
+    "gerador": [
+      "geradores",
+      "motores",
+      "elétricos"
+    ],
+    "elevador": [
+      "máquinas",
+      "de",
+      "levantar"
+    ],
+    "empilhadeira": [
+      "carro"
+    ],
+    "trator": [
+      "tratores",
+      "máquina",
+      "agrícola",
+      "florestal"
+    ],
+    "roçadeira": [
+      "máquinas",
+      "cortar",
+      "erva"
+    ],
+    "cortador de grama": [
+      "máquina",
+      "relva"
+    ],
+    "máquina de soldar": [
+      "soldadura",
+      "elétrico"
+    ],
+    "furadeira de bancada": [
+      "máquina",
+      "ferrar"
+    ],
+    "torno": [
+      "máquina",
+      "ferrar"
+    ],
+    "injetora": [
+      "máquina",
+      "moldear",
+      "plástico"
+    ],
+    "balança": [
+      "balanças",
+      "instrumentos",
+      "peso",
+      "medida"
+    ],
+    "trena": [
+      "instrumentos",
+      "medida"
+    ],
+    "teodolito": [
+      "instrumento",
+      "geodésico"
+    ],
+    "estetoscópio": [
+      "instrumento",
+      "médico"
+    ],
+    "oxímetro": [
+      "instrumento",
+      "médico"
+    ],
+    "pressão arterial": [
+      "esfigmomanômetro",
+      "instrumento"
+    ],
+    "nebulizador": [
+      "inaladores",
+      "aparelhos",
+      "medicina"
+    ],
+    "cadeira de rodas": [
+      "artigo",
+      "ortopedia"
+    ],
+    "aparelho de jantar": [
+      "artigo",
+      "mesa"
+    ],
+    "talher": [
+      "aparelho",
+      "mesa"
+    ],
+    "panela": [
+      "utensílio",
+      "cozinha"
+    ],
+    "frigorífico": [
+      "refrigerador"
+    ],
+    "exaustor": [
+      "aparelho",
+      "extrator",
+      "ventilar"
+    ],
+    "coifa": [
+      "capela",
+      "extrator",
+      "ventilar"
+    ],
+    "fogão": [
+      "câmaras",
+      "aquecimento",
+      "cocção"
+    ],
+    "cooktop": [
+      "aparelho",
+      "cozedura",
+      "elétrico"
+    ],
+    "purificador de ar": [
+      "aparelho",
+      "filtrar",
+      "ar"
+    ],
+    "umidificador": [
+      "aparelho",
+      "tratar",
+      "ar"
+    ],
+    "secador de cabelo": [
+      "aparelho",
+      "cabelo",
+      "secar"
+    ],
+    "prancha de cabelo": [
+      "aparelho",
+      "cabelo",
+      "ondular"
+    ],
+    "barbeador": [
+      "aparelho",
+      "barbear",
+      "cortar",
+      "cabelo"
+    ],
+    "escova de dente": [
+      "escova",
+      "higiene"
+    ],
+    "fio dental": [
+      "limpeza",
+      "higiene"
+    ],
+    "ultrabook": [
+      "máquina automática",
+      "processamento",
+      "dados",
+      "portátil",
+      "tela",
+      "peso"
+    ],
+    "cadeira": [
+      "assentos",
+      "estofados",
+      "moveis"
+    ],
+    "sofa": [
+      "assento",
+      "estofado",
+      "mobiliário",
+      "móvel"
+    ],
+    "poltrona": [
+      "assentos",
+      "estofados"
+    ],
+    "escrivaninha": [
+      "mobiliário",
+      "escritório"
+    ],
+    "armário": [
+      "mobiliário",
+      "móvel"
+    ],
+    "cama": [
+      "mobiliário",
+      "dormir"
+    ],
+    "copo": [
+      "utensílio",
+      "mesa",
+      "cozinha"
+    ],
+    "caneca": [
+      "utensílio",
+      "mesa"
+    ],
+    "garrafa": [
+      "utensílio",
+      "mesa",
+      "tampão"
+    ],
+    "prato": [
+      "utensílio",
+      "mesa"
+    ],
+    "travessa": [
+      "utensílio",
+      "mesa",
+      "cozinha"
+    ],
+    "pneu": [
+      "pneumáticos",
+      "borracha"
+    ],
+    "roda": [
+      "pneumáticos",
+      "aro"
+    ],
+    "aro": [
+      "roda",
+      "veículo"
+    ],
+    "monitor": [
+      "máquina",
+      "saída",
+      "vídeo"
+    ],
+    "projetor": [
+      "aparelho",
+      "projecção",
+      "imagem"
+    ],
+    "rotulador": [
+      "máquina",
+      "impressão"
+    ],
+    "impressora": [
+      "máquina",
+      "impressão"
+    ],
+    "scanner": [
+      "leitor",
+      "imagem"
+    ],
+    "roterizador": [
+      "aparelho",
+      "transmissão",
+      "dados"
+    ],
+    "roteador": [
+      "aparelho",
+      "transmissão",
+      "dados"
+    ],
+    "switch": [
+      "aparelho",
+      "comutação",
+      "pacote",
+      "dados"
+    ],
+    "modem": [
+      "modulador",
+      "aparelho",
+      "transmissão"
+    ],
+    "repetidor": [
+      "aparelho",
+      "transmissão",
+      "dados"
+    ],
+    "fonte": [
+      "fonte",
+      "alimentação"
+    ],
+    "bateria": [
+      "acumulador",
+      "elétrico"
+    ],
+    "pilha": [
+      "elemento",
+      "primário",
+      "eletrítico"
+    ],
+    "lampada": [
+      "lâmpada",
+      "diodo",
+      "emissor",
+      "luz"
+    ],
+    "lâmpada": [
+      "lâmpada",
+      "diodo",
+      "emissor",
+      "luz"
+    ],
+    "pendrive": [
+      "suporte",
+      "magnético",
+      "state",
+      "solido"
+    ],
+    "cartao": [
+      "cartão",
+      "memória"
+    ],
+    "memoria": [
+      "memória",
+      "unidade",
+      "armazenamento"
+    ],
+    "computador": [
+      "máquina",
+      "processamento",
+      "dados"
+    ],
+    "servidor": [
+      "máquina",
+      "processamento",
+      "dados",
+      "unidade"
+    ],
+    "patinete": [
+      "veículo",
+      "motor",
+      "elétrico"
+    ],
+    "bicicleta": [
+      "ciclo"
+    ],
+    "ciclomotor": [
+      "motor",
+      "ciclo"
+    ],
+    "oculos": [
+      "óculos"
+    ],
+    "tapete": [
+      "revestimento",
+      "pavimento",
+      "artigo",
+      "têxtil"
+    ],
+    "cortina": [
+      "cortinado",
+      "tecido"
+    ],
+    "almofada": [
+      "artigo de decoração",
+      "colcha"
+    ],
+    "toalha": [
+      "roupa",
+      "toucador",
+      "cozinha"
+    ],
+    "cobertor": [
+      "manta",
+      "roupa",
+      "cama"
+    ],
+    "roupa intima": [
+      "vestuário",
+      "interior"
+    ],
+    "meia": [
+      "vestuário",
+      "meias"
+    ],
+    "carrinho": [
+      "bebê",
+      "artigo"
+    ],
+    "cadeira de bebe": [
+      "artigo",
+      "bebê",
+      "segurança"
+    ],
+    "assento infantil": [
+      "assento",
+      "segurança",
+      "bebê"
+    ],
+    "filtro": [
+      "aparelho",
+      "filtrar",
+      "depurar"
+    ],
+    "purificador": [
+      "aparelho",
+      "tratar",
+      "ar",
+      "filtrar"
+    ],
+    "lavadora": [
+      "máquina",
+      "lavar",
+      "limpar",
+      "secar"
+    ],
+    "secadora": [
+      "máquina",
+      "secar"
+    ],
+    "lava-louças": [
+      "máquina",
+      "lavar",
+      "louça"
+    ],
+    "ventilador": [
+      "mesa",
+      "ventilador",
+      "aerossol"
+    ],
+    "ar-condicionado": [
+      "ar",
+      "condicionado",
+      "aparelhos",
+      "maquinas",
+      "refrigerar",
+      "temperatura",
+      "umidade"
+    ],
+    "aquecedor": [
+      "aquecimento",
+      "instantâneo"
+    ],
+    "chauffe": [
+      "aquecedor",
+      "água",
+      "elétrico"
+    ],
+    "ferro": [
+      "ferro",
+      "passar"
+    ],
+    "chapinha": [
+      "ferro",
+      "cabelo",
+      "ondular"
+    ],
+    "babyliss": [
+      "ferro",
+      "cabelo",
+      "ondular"
+    ],
+    "depilador": [
+      "epilar",
+      "máquina",
+      "depilar"
+    ],
+    "escova": [
+      "escova",
+      "higiene",
+      "dentes"
+    ],
+    "cera": [
+      "cera",
+      "preparação",
+      "polir"
+    ],
+    "shampoo": [
+      "cabelo",
+      "preparação"
+    ],
+    "condicionador": [
+      "cabelo",
+      "preparação"
+    ],
+    "creme": [
+      "preparação",
+      "pele",
+      "tocador"
+    ],
+    "espumante": [
+      "vinho",
+      "gaseificado"
+    ],
+    "cachaça": [
+      "destilados",
+      "bebida",
+      "alcoólica"
+    ],
+    "whisky": [
+      "destilados",
+      "bebida",
+      "alcoólica"
+    ],
+    "vodka": [
+      "destilados",
+      "bebida",
+      "alcoólica"
+    ],
+    "licor": [
+      "destilados",
+      "preparações",
+      "bebida"
+    ],
+    "isotonico": [
+      "bebidas",
+      "não",
+      "alcoólicas"
+    ],
+    "energetico": [
+      "bebidas",
+      "não",
+      "alcoólicas"
+    ],
+    "polpa": [
+      "preparações",
+      "frutas",
+      "hortaliças"
+    ],
+    "geleia": [
+      "doces",
+      "frutas"
+    ],
+    "mel": [
+      "mel",
+      "produtos",
+      "abelha"
+    ],
+    "cafe": [
+      "café",
+      "torrado",
+      "cafeína"
+    ],
+    "cereal": [
+      "preparações",
+      "farinhas",
+      "produtos",
+      "padaria"
+    ],
+    "granola": [
+      "preparações",
+      "aveia",
+      "frutas"
+    ],
+    "feijao": [
+      "feijão",
+      "vagens"
+    ],
+    "macarrao": [
+      "massas",
+      "alimentícias"
+    ],
+    "milho": [
+      "milho",
+      "grãos"
+    ],
+    "oleo": [
+      "óleos",
+      "gorduras",
+      "vegetais"
+    ],
+    "azeite": [
+      "azeite",
+      "oliva",
+      "frutado"
+    ],
+    "margarina": [
+      "gorduras",
+      "vegetais",
+      "animais",
+      "preparadas",
+      "untar"
+    ],
+    "leite": [
+      "leite",
+      "creme"
+    ],
+    "requeijao": [
+      "leite",
+      "preparações"
+    ],
+    "salame": [
+      "preparações",
+      "carne",
+      "tripas"
+    ],
+    "linguica": [
+      "preparações",
+      "carne",
+      "tripas"
+    ],
+    "presunto": [
+      "carne",
+      "presuntos",
+      "comestíveis"
+    ],
+    "frango": [
+      "carne",
+      "aves",
+      "galináceos"
+    ],
+    "carne": [
+      "carne",
+      "cortes"
+    ],
+    "hamburguer": [
+      "carne",
+      "preparações",
+      "homogeneizada"
+    ],
+    "pao": [
+      "padaria",
+      "farinha",
+      "biscoitos"
+    ],
+    "bolo": [
+      "padaria",
+      "pastelaria",
+      "biscoitos"
+    ],
+    "salgadinho": [
+      "preparações",
+      "alimentícias",
+      "farinhas"
+    ],
+    "pipoca": [
+      "milho",
+      "estourado",
+      "preparações"
+    ],
+    "chocolate": [
+      "cacau",
+      "chocolate"
+    ],
+    "bala": [
+      "doces",
+      "balas",
+      "gomas"
+    ],
+    "pirulito": [
+      "doces",
+      "balas"
+    ],
+    "fósforo": [
+      "fósforos"
+    ],
+    "vela": [
+      "velas",
+      "produtos",
+      "semelhantes"
+    ],
+    "incenso": [
+      "matérias",
+      "odorizantes"
+    ],
+    "adubo": [
+      "adubos",
+      "fertilizantes"
+    ],
+    "inseticida": [
+      "antiparasitários",
+      "inseticidas"
+    ],
+    "fungicida": [
+      "antiparasitários",
+      "fungicidas"
+    ],
+    "herbicida": [
+      "antiparasitários",
+      "fungicidas"
+    ],
+    "detergente": [
+      "preparações",
+      "superfície",
+      "ativos"
+    ],
+    "desinfetante": [
+      "matérias",
+      "odorizantes",
+      "preparações",
+      "limpar"
+    ],
+    "lixo": [
+      "resíduos"
+    ],
+    "filme": [
+      "filmes",
+      "películas"
+    ],
+    "fita": [
+      "fitas",
+      "adesivas"
+    ],
+    "adesivo": [
+      "cola",
+      "adesivos"
+    ],
+    "esmalte": [
+      "tintas",
+      "vernizes"
+    ],
+    "parafuso": [
+      "parafusos",
+      "pinos",
+      "pregos"
+    ],
+    "porca": [
+      "parafusos",
+      "pinos",
+      "pregos"
+    ],
+    "arruela": [
+      "parafusos",
+      "pinos",
+      "pregos"
+    ],
+    "dobradiça": [
+      "fechaduras",
+      "guarnições",
+      "metal"
+    ],
+    "maçaneta": [
+      "fechaduras",
+      "guarnições",
+      "metal"
+    ],
+    "cadeado": [
+      "fechaduras",
+      "metal"
+    ],
+    "ferragem": [
+      "fechaduras",
+      "guarnições",
+      "metal"
+    ],
+    "cabo aco": [
+      "cabos",
+      "cordas",
+      "tranças"
+    ],
+    "arame": [
+      "arame",
+      "fios",
+      "metal"
+    ],
+    "tubo": [
+      "tubos",
+      "tubos e acessórios"
+    ],
+    "valvula": [
+      "válvulas",
+      "torneiras"
+    ],
+    "compressor": [
+      "máquinas",
+      "comprimir",
+      "expansão"
+    ],
+    "retroescavadeira": [
+      "máquina",
+      "movimento",
+      "terra"
+    ],
+    "plantadeira": [
+      "máquinas",
+      "agricultura",
+      "horticultura"
+    ],
+    "colheitadeira": [
+      "máquinas",
+      "recolher",
+      "colher",
+      "debulhar"
+    ],
+    "medidor": [
+      "instrumentos",
+      "medida",
+      "verificação"
+    ],
+    "régua": [
+      "instrumentos",
+      "medida",
+      "traçado"
+    ],
+    "estetoscopio": [
+      "instrumentos",
+      "medicina",
+      "cirurgia"
+    ],
+    "oximetro": [
+      "instrumentos",
+      "medicina",
+      "medida"
+    ],
+    "pressao arterial": [
+      "esfigmomanômetros",
+      "instrumentos",
+      "medicina"
+    ],
+    "sonda": [
+      "cateteres",
+      "cânulas",
+      "sondas"
+    ],
+    "seringa": [
+      "seringas",
+      "agulhas"
+    ],
+    "cateter": [
+      "cateteres",
+      "cânulas",
+      "sondas"
+    ],
+    "protetico": [
+      "próteses",
+      "artigos",
+      "ortopedia"
+    ],
+    "aparelho auditivo": [
+      "aparelhos",
+      "compensar",
+      "surdez"
+    ],
+    "termometro": [
+      "termômetros",
+      "instrumentos",
+      "medida"
+    ],
+    "bisturi": [
+      "instrumentos",
+      "medicina",
+      "cirurgia"
+    ],
+    "pinca": [
+      "instrumentos",
+      "medicina",
+      "cirurgia"
+    ],
+    "aferição": [
+      "verificação"
+    ],
+    "fita de LED": [
+      "condutores",
+      "isolados",
+      "elétricos",
+      "iluminação"
+    ],
+    "luminaria": [
+      "aparelhos",
+      "iluminação",
+      "elétricos",
+      "portáteis"
+    ],
+    "arandela": [
+      "aparelhos",
+      "iluminação",
+      "elétricos"
+    ],
+    "led": [
+      "diodos",
+      "emissores",
+      "luz",
+      "fotoemissores"
+    ],
+    "painel solar": [
+      "células",
+      "fotovoltaicas",
+      "semicondutoras"
+    ],
+    "placa solar": [
+      "células",
+      "fotovoltaicas",
+      "semicondutoras"
+    ],
+    "painel de LED": [
+      "painéis",
+      "diodos",
+      "emissores",
+      "luz"
+    ],
+    "televisao": [
+      "aparelhos",
+      "recepção",
+      "imagem",
+      "som"
+    ],
+    "tv": [
+      "aparelhos",
+      "recepção",
+      "imagem",
+      "som"
+    ],
+    "aparelho de som": [
+      "receptores",
+      "rádio",
+      "reprodução",
+      "som"
+    ],
+    "caixinha de som": [
+      "alto-falantes",
+      "reprodução",
+      "som"
+    ],
+    "speaker bluetooth": [
+      "alto-falantes",
+      "reprodução",
+      "som"
+    ],
+    "fones": [
+      "auscultadores",
+      "microfones"
+    ],
+    "microfone": [
+      "microfones",
+      "alto-falantes"
+    ],
+    "camera": [
+      "câmaras",
+      "objetivas",
+      "fotográficos"
+    ],
+    "camera de vigilancia": [
+      "câmaras",
+      "televisão",
+      "circuito",
+      "fechado"
+    ],
+    "webcam": [
+      "câmaras",
+      "vídeo",
+      "câmeras",
+      "digitais"
+    ],
+    "controle remoto": [
+      "aparelhos",
+      "comando",
+      "à distância"
+    ],
+    "video game": [
+      "máquinas",
+      "jogos",
+      "vídeo"
+    ],
+    "console": [
+      "máquinas",
+      "jogos",
+      "vídeo"
+    ],
+    "joystick": [
+      "máquinas",
+      "jogos",
+      "vídeo",
+      "aparelhos"
+    ],
+    "brinquedo": [
+      "brinquedos",
+      "jogos",
+      "artigos"
+    ],
+    "boneca": [
+      "bonecos"
+    ],
+    "pelucia": [
+      "bonecos",
+      "enchimento"
+    ],
+    "carrinho de brincar": [
+      "brinquedos",
+      "rodas"
+    ],
+    "jogo de tabuleiro": [
+      "jogos",
+      "sociedade"
+    ],
+    "cartas": [
+      "jogos",
+      "cartas"
+    ],
+    "cosmetico": [
+      "preparações",
+      "beleza",
+      "maquilagem"
+    ],
+    "esmalte unhas": [
+      "preparações",
+      "manicura",
+      "pedicura"
+    ],
+    "maquiagem": [
+      "preparações",
+      "maquilagem"
+    ],
+    "batom": [
+      "preparações",
+      "maquilagem",
+      "lábios"
+    ],
+    "base facial": [
+      "preparações",
+      "maquilagem"
+    ],
+    "mascara capilar": [
+      "preparações",
+      "cabelo",
+      "toucador"
+    ],
+    "escritorio": [
+      "escritórios",
+      "móvel",
+      "mobiliário"
+    ],
+    "escritório": [
+      "escritórios",
+      "móvel",
+      "mobiliário"
+    ],
+    "sala de estar": [
+      "móvel",
+      "assento"
+    ],
+    "cadeira de escritorio": [
+      "assento",
+      "escritórios",
+      "mobiliário"
+    ],
+    "ar condicionado": [
+      "ar",
+      "condicionado",
+      "aparelhos",
+      "maquinas",
+      "refrigerar",
+      "temperatura",
+      "umidade"
+    ],
+    "split": [
+      "split-system",
+      "split",
+      "elementos",
+      "separados"
+    ],
+    "luva nitrilica": [
+      "medicina",
+      "cirurgia",
+      "odontologia",
+      "veterinaria",
+      "vestuario",
+      "acessorios",
+      "luvas",
+      "mitenes",
+      "borracha"
+    ],
+    "luva hospitalar": [
+      "medicina",
+      "cirurgia",
+      "odontologia",
+      "veterinaria",
+      "vestuario",
+      "acessorios",
+      "luvas",
+      "mitenes",
+      "borracha"
+    ],
+    "cadeiras": [
+      "assentos",
+      "estofados",
+      "moveis"
+    ],
+    "giratoria": [
+      "assentos",
+      "ajustavel",
+      "altura",
+      "giratorios"
+    ],
+    "giratorio": [
+      "assentos",
+      "ajustavel",
+      "altura",
+      "giratorios"
+    ]
+  },
+  "materiais": {
+    "plástico": [
+      "39"
+    ],
+    "polipropileno": [
+      "39"
+    ],
+    "polietileno": [
+      "39"
+    ],
+    "pvc": [
+      "39"
+    ],
+    "acrílico": [
+      "39"
+    ],
+    "silicone": [
+      "39"
+    ],
+    "poliuretano": [
+      "39"
+    ],
+    "teflon": [
+      "38"
+    ],
+    "nylon": [
+      "39"
+    ],
+    "poliamida": [
+      "39"
+    ],
+    "borracha": [
+      "40"
+    ],
+    "látex": [
+      "40"
+    ],
+    "elastômero": [
+      "40"
+    ],
+    "epdm": [
+      "40"
+    ],
+    "couro": [
+      "42"
+    ],
+    "camurça": [
+      "42"
+    ],
+    "vaqueta": [
+      "42"
+    ],
+    "couro natural": [
+      "42"
+    ],
+    "madeira": [
+      "44"
+    ],
+    "mdf": [
+      "44"
+    ],
+    "mpc": [
+      "44"
+    ],
+    "compensado": [
+      "44"
+    ],
+    "bambu": [
+      "44"
+    ],
+    "cortiça": [
+      "45"
+    ],
+    "papel": [
+      "48"
+    ],
+    "papelão": [
+      "48"
+    ],
+    "cartão": [
+      "48"
+    ],
+    "kraft": [
+      "48"
+    ],
+    "têxtil": [
+      "63"
+    ],
+    "algodão": [
+      "52"
+    ],
+    "poliéster": [
+      "54"
+    ],
+    "sintética": [
+      "54"
+    ],
+    "lã": [
+      "51"
+    ],
+    "linho": [
+      "53"
+    ],
+    "seda": [
+      "50"
+    ],
+    "viscose": [
+      "55"
+    ],
+    "elastano": [
+      "54"
+    ],
+    "cerâmica": [
+      "69"
+    ],
+    "porcelana": [
+      "69"
+    ],
+    "grés": [
+      "69"
+    ],
+    "louça": [
+      "69"
+    ],
+    "vidro": [
+      "70"
+    ],
+    "cristal": [
+      "70"
+    ],
+    "espelho": [
+      "70"
+    ],
+    "fundição": [
+      "73"
+    ],
+    "aço": [
+      "73"
+    ],
+    "ferro": [
+      "73"
+    ],
+    "inox": [
+      "73"
+    ],
+    "inoxidável": [
+      "73"
+    ],
+    "cobre": [
+      "74"
+    ],
+    "alumínio": [
+      "76"
+    ],
+    "zinco": [
+      "79"
+    ],
+    "chumbo": [
+      "78"
+    ],
+    "estanho": [
+      "80"
+    ],
+    "metal": [
+      "73"
+    ],
+    "liga": [
+      "72"
+    ],
+    "prata": [
+      "71"
+    ],
+    "ouro": [
+      "71"
+    ],
+    "aço galvanizado": [
+      "7215"
+    ],
+    "plástica": [
+      "39"
+    ],
+    "plásticos": [
+      "39"
+    ],
+    "plásticas": [
+      "39"
+    ],
+    "polimérica": [
+      "39"
+    ],
+    "metálicas": [
+      "73"
+    ],
+    "metálico": [
+      "73"
+    ],
+    "metálicos": [
+      "73"
+    ],
+    "dérmicas": [
+      "42"
+    ],
+    "cúprica": [
+      "74"
+    ],
+    "aluminizada": [
+      "76"
+    ],
+    "vítreas": [
+      "70"
+    ],
+    "vítrea": [
+      "70"
+    ],
+    "cerâmicas": [
+      "69"
+    ],
+    "porcelanizada": [
+      "69"
+    ],
+    "latex": [
+      "40"
+    ],
+    "borrachuda": [
+      "40"
+    ],
+    "texteis": [
+      "63"
+    ],
+    "têxteis": [
+      "63"
+    ],
+    "de algodão": [
+      "52"
+    ],
+    "de poliéster": [
+      "54"
+    ],
+    "de lã": [
+      "51"
+    ],
+    "de linho": [
+      "53"
+    ],
+    "de seda": [
+      "50"
+    ],
+    "em aço inox": [
+      "73"
+    ],
+    "de aço": [
+      "73"
+    ],
+    "inoxidáveis": [
+      "73"
+    ],
+    "de madeira": [
+      "44"
+    ],
+    "de plástico": [
+      "39"
+    ],
+    "de borracha": [
+      "40"
+    ],
+    "de vidro": [
+      "70"
+    ],
+    "de cerâmica": [
+      "69"
+    ],
+    "de porcelana": [
+      "69"
+    ],
+    "de alumínio": [
+      "76"
+    ],
+    "de cobre": [
+      "74"
+    ],
+    "de couro": [
+      "42"
+    ],
+    "de papel": [
+      "48"
+    ]
+  },
+  "usos": {
+    "uso doméstico": [
+      "doméstica",
+      "doméstico"
+    ],
+    "uso industrial": [
+      "industrial",
+      "indústria"
+    ],
+    "uso hospitalar": [
+      "hospitalar",
+      "medicina"
+    ],
+    "uso odontológico": [
+      "odontologia"
+    ],
+    "uso veterinário": [
+      "veterinária"
+    ],
+    "uso infantil": [
+      "criança",
+      "bebê"
+    ],
+    "uso esportivo": [
+      "desporto",
+      "esporte",
+      "ginástica"
+    ],
+    "uso automotivo": [
+      "veículo",
+      "automóvel"
+    ],
+    "uso agrícola": [
+      "agrícola",
+      "agricultura"
+    ],
+    "uso militar": [
+      "militar",
+      "guerra"
+    ],
+    "uso de escritório": [
+      "escritório"
+    ],
+    "uso culinário": [
+      "cozinha",
+      "alimentar"
+    ],
+    "uso decorativo": [
+      "adorno",
+      "decoração"
+    ],
+    "descartável": [
+      "descartável",
+      "uso único"
+    ],
+    "recarregável": [
+      "recarga",
+      "acumulador"
+    ],
+    "sem fio": [
+      "sem",
+      "fio",
+      "infravermelho",
+      "bluetooth"
+    ],
+    "resistente à água": [
+      "impermeável",
+      "à prova d'água"
+    ],
+    "doméstica": [
+      "doméstica",
+      "doméstico"
+    ],
+    "doméstico": [
+      "doméstica",
+      "doméstico"
+    ],
+    "hospitalares": [
+      "hospitalar",
+      "medicina"
+    ],
+    "hospitalar": [
+      "hospitalar",
+      "medicina"
+    ]
+  },
+  "genericas": [
+    "outros",
+    "demais",
+    "os demais",
+    "outra",
+    "outras",
+    "diversos",
+    "vários",
+    "varios"
+  ],
+  "indicadores": {
+    "composto": [
+      "misto",
+      "mistura",
+      "combinação",
+      "combinado",
+      "kit",
+      "conjunto",
+      "sortido",
+      "composto"
+    ],
+    "incompleto": [
+      "incompleto",
+      "desmontado",
+      "semi",
+      "parcialmente",
+      "para montar",
+      "não acabado",
+      "nao acabado"
+    ],
+    "parte": [
+      "parte",
+      "peça",
+      "acessório",
+      "componente",
+      "reposição",
+      "sobressalente",
+      "próprio"
+    ],
+    "nominal": [
+      "para",
+      "próprio",
+      "destinado"
+    ],
+    "medidas": [
+      "cm",
+      "mm",
+      "kg",
+      "w",
+      "v",
+      "ah",
+      "l",
+      "polegada",
+      "litro",
+      "ml",
+      "g ",
+      "cm3",
+      "cm²",
+      "vat"
+    ]
+  },
+  "resumo_rotina": [
+    "Identifique a MATÉRIA e a FUNÇÃO declarada na descrição — a NCM é objetiva, não comercial.",
+    "Localize a posição (4 díg.) pelo texto das Seções/Capítulos e suas Notas (RGI 1).",
+    "Descarte capítulos por Notas de exclusão (Notas Legais) antes de comparar méritos.",
+    "Se mais de uma posição cabe: especificidade (RGI 3(a)) → característica essencial (3(b)) → maior numérico (3(c)).",
+    "Fixada a posição, desdobre item/subitem comparando apenas o mesmo nível (RGI 6).",
+    "Confira posição nacional de 7º/8º díg., Ex-tarifário, antidumping e CEST antes de parametrizar o documento fiscal.",
+    "Sem matéria, uso, composição ou apresentação declarados, NÃO feche o código — peça o dado."
+  ],
+  "sinais_de_inseguranca": [
+    "descrição genérica de 'tipo' (linha/família/modelo) sem atributos",
+    "composição têxtil ausente",
+    "material não informado em artefato",
+    "kit ou conjunto sem função principal declarada",
+    "produto com alegação de uso (medicinal, infantil) sem registro/anvisa",
+    "aparelho elétrico multifunção"
+  ],
+  "jargao_sem_valor_fiscal": [
+    "linha",
+    "kit",
+    "sortido",
+    "sortidos",
+    "variedades",
+    "variado",
+    "diversos",
+    "varios",
+    "generico",
+    "generico",
+    "acabamento",
+    "qualidade",
+    "premium",
+    "top",
+    "luxo",
+    "importado",
+    "nacional",
+    "original",
+    "referencia",
+    "modelo",
+    "codigo",
+    "descricao",
+    "item",
+    "produto",
+    "produto varia",
+    "atualizado",
+    "completo",
+    "semi novo",
+    "seminovo",
+    "usado",
+    "varejo",
+    "atacado",
+    "promocao",
+    "oferta",
+    "desconto",
+    "embalagem economica"
+  ],
+  "palavras_comuns_na_tabela": [
+    "casa",
+    "casas",
+    "linha",
+    "linhas",
+    "tipo",
+    "tipos",
+    "uso",
+    "usos",
+    "peso",
+    "cor",
+    "cores",
+    "forma",
+    "formas",
+    "parte",
+    "partes",
+    "conta",
+    "contas",
+    "ferro",
+    "madeira",
+    "plastico",
+    "papel",
+    "metal",
+    "maquina",
+    "maquinas",
+    "aparelho",
+    "aparelhos",
+    "artigo",
+    "artigos",
+    "produto",
+    "produtos",
+    "medida",
+    "medidas",
+    "funcion",
+    "funcao",
+    "funcoes",
+    "base",
+    "bases",
+    "ponta",
+    "vidro",
+    "agua",
+    "ar",
+    "luz",
+    "sol",
+    "mar",
+    "terra",
+    "fogo",
+    "outro",
+    "outros",
+    "outra",
+    "outras",
+    "demais",
+    "meio",
+    "meios",
+    "fim",
+    "final",
+    "finais",
+    "variedades"
+  ]
+}
