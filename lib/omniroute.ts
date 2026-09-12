@@ -66,6 +66,6 @@ async function askGeminiFallback(systemPrompt: string, userPrompt: string): Prom
     }
   });
 
-  const text = typeof response.text === 'function' ? response.text() : response.text;
+  const text = typeof response.text === 'function' ? (response as any).text() : response.text;
   return JSON.parse(text);
 }

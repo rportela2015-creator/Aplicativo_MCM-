@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { XMLParser } from 'fast-xml-parser';
 import * as pdfParseModule from 'pdf-parse';
-const pdfParse = pdfParseModule.default || pdfParseModule;
+const pdfParse = (pdfParseModule as any).default || pdfParseModule;
 import { getFiscalContext } from '@/lib/fiscal-context';
 import { askOmniRoute } from '@/lib/omniroute';
 
