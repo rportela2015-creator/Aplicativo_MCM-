@@ -7,14 +7,16 @@ import Consultar from '@/components/Consultar';
 import Regras from '@/components/Regras';
 import Parametrizar from '@/components/Parametrizar';
 import ReformaTab from '@/components/Reforma';
+import AuditoriaEntrada from '@/components/AuditoriaEntrada';
 
 const TABS = [
   { id: 'classificar', nome: '1 · Classificar produto', hint: 'descrição → candidatos de NCM com RGI, tributos e parametrização' },
   { id: 'lote', nome: '2 · Lote (CSV)', hint: 'centenas de itens de uma vez, com triagem por confiança' },
   { id: 'consultar', nome: '3 · Consultar NCM', hint: 'busca na tabela oficial por código, palavra ou capítulo' },
   { id: 'parametrizar', nome: '4 · Parametrização de ERP', hint: 'cadastro + cenário → códigos e maqueta de XML da NF-e/NFS-e' },
-  { id: 'reforma', nome: '5 · Reforma (IBS/CBS/IS)', hint: 'tabela cClassTrib, CST-IBS/CBS, IS e alíquotas da transição' },
-  { id: 'regras', nome: '6 · Regras e fontes', hint: 'RGI, Notas Legais, armadilhas, vigência e atualização' },
+  { id: 'auditoria-entrada', nome: '5 · Auditoria (Entrada)', hint: 'upload de nota fiscal para análise via IA e extração de parâmetros' },
+  { id: 'reforma', nome: '6 · Reforma (IBS/CBS/IS)', hint: 'tabela cClassTrib, CST-IBS/CBS, IS e alíquotas da transição' },
+  { id: 'regras', nome: '7 · Regras e fontes', hint: 'RGI, Notas Legais, armadilhas, vigência e atualização' },
 ] as const;
 
 export default function Home() {
@@ -65,6 +67,7 @@ export default function Home() {
         {tab === 'lote' && <Lote />}
         {tab === 'consultar' && <Consultar />}
         {tab === 'parametrizar' && <Parametrizar />}
+        {tab === 'auditoria-entrada' && <AuditoriaEntrada />}
         {tab === 'reforma' && <ReformaTab />}
         {tab === 'regras' && <Regras />}
 
