@@ -47,14 +47,14 @@ export async function POST(req: Request) {
         doc.moveDown(1);
       });
     } else {
-        doc.fontSize(12).text('Nenhum item processado nesta auditoria.', { font: 'Helvetica-Oblique' });
+        doc.fontSize(12).font('Helvetica-Oblique').text('Nenhum item processado nesta auditoria.');
     }
 
     doc.end();
 
     const pdfBuffer = await pdfBufferPromise;
 
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(pdfBuffer as unknown as BodyInit, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
