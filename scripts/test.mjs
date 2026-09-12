@@ -68,7 +68,7 @@ let fail = 0;
   const r = spawnSync(process.execPath, ['scripts/ui-smoke.mjs'], { stdio: 'inherit' });
   if (r.status !== 0) fail++;
 }
-for (const entry of ['tests/engine.test.mjs', 'tests/lote.test.mjs', 'tests/probe.test.mjs', 'tests/reforma.test.mjs', 'tests/xml.test.mjs']) {
+for (const entry of ['tests/engine.test.mjs', 'tests/lote.test.mjs', 'tests/probe.test.mjs', 'tests/reforma.test.mjs', 'tests/xml.test.mjs', 'tests/auditoria.test.mjs']) {
   const out = '.bundle-' + entry.split('/').pop() + '.mjs';
   try {
     await build({
