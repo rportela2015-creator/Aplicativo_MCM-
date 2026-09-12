@@ -10,6 +10,41 @@ export default function AuditoriaEntrada() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any | null>(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+
+  const handleDownloadPdf = async () => {
+    if (!data) return;
+    setPdfLoading(true);
+    setPdfError(null);
+    try {
+      const res = await fetch('/api/auditoria-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Erro HTTP ${res.status} ao gerar PDF.`);
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'auditoria_entrada.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      setPdfError(err.message || 'Falha ao baixar o PDF.');
+    } finally {
+      setPdfLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,8 +155,21 @@ export default function AuditoriaEntrada() {
             </div>
           </div>
 
+          <div style={{ marginTop: 16 }}>
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              disabled={pdfLoading}
+              className="chip"
+              style={{ padding: '8px 16px', background: 'var(--brand)', color: 'white' }}
+            >
+              {pdfLoading ? 'Gerando PDF...' : 'Baixar Relatório em PDF'}
+            </button>
+            {pdfError && <div className="note error" style={{ marginTop: 8 }}>{pdfError}</div>}
+          </div>
+
           {(data.itens && data.itens.length > 0) ? (
-            <table className="tb">
+            <table className="tb" style={{ marginTop: 24 }}>
               <thead>
                 <tr>
                   <th>Produto</th>
