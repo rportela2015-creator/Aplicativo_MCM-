@@ -143,8 +143,8 @@
     "notebook": [
       "computador",
       "portatil",
-      "processamento de dados",
-      "laptop"
+      "laptop",
+      "processamento de dados"
     ],
     "computador": [
       "notebook",
@@ -153,7 +153,8 @@
     ],
     "cadeira": [
       "assento",
-      "poltrona"
+      "poltrona",
+      "movel"
     ],
     "celular": [
       "smartphone",
@@ -166,9 +167,6 @@
       "artigo de mesa",
       "recipiente",
       "embalagem"
-    ],
-    "giratoria": [
-      "giratorio"
     ]
   },
   "armadilhas": [
@@ -204,31 +202,6 @@
       ],
       "quando": [],
       "fonte": "LC 214/2025 e LC 227/2026"
-    },
-    {
-      "id": "ARM-CADEIRA",
-      "titulo": "Cadeiras e Assentos (Posição 9401)",
-      "kind": "Armadilha",
-      "severidade": "info",
-      "explicacao": "Cadeiras de escritório e assentos em geral classificam-se na posição 9401. Não confundir com partes exclusivas de veículos.",
-      "candidatos": [
-        "94013100",
-        "94013900",
-        "94018000"
-      ],
-      "quando": [
-        "cadeira",
-        "assento"
-      ],
-      "capitulos": [
-        "94"
-      ],
-      "penalizar_prefijos": [
-        "8714",
-        "3926",
-        "9403"
-      ],
-      "fonte": "Regras Gerais e NESH"
     }
   ],
   "notas_legais": [
