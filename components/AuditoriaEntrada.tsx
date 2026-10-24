@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ParametrizacaoERP from './ParametrizacaoERP';
 
 export default function AuditoriaEntrada() {
   const [file, setFile] = useState<File | null>(null);
@@ -85,7 +86,7 @@ export default function AuditoriaEntrada() {
 
   return (
     <div className="card">
-      <h2>Auditoria de Entrada (OmniRoute)</h2>
+      <h2>Auditoria de Entrada (Gemini)</h2>
       <p className="hint">
         Faça o upload da nota fiscal para análise com IA.
       </p>
@@ -120,7 +121,7 @@ export default function AuditoriaEntrada() {
 
         <div style={{ marginTop: 16 }}>
           <button type="submit" disabled={loading || !file}>
-            Auditar Documento via OmniRoute
+            Auditar Documento via Gemini
           </button>
         </div>
       </form>
@@ -136,23 +137,25 @@ export default function AuditoriaEntrada() {
 
       {data && (
         <div style={{ marginTop: 24 }}>
-          <h3>Resultados da Auditoria</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3>Resultados da Auditoria</h3>
+            {data.statusGlobal === 'Inconsistente' ? (
+              <span className="badge error">{data.statusGlobal}</span>
+            ) : data.statusGlobal === 'Atenção' ? (
+              <span className="badge media">{data.statusGlobal}</span>
+            ) : (
+              <span className="badge blue">{data.statusGlobal || 'Regular'}</span>
+            )}
+          </div>
 
-          <div className="taxgrid" style={{ marginBottom: 16 }}>
-            <div className="tax">
-              <div className="k">CFOP de Entrada Sugerido</div>
-              <div className="v mono">{data.cfopEntradaSugerido || 'N/A'}</div>
-            </div>
-            <div className="tax">
-              <div className="k">Direito a Crédito</div>
-              <div className="v">
-                {data.direitoCredito ? (
-                  <span className="badge blue">Sim</span>
-                ) : (
-                  <span className="badge media">Não</span>
-                )}
-              </div>
-            </div>
+          <div className="card" style={{ marginBottom: 16, background: '#f9f9f9', padding: 16, borderRadius: 8 }}>
+            <h4>Parecer Técnico do Documento</h4>
+            <p className="small">{data.parecerTecnicoXml || 'Nenhum parecer técnico disponível.'}</p>
+          </div>
+
+          <div className="card" style={{ marginBottom: 16, background: '#f0f4f8', padding: 16, borderRadius: 8 }}>
+            <h4>Parecer Breve de Conformidade e Créditos</h4>
+            <p className="small">{data.parecerConformidade || 'Nenhum parecer de conformidade disponível.'}</p>
           </div>
 
           <div style={{ marginTop: 16 }}>
@@ -163,35 +166,12 @@ export default function AuditoriaEntrada() {
               className="chip"
               style={{ padding: '8px 16px', background: 'var(--brand)', color: 'white' }}
             >
-              {pdfLoading ? 'Gerando PDF...' : 'Baixar Relatório em PDF'}
+              {pdfLoading ? 'Gerando PDF...' : 'Baixar Relatório PDF Executivo'}
             </button>
             {pdfError && <div className="note error" style={{ marginTop: 8 }}>{pdfError}</div>}
           </div>
 
-          {(data.itens && data.itens.length > 0) ? (
-            <table className="tb" style={{ marginTop: 24 }}>
-              <thead>
-                <tr>
-                  <th>Produto</th>
-                  <th>NCM</th>
-                  <th>cClassTrib Sugerido</th>
-                  <th>Parecer / Alerta da Reforma</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.itens.map((item: any, idx: number) => (
-                  <tr key={idx}>
-                    <td>{item.produto || item.descricao || '—'}</td>
-                    <td className="mono">{item.ncm || '—'}</td>
-                    <td className="mono">{item.cClassTrib || '—'}</td>
-                    <td className="small">{item.parecer || item.alertaReforma || '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <div className="note info">Nenhum item retornado.</div>
-          )}
+          <ParametrizacaoERP data={data} />
         </div>
       )}
     </div>
