@@ -1,13 +1,48 @@
 import { NextResponse } from 'next/server';
 import PDFDocument from 'pdfkit';
+import { z } from 'zod';
+
+
+const pdfDataSchema = z.object({
+  parecerTecnicoXml: z.string().optional().nullable(),
+  parecerConformidade: z.string().optional().nullable(),
+  itens: z.array(z.object({
+    cProd: z.string().optional().nullable(),
+    xProd: z.string().optional().nullable(),
+    ncm: z.string().optional().nullable(),
+    cest: z.string().optional().nullable(),
+    cfopEntrada: z.string().optional().nullable(),
+    cstIcmsEntrada: z.string().optional().nullable(),
+    aliqIcms: z.string().optional().nullable(),
+    permiteCredito: z.boolean().optional().nullable(),
+    cstPisCofinsEntrada: z.string().optional().nullable(),
+    aliqPis: z.string().optional().nullable(),
+    aliqCofins: z.string().optional().nullable(),
+    cClassTrib: z.string().optional().nullable(),
+    aliqIbsTransitorio: z.string().optional().nullable(),
+    aliqCbsTransitorio: z.string().optional().nullable(),
+    regimeEspecial: z.string().optional().nullable(),
+    instrucaoCadastro: z.string().optional().nullable(),
+  })).optional().nullable()
+});
+
 
 export async function POST(req: Request) {
   try {
-    const data = await req.json();
+    let data = await req.json();
 
     if (!data) {
       return NextResponse.json({ error: 'Nenhum dado fornecido para o PDF.' }, { status: 400 });
     }
+
+    const parsed = pdfDataSchema.safeParse(data);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Dados inválidos para o PDF.', details: parsed.error.issues }, { status: 400 });
+    }
+
+    // Assign validated data back
+    data = parsed.data;
+
 
     const doc = new PDFDocument({ margin: 50 });
     const chunks: Buffer[] = [];
