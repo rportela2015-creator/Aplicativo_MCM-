@@ -3,7 +3,7 @@ import { XMLParser } from 'fast-xml-parser';
 import * as pdfParseModule from 'pdf-parse';
 const pdfParse = (pdfParseModule as any).default || pdfParseModule;
 import { getFiscalContext } from '@/lib/fiscal-context';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 
 export async function POST(request: Request) {
   try {
@@ -136,12 +136,46 @@ Responda usando o seguinte JSON Schema, exatamente:
 
     const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash',
       contents: [
         { role: 'user', parts: [{ text: fiscalContext + '\n\n' + userPrompt }] }
       ],
       config: {
         responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            statusGlobal: { type: Type.STRING },
+            parecerTecnicoXml: { type: Type.STRING },
+            parecerConformidade: { type: Type.STRING },
+            itens: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  cProd: { type: Type.STRING },
+                  xProd: { type: Type.STRING },
+                  ncm: { type: Type.STRING },
+                  cest: { type: Type.STRING },
+                  cfopEntrada: { type: Type.STRING },
+                  cstIcmsEntrada: { type: Type.STRING },
+                  aliqIcms: { type: Type.STRING },
+                  cstPisCofinsEntrada: { type: Type.STRING },
+                  aliqPis: { type: Type.STRING },
+                  aliqCofins: { type: Type.STRING },
+                  permiteCredito: { type: Type.BOOLEAN },
+                  cClassTrib: { type: Type.STRING },
+                  aliqIbsTransitorio: { type: Type.STRING },
+                  aliqCbsTransitorio: { type: Type.STRING },
+                  regimeEspecial: { type: Type.STRING },
+                  instrucaoCadastro: { type: Type.STRING },
+                },
+                required: ['cProd', 'xProd', 'ncm', 'cClassTrib']
+              }
+            }
+          },
+          required: ['statusGlobal', 'parecerTecnicoXml', 'parecerConformidade', 'itens']
+        }
       }
     });
 

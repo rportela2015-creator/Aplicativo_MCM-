@@ -74,7 +74,7 @@ Contexto: "${contextoOperacao || 'Operação comercial interna padrão'}"`;
     };
 
     // Lista de modelos em ordem de prioridade para contornar picos de tráfego (503)
-    const modelos = ['gemini-3.6-flash', 'gemini-2.5-flash'];
+    const modelos = ['gemini-3.8-flash', 'gemini-3.6-flash'];
     let responseText = '';
     let ultimoErro: any = null;
 
