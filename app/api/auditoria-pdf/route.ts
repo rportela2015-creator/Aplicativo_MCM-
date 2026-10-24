@@ -28,23 +28,35 @@ export async function POST(req: Request) {
     doc.moveDown(2);
 
     // --- Summary ---
-    doc.fontSize(14).text('Resumo Operacional');
+    doc.fontSize(14).text('Parecer Técnico do Documento');
     doc.moveDown(0.5);
-    doc.fontSize(12).text(`CFOP de Entrada Sugerido: ${data.cfopEntradaSugerido || 'N/A'}`);
-    doc.text(`Direito a Crédito: ${data.direitoCredito ? 'Sim' : 'Não'}`);
+    doc.fontSize(10).text(data.parecerTecnicoXml || 'Nenhum parecer técnico disponível.');
+    doc.moveDown(1.5);
+
+    doc.fontSize(14).text('Parecer Breve de Conformidade e Créditos');
+    doc.moveDown(0.5);
+    doc.fontSize(10).text(data.parecerConformidade || 'Nenhum parecer de conformidade disponível.');
     doc.moveDown(2);
 
     // --- Detail ---
-    doc.fontSize(14).text('Detalhamento de Itens');
+    doc.fontSize(14).text('Parametrização de ERP - Detalhamento de Itens');
     doc.moveDown(1);
 
     if (data.itens && data.itens.length > 0) {
       data.itens.forEach((item: any, i: number) => {
-        doc.fontSize(12).text(`Item ${i + 1}: ${item.produto || item.descricao || 'N/A'}`, { underline: true });
-        doc.fontSize(10).text(`NCM: ${item.ncm || 'N/A'}`);
-        doc.text(`cClassTrib: ${item.cClassTrib || 'N/A'}`);
-        doc.text(`Parecer / Alerta da Reforma: ${item.parecer || item.alertaReforma || 'N/A'}`);
-        doc.moveDown(1);
+        doc.rect(50, doc.y, 500, 110).stroke('#cccccc');
+        doc.moveDown(0.5);
+        doc.fontSize(12).text(`Item ${i + 1}: ${item.cProd || 'N/A'} - ${item.xProd || 'N/A'}`, { indent: 10, underline: true });
+        doc.fontSize(10).text(`NCM: ${item.ncm || 'N/A'} | CEST: ${item.cest || 'N/A'}`, { indent: 10 });
+        doc.moveDown(0.5);
+
+        doc.fontSize(9).text(`[ICMS/ST] CFOP: ${item.cfopEntrada || 'N/A'} | CST: ${item.cstIcmsEntrada || 'N/A'} | Alíquota: ${item.aliqIcms || 'N/A'} | Crédito: ${item.permiteCredito ? 'Sim' : 'Não'}`, { indent: 10 });
+        doc.text(`[PIS/COFINS] CST: ${item.cstPisCofinsEntrada || 'N/A'} | PIS: ${item.aliqPis || 'N/A'} | COFINS: ${item.aliqCofins || 'N/A'}`, { indent: 10 });
+        doc.text(`[REFORMA] cClassTrib: ${item.cClassTrib || 'N/A'} | IBS: ${item.aliqIbsTransitorio || 'N/A'} | CBS: ${item.aliqCbsTransitorio || 'N/A'} | Regime: ${item.regimeEspecial || 'N/A'}`, { indent: 10 });
+        doc.moveDown(0.5);
+        doc.text(`Instrução: ${item.instrucaoCadastro || 'N/A'}`, { indent: 10, oblique: true });
+
+        doc.moveDown(2);
       });
     } else {
         doc.fontSize(12).font('Helvetica-Oblique').text('Nenhum item processado nesta auditoria.');

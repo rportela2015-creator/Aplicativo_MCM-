@@ -3,7 +3,7 @@ import { XMLParser } from 'fast-xml-parser';
 import * as pdfParseModule from 'pdf-parse';
 const pdfParse = (pdfParseModule as any).default || pdfParseModule;
 import { getFiscalContext } from '@/lib/fiscal-context';
-import { askOmniRoute } from '@/lib/omniroute';
+import { GoogleGenAI } from '@google/genai';
 
 export async function POST(request: Request) {
   try {
@@ -33,21 +33,60 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'XML de NF-e inválido.' }, { status: 400 });
       }
 
-      // Simplificando o XML para poupar tokens
+      // Extração determinística do XML
+      const emit = {
+        cnpj: nfe.emit?.CNPJ,
+        nome: nfe.emit?.xNome,
+        crt: nfe.emit?.CRT,
+      };
+
+      const dest = {
+        cnpj: nfe.dest?.CNPJ,
+        cpf: nfe.dest?.CPF,
+        nome: nfe.dest?.xNome,
+      };
+
+      const itens = Array.isArray(nfe.det) ? nfe.det : (nfe.det ? [nfe.det] : []);
+
+      const detExtraido = itens.map((d: any) => ({
+        cProd: d.prod?.cProd,
+        xProd: d.prod?.xProd,
+        NCM: d.prod?.NCM,
+        CEST: d.prod?.CEST,
+        CFOP: d.prod?.CFOP,
+        vProd: d.prod?.vProd,
+        imposto: d.imposto
+      }));
+
       const resumo = {
-        ide: nfe.ide,
-        emit: nfe.emit,
-        dest: nfe.dest,
-        det: Array.isArray(nfe.det) ? nfe.det.map((d: any) => ({
-          prod: d.prod,
-          imposto: d.imposto
-        })) : [{ prod: nfe.det?.prod, imposto: nfe.det?.imposto }]
+        emit,
+        dest,
+        itens: detExtraido
       };
 
       parsedContent = JSON.stringify(resumo, null, 2);
     } else if (file.name.toLowerCase().endsWith('.pdf')) {
       const pdfData = await pdfParse(buffer);
-      parsedContent = pdfData.text;
+      const text = pdfData.text;
+
+      // Basic deterministic extraction for PDF to help the AI (DANFE structure)
+      const emitMatch = text.match(/CNPJ:\s*([\d\.\-\/]+)/);
+      const destMatch = text.match(/DESTINATÁRIO[\s\S]*?CNPJ\/CPF:\s*([\d\.\-\/]+)/);
+
+      const cfops = [...text.matchAll(/CFOP:\s*(\d{4})/g)].map(m => m[1]);
+      const ncms = [...text.matchAll(/NCM[\/\s]*SH[:\s]*([\d\.]+)/g)].map(m => m[1]);
+
+      const resumoPdf = {
+        textoIntegral: text,
+        extracaoAuxiliar: {
+          emitenteCnpj: emitMatch ? emitMatch[1] : null,
+          destinatarioCnpjCpf: destMatch ? destMatch[1] : null,
+          cfopsEncontrados: [...new Set(cfops)],
+          ncmsEncontrados: [...new Set(ncms)]
+        }
+      };
+
+      parsedContent = JSON.stringify(resumoPdf, null, 2);
     } else {
       return NextResponse.json({ error: 'Formato de arquivo não suportado. Apenas XML ou PDF.' }, { status: 400 });
     }
@@ -55,28 +94,60 @@ export async function POST(request: Request) {
     const fiscalContext = await getFiscalContext();
 
     const userPrompt = `
-Por favor, analise a seguinte nota fiscal de entrada.
+Por favor, analise a seguinte nota fiscal de entrada considerando o contexto fiscal.
 Regime do Destinatário: ${regime || 'Não informado'}
 Finalidade da Aquisição: ${finalidade || 'Não informado'}
 
-Conteúdo da Nota Fiscal:
+Conteúdo da Nota Fiscal (XML parseado ou texto de PDF):
 ${parsedContent}
 
-Responda em formato JSON estrito com as seguintes chaves:
+Responda usando o seguinte JSON Schema, exatamente:
 {
-  "cfop_entrada_sugerido": "string",
-  "credito_permitido": boolean,
+  "statusGlobal": "Regular | Atenção | Inconsistente",
+  "parecerTecnicoXml": "Avaliação minuciosa da NF-e emitida pelo fornecedor (alíquotas interestaduais, retenções, consistência).",
+  "parecerConformidade": "Resumo executivo sobre direito a créditos, riscos, DIFAL e estornos.",
   "itens": [
     {
+      "cProd": "string",
+      "xProd": "string",
       "ncm": "string",
-      "cClassTrib_sugerido": "string",
-      "alerta_reforma": "string"
+      "cest": "string",
+      "cfopEntrada": "string",
+      "cstIcmsEntrada": "string",
+      "aliqIcms": "string",
+      "cstPisCofinsEntrada": "string",
+      "aliqPis": "string",
+      "aliqCofins": "string",
+      "permiteCredito": true,
+      "cClassTrib": "string",
+      "aliqIbsTransitorio": "string",
+      "aliqCbsTransitorio": "string",
+      "regimeEspecial": "string",
+      "instrucaoCadastro": "Instrução cirúrgica com a regra aplicada"
     }
   ]
 }
 `;
 
-    const result = await askOmniRoute(fiscalContext, userPrompt);
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('GEMINI_API_KEY is not set');
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: [
+        { role: 'user', parts: [{ text: fiscalContext + '\n\n' + userPrompt }] }
+      ],
+      config: {
+        responseMimeType: 'application/json',
+      }
+    });
+
+    const textResponse = typeof response.text === 'function' ? (response as any).text() : response.text;
+    const result = JSON.parse(textResponse);
+
     return NextResponse.json(result);
   } catch (error: any) {
     console.error('Erro na auditoria de entrada:', error);
