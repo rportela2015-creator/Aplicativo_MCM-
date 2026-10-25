@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-09-11T10:59:09",
+ "gerado_em": "2026-10-24T13:39:26",
  "base": "https://consumo.tributos.gov.br/servico/calcular-tributos-consumo/api/calculadora/dados-abertos",
  "fallback": "https://dfe-portal.svrs.rs.gov.br/DFE/ClassificacaoTributaria",
  "datas": [
