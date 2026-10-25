@@ -14,38 +14,40 @@ export default function AuditoriaEntrada() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
 
-  const handleDownloadPdf = async () => {
+
+  const handleDownloadReport = async (format: 'html' | 'txt' = 'html') => {
     if (!data) return;
     setPdfLoading(true);
     setPdfError(null);
     try {
-      const res = await fetch('/api/auditoria-pdf', {
+      const res = await fetch('/api/auditoria-relatorio', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, format }),
       });
 
       if (!res.ok) {
-        throw new Error(`Erro HTTP ${res.status} ao gerar PDF.`);
+        throw new Error(`Erro HTTP ${res.status} ao gerar relatório.`);
       }
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'auditoria_entrada.pdf';
+      a.download = `relatorio_executivo.${format}`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (err: any) {
-      setPdfError(err.message || 'Falha ao baixar o PDF.');
+      setPdfError(err.message || 'Falha ao baixar o relatório.');
     } finally {
       setPdfLoading(false);
     }
   };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,15 +160,24 @@ export default function AuditoriaEntrada() {
             <p className="small">{data.parecerConformidade || 'Nenhum parecer de conformidade disponível.'}</p>
           </div>
 
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 16, display: 'flex', gap: '10px' }}>
             <button
               type="button"
-              onClick={handleDownloadPdf}
+              onClick={() => handleDownloadReport('html')}
               disabled={pdfLoading}
               className="chip"
               style={{ padding: '8px 16px', background: 'var(--brand)', color: 'white' }}
             >
-              {pdfLoading ? 'Gerando PDF...' : 'Baixar Relatório PDF Executivo'}
+              {pdfLoading ? 'Gerando...' : 'Baixar Relatório HTML'}
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDownloadReport('txt')}
+              disabled={pdfLoading}
+              className="chip"
+              style={{ padding: '8px 16px', background: '#34495e', color: 'white' }}
+            >
+              {pdfLoading ? 'Gerando...' : 'Baixar Relatório TXT'}
             </button>
             {pdfError && <div className="note error" style={{ marginTop: 8 }}>{pdfError}</div>}
           </div>
