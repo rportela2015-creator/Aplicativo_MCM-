@@ -269,10 +269,10 @@ export function classify(text: string, ds: Dataset, opts: { top?: number } = {})
       s += chaptersFromMaterial.some((c) => rec.d8.startsWith(c)) ? 20 : -13;
     }
     // armadilhas: reforco suave, nunca imposicao
-    for (const [mul, chaps, pen] of armadilhaMods(q, ds)) {
+    for (const [mul, chaps, pen] of mods) {
       s *= mul;
       if (chaps.length && !chaps.some((c) => rec.d8.startsWith(c))) s -= 9;
-      if (pen.some((c) => rec.d8.startsWith(c)) && !armadilhaCandidates(q, ds).has(rec.d8)) s -= 11;
+      if (pen.some((c) => rec.d8.startsWith(c)) && !permite.has(rec.d8)) s -= 11;
     }
     s *= penMul;
     s *= rec.gen ? 0.93 : 1;

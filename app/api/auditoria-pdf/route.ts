@@ -26,8 +26,9 @@ const pdfDataSchema = z.object({
   })).optional().nullable()
 });
 
+import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
     let data = await req.json();
 
@@ -93,26 +94,17 @@ export async function POST(req: Request) {
 
         doc.moveDown(2);
       });
-    } else {
-        doc.fontSize(12).font('Helvetica-Oblique').text('Nenhum item processado nesta auditoria.');
     }
 
-    doc.end();
-
-    const pdfBuffer = await pdfBufferPromise;
-
-    return new NextResponse(pdfBuffer as unknown as BodyInit, {
+    // Retorna o relatório como texto plano para download direto (.txt)
+    return new NextResponse(relatorio, {
       status: 200,
       headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="auditoria_entrada.pdf"',
+        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Disposition": `attachment; filename="laudo-auditoria-${metadata?.nNF || "fiscal"}.txt"`,
       },
     });
   } catch (error: any) {
-    console.error('Erro ao gerar PDF:', error);
-    return NextResponse.json(
-      { error: 'Falha ao gerar o relatório PDF.' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
