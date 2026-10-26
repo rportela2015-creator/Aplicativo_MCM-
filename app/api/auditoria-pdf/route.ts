@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import PDFDocument from 'pdfkit';
 import { z } from 'zod';
-
 
 const pdfDataSchema = z.object({
   parecerTecnicoXml: z.string().optional().nullable(),
@@ -26,82 +24,48 @@ const pdfDataSchema = z.object({
   })).optional().nullable()
 });
 
-import { NextResponse } from "next/server";
-
 export async function POST(request: Request) {
   try {
-    let data = await req.json();
+    let data = await request.json();
 
     if (!data) {
-      return NextResponse.json({ error: 'Nenhum dado fornecido para o PDF.' }, { status: 400 });
+      return NextResponse.json({ error: 'Nenhum dado fornecido para o relatório.' }, { status: 400 });
     }
 
     const parsed = pdfDataSchema.safeParse(data);
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Dados inválidos para o PDF.', details: parsed.error.issues }, { status: 400 });
+      return NextResponse.json({ error: 'Dados inválidos para o relatório.', details: parsed.error.issues }, { status: 400 });
     }
 
-    // Assign validated data back
     data = parsed.data;
 
+    let relatorio = `Relatório de Auditoria Fiscal de Entrada\n`;
+    relatorio += `Data da geração: ${new Date().toLocaleString('pt-BR')}\n\n`;
 
-    const doc = new PDFDocument({ margin: 50 });
-    const chunks: Buffer[] = [];
+    relatorio += `Parecer Técnico do Documento\n`;
+    relatorio += `${data.parecerTecnicoXml || 'Nenhum parecer técnico disponível.'}\n\n`;
 
-    doc.on('data', (chunk) => chunks.push(chunk));
+    relatorio += `Parecer Breve de Conformidade e Créditos\n`;
+    relatorio += `${data.parecerConformidade || 'Nenhum parecer de conformidade disponível.'}\n\n`;
 
-    // We wrap the doc end in a promise to properly return the buffer when it is done
-    const pdfBufferPromise = new Promise<Buffer>((resolve) => {
-        doc.on('end', () => {
-            resolve(Buffer.concat(chunks));
-        });
-    });
-
-    // --- Header ---
-    doc.fontSize(20).text('Relatório de Auditoria Fiscal de Entrada', { align: 'center' });
-    doc.moveDown(0.5);
-    doc.fontSize(10).text(`Data da geração: ${new Date().toLocaleString('pt-BR')}`, { align: 'center' });
-    doc.moveDown(2);
-
-    // --- Summary ---
-    doc.fontSize(14).text('Parecer Técnico do Documento');
-    doc.moveDown(0.5);
-    doc.fontSize(10).text(data.parecerTecnicoXml || 'Nenhum parecer técnico disponível.');
-    doc.moveDown(1.5);
-
-    doc.fontSize(14).text('Parecer Breve de Conformidade e Créditos');
-    doc.moveDown(0.5);
-    doc.fontSize(10).text(data.parecerConformidade || 'Nenhum parecer de conformidade disponível.');
-    doc.moveDown(2);
-
-    // --- Detail ---
-    doc.fontSize(14).text('Parametrização de ERP - Detalhamento de Itens');
-    doc.moveDown(1);
+    relatorio += `Parametrização de ERP - Detalhamento de Itens\n\n`;
 
     if (data.itens && data.itens.length > 0) {
       data.itens.forEach((item: any, i: number) => {
-        doc.rect(50, doc.y, 500, 110).stroke('#cccccc');
-        doc.moveDown(0.5);
-        doc.fontSize(12).text(`Item ${i + 1}: ${item.cProd || 'N/A'} - ${item.xProd || 'N/A'}`, { indent: 10, underline: true });
-        doc.fontSize(10).text(`NCM: ${item.ncm || 'N/A'} | CEST: ${item.cest || 'N/A'}`, { indent: 10 });
-        doc.moveDown(0.5);
-
-        doc.fontSize(9).text(`[ICMS/ST] CFOP: ${item.cfopEntrada || 'N/A'} | CST: ${item.cstIcmsEntrada || 'N/A'} | Alíquota: ${item.aliqIcms || 'N/A'} | Crédito: ${item.permiteCredito ? 'Sim' : 'Não'}`, { indent: 10 });
-        doc.text(`[PIS/COFINS] CST: ${item.cstPisCofinsEntrada || 'N/A'} | PIS: ${item.aliqPis || 'N/A'} | COFINS: ${item.aliqCofins || 'N/A'}`, { indent: 10 });
-        doc.text(`[REFORMA] cClassTrib: ${item.cClassTrib || 'N/A'} | IBS: ${item.aliqIbsTransitorio || 'N/A'} | CBS: ${item.aliqCbsTransitorio || 'N/A'} | Regime: ${item.regimeEspecial || 'N/A'}`, { indent: 10 });
-        doc.moveDown(0.5);
-        doc.text(`Instrução: ${item.instrucaoCadastro || 'N/A'}`, { indent: 10, oblique: true });
-
-        doc.moveDown(2);
+        relatorio += `Item ${i + 1}: ${item.cProd || 'N/A'} - ${item.xProd || 'N/A'}\n`;
+        relatorio += `NCM: ${item.ncm || 'N/A'} | CEST: ${item.cest || 'N/A'}\n`;
+        relatorio += `[ICMS/ST] CFOP: ${item.cfopEntrada || 'N/A'} | CST: ${item.cstIcmsEntrada || 'N/A'} | Alíquota: ${item.aliqIcms || 'N/A'} | Crédito: ${item.permiteCredito ? 'Sim' : 'Não'}\n`;
+        relatorio += `[PIS/COFINS] CST: ${item.cstPisCofinsEntrada || 'N/A'} | PIS: ${item.aliqPis || 'N/A'} | COFINS: ${item.aliqCofins || 'N/A'}\n`;
+        relatorio += `[REFORMA] cClassTrib: ${item.cClassTrib || 'N/A'} | IBS: ${item.aliqIbsTransitorio || 'N/A'} | CBS: ${item.aliqCbsTransitorio || 'N/A'} | Regime: ${item.regimeEspecial || 'N/A'}\n`;
+        relatorio += `Instrução: ${item.instrucaoCadastro || 'N/A'}\n\n`;
       });
     }
 
-    // Retorna o relatório como texto plano para download direto (.txt)
     return new NextResponse(relatorio, {
       status: 200,
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "Content-Disposition": `attachment; filename="laudo-auditoria-${metadata?.nNF || "fiscal"}.txt"`,
+        "Content-Disposition": `attachment; filename="laudo-auditoria.txt"`,
       },
     });
   } catch (error: any) {
