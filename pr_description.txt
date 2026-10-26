@@ -1,0 +1,5 @@
+🎯 **What:** Added missing input validation on the `/api/auditoria-pdf` API endpoint. Previously, the endpoint did not validate the JSON payload schema. It now uses `zod` to perform schema validation and ensures the payload correctly shapes into strings and arrays of objects with expected keys.
+
+⚠️ **Risk:** The previous lack of validation would allow an attacker to submit malformed objects to the PDF generator. PDFKit could crash if properties like `data.itens` were not arrays or did not behave expectedly, which could lead to Denial of Service (DoS) and application instability.
+
+🛡️ **Solution:** Implemented `zod` schema `pdfDataSchema` that rigorously type-checks the payload (making all strings and object shapes explicit) and rejects malformed inputs returning a 400 status with details of the validation errors.

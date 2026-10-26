@@ -1,50 +1,98 @@
+import { NextResponse } from 'next/server';
+import PDFDocument from 'pdfkit';
+import { z } from 'zod';
+
+
+const pdfDataSchema = z.object({
+  parecerTecnicoXml: z.string().optional().nullable(),
+  parecerConformidade: z.string().optional().nullable(),
+  itens: z.array(z.object({
+    cProd: z.string().optional().nullable(),
+    xProd: z.string().optional().nullable(),
+    ncm: z.string().optional().nullable(),
+    cest: z.string().optional().nullable(),
+    cfopEntrada: z.string().optional().nullable(),
+    cstIcmsEntrada: z.string().optional().nullable(),
+    aliqIcms: z.string().optional().nullable(),
+    permiteCredito: z.boolean().optional().nullable(),
+    cstPisCofinsEntrada: z.string().optional().nullable(),
+    aliqPis: z.string().optional().nullable(),
+    aliqCofins: z.string().optional().nullable(),
+    cClassTrib: z.string().optional().nullable(),
+    aliqIbsTransitorio: z.string().optional().nullable(),
+    aliqCbsTransitorio: z.string().optional().nullable(),
+    regimeEspecial: z.string().optional().nullable(),
+    instrucaoCadastro: z.string().optional().nullable(),
+  })).optional().nullable()
+});
+
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { metadata, parecerTecnico, parecerConformidade, itens } = body;
+    let data = await req.json();
 
-    // Montagem do Relatório Executivo em formato Texto Estruturado / Markdown
-    let relatorio = `======================================================================\n`;
-    relatorio += `         LAUDO DE AUDITORIA FISCAL E PARAMETRIZAÇÃO ERP               \n`;
-    relatorio += `                     PORTELA CONTABILIDADE                            \n`;
-    relatorio += `======================================================================\n\n`;
-
-    if (metadata) {
-      relatorio += `[DADOS DO DOCUMENTO]\n`;
-      relatorio += `• Emitente: ${metadata.emitente || "N/D"}\n`;
-      relatorio += `• CNPJ Emitente: ${metadata.cnpjEmitente || "N/D"}\n`;
-      relatorio += `• Número NF-e: ${metadata.nNF || "N/D"} | Série: ${metadata.serie || "N/D"}\n`;
-      relatorio += `• Data de Emissão: ${metadata.dhEmi || "N/D"}\n`;
-      relatorio += `• Regime Adquirente: ${metadata.regime || "N/D"} | Finalidade: ${metadata.finalidade || "N/D"}\n\n`;
+    if (!data) {
+      return NextResponse.json({ error: 'Nenhum dado fornecido para o PDF.' }, { status: 400 });
     }
 
-    relatorio += `----------------------------------------------------------------------\n`;
-    relatorio += `1. PARECER TÉCNICO DO XML\n`;
-    relatorio += `----------------------------------------------------------------------\n`;
-    relatorio += `${parecerTecnico || "Nenhum parecer técnico gerado."}\n\n`;
+    const parsed = pdfDataSchema.safeParse(data);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Dados inválidos para o PDF.', details: parsed.error.issues }, { status: 400 });
+    }
 
-    relatorio += `----------------------------------------------------------------------\n`;
-    relatorio += `2. PARECER DE CONFORMIDADE E CRÉDITOS\n`;
-    relatorio += `----------------------------------------------------------------------\n`;
-    relatorio += `${parecerConformidade || "Nenhum parecer de conformidade gerado."}\n\n`;
+    // Assign validated data back
+    data = parsed.data;
 
-    relatorio += `----------------------------------------------------------------------\n`;
-    relatorio += `3. CARTÃO DE PROGRAMAÇÃO VISUAL / PARÂMETROS PARA O ERP\n`;
-    relatorio += `----------------------------------------------------------------------\n\n`;
 
-    if (itens && Array.isArray(itens)) {
-      itens.forEach((item: any, index: number) => {
-        relatorio += `[ITEM ${index + 1}] ${item.cProd || ""} - ${item.xProd || "Produto sem descrição"}\n`;
-        relatorio += `  • NCM: ${item.ncm || "N/D"} | CEST: ${item.cest || "N/D"}\n`;
-        relatorio += `  • CFOP Entrada Sugerido: ${item.cfopEntrada || "N/D"}\n`;
-        relatorio += `  • CST ICMS Entrada: ${item.cstIcmsEntrada || "N/D"} | Alíquota: ${item.aliqIcms || "0"}%\n`;
-        relatorio += `  • CST PIS/COFINS: ${item.cstPisCofinsEntrada || "N/D"}\n`;
-        relatorio += `  • Reforma Tributária (LC 214/25) - cClassTrib: ${item.cClassTrib || "N/D"}\n`;
-        relatorio += `  • Permite Crédito?: ${item.permiteCredito ? "SIM" : "NÃO"}\n`;
-        relatorio += `  • Instrução para Cadastro: ${item.instrucaoCadastro || "N/D"}\n`;
-        relatorio += `--------------------------------------------------------------------\n`;
+    const doc = new PDFDocument({ margin: 50 });
+    const chunks: Buffer[] = [];
+
+    doc.on('data', (chunk) => chunks.push(chunk));
+
+    // We wrap the doc end in a promise to properly return the buffer when it is done
+    const pdfBufferPromise = new Promise<Buffer>((resolve) => {
+        doc.on('end', () => {
+            resolve(Buffer.concat(chunks));
+        });
+    });
+
+    // --- Header ---
+    doc.fontSize(20).text('Relatório de Auditoria Fiscal de Entrada', { align: 'center' });
+    doc.moveDown(0.5);
+    doc.fontSize(10).text(`Data da geração: ${new Date().toLocaleString('pt-BR')}`, { align: 'center' });
+    doc.moveDown(2);
+
+    // --- Summary ---
+    doc.fontSize(14).text('Parecer Técnico do Documento');
+    doc.moveDown(0.5);
+    doc.fontSize(10).text(data.parecerTecnicoXml || 'Nenhum parecer técnico disponível.');
+    doc.moveDown(1.5);
+
+    doc.fontSize(14).text('Parecer Breve de Conformidade e Créditos');
+    doc.moveDown(0.5);
+    doc.fontSize(10).text(data.parecerConformidade || 'Nenhum parecer de conformidade disponível.');
+    doc.moveDown(2);
+
+    // --- Detail ---
+    doc.fontSize(14).text('Parametrização de ERP - Detalhamento de Itens');
+    doc.moveDown(1);
+
+    if (data.itens && data.itens.length > 0) {
+      data.itens.forEach((item: any, i: number) => {
+        doc.rect(50, doc.y, 500, 110).stroke('#cccccc');
+        doc.moveDown(0.5);
+        doc.fontSize(12).text(`Item ${i + 1}: ${item.cProd || 'N/A'} - ${item.xProd || 'N/A'}`, { indent: 10, underline: true });
+        doc.fontSize(10).text(`NCM: ${item.ncm || 'N/A'} | CEST: ${item.cest || 'N/A'}`, { indent: 10 });
+        doc.moveDown(0.5);
+
+        doc.fontSize(9).text(`[ICMS/ST] CFOP: ${item.cfopEntrada || 'N/A'} | CST: ${item.cstIcmsEntrada || 'N/A'} | Alíquota: ${item.aliqIcms || 'N/A'} | Crédito: ${item.permiteCredito ? 'Sim' : 'Não'}`, { indent: 10 });
+        doc.text(`[PIS/COFINS] CST: ${item.cstPisCofinsEntrada || 'N/A'} | PIS: ${item.aliqPis || 'N/A'} | COFINS: ${item.aliqCofins || 'N/A'}`, { indent: 10 });
+        doc.text(`[REFORMA] cClassTrib: ${item.cClassTrib || 'N/A'} | IBS: ${item.aliqIbsTransitorio || 'N/A'} | CBS: ${item.aliqCbsTransitorio || 'N/A'} | Regime: ${item.regimeEspecial || 'N/A'}`, { indent: 10 });
+        doc.moveDown(0.5);
+        doc.text(`Instrução: ${item.instrucaoCadastro || 'N/A'}`, { indent: 10, oblique: true });
+
+        doc.moveDown(2);
       });
     }
 
