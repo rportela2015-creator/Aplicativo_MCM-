@@ -70,6 +70,31 @@ const fails = out.filter((o) => !o.ok);
 assert.equal(fails.length, 0, `${fails.length} caso(s) fora do esperado: ` +
   fails.map((f) => `${f.entrada} → ${f.obtido} (queria ${f.esperado}; ${f.motivo})`).join(' | '));
 
+
+// ------------------------------------------------------------------ testes de stemming (redução morfológica)
+{
+  const CASES = [
+    { in: 'pneu', out: 'pneu' },
+    { in: 'pneus', out: 'pneu' },
+    { in: 'automovel', out: 'automovel' },
+    { in: 'automoveis', out: 'automovei' },
+    { in: 'portateis', out: 'portatei' },
+    { in: 'portatil', out: 'portatil' },
+    { in: 'finais', out: 'finai' },
+    { in: 'reis', out: 'reis' },
+    { in: 'ar-condicionados', out: 'ar-condicionado' },
+    { in: 'computadores', out: 'computadore' },
+    { in: 'celulares', out: 'celulare' }
+  ];
+
+  console.log('\n--- teste de stemming morfológico ---');
+  for (const c of CASES) {
+    const got = engine.stem(c.in);
+    assert.equal(got, c.out, `stem('${c.in}') falhou: esperado '${c.out}', obtido '${got}'`);
+    console.log(`OK  ${c.in} -> ${got}`);
+  }
+}
+
 // ------------------------------------------------------------------ casos específicos
 { // produto ambíguo de propósito: não deve ter confiança alta
   const res = engine.classify('produto variedades linha casa', ds, { top: 5 });
