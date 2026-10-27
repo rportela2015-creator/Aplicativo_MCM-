@@ -144,4 +144,35 @@ t('fiação da UI: a candidata usa o CST de PIS/COFINS calculado pela parametriz
   assert.ok(sE.falta.length > 0, 'cenário de exportação tem de trazer as checagens');
 });
 
+
+t('aliquotasReforma transforma o dicionário em array ordenado por ano', () => {
+  assert.deepEqual(mods.reforma.aliquotasReforma(null), [], 'retorna vazio se null');
+  assert.deepEqual(mods.reforma.aliquotasReforma({}), [], 'retorna vazio se sem aliquotas');
+
+  const m = {
+    aliquotas: {
+      '2027': { uniao: 8.4, uf: [0.05] },
+      '2026': { uniao: 0.9, uf: [0.1] },
+      '2033': { uf: [10] },
+      '2034': { uniao: 1 }
+    }
+  };
+  const arr = mods.reforma.aliquotasReforma(m);
+  assert.equal(arr.length, 4);
+  assert.equal(arr[0].ano, '2026');
+  assert.equal(arr[0].cbs, 0.9);
+  assert.deepEqual(arr[0].uf, [0.1]);
+
+  assert.equal(arr[1].ano, '2027');
+  assert.equal(arr[1].cbs, 8.4);
+  assert.deepEqual(arr[1].uf, [0.05]);
+
+  assert.equal(arr[2].ano, '2033');
+  assert.equal(arr[2].cbs, undefined);
+  assert.deepEqual(arr[2].uf, [10]);
+
+  assert.equal(arr[3].ano, '2034');
+  assert.equal(arr[3].cbs, 1);
+  assert.deepEqual(arr[3].uf, []);
+});
 console.log('\nREFORMA OK ✓');
