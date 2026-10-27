@@ -1,3 +1,5 @@
+import { getNcmDataset } from '@/lib/ai/ncm-server';
+import { validarNcmIA } from '@/lib/ai/validar';
 import { NextResponse } from 'next/server';
 import { XMLParser } from 'fast-xml-parser';
 import * as pdfParseModule from 'pdf-parse';

@@ -1,33 +1,27 @@
-import type { Record8 } from '@/lib/data';
-
-export interface ValidacaoIAOutput {
-  ncm: string;
-  valido: boolean;
-  confianca: 'ALTA' | 'MEDIA' | 'BAIXA';
-  descricaoNcm?: string;
-  aviso?: string;
-}
-
+/**
+ * Valida a NCM extraída pela IA garantindo que existe no catálogo oficial e possui 8 dígitos.
+ * Também substitui a descrição gerada pela IA pela descrição oficial da tabela.
+ */
 export function validarNcmIA(
-  r: { ncm: string; confianca?: 'ALTA' | 'MEDIA' | 'BAIXA' },
-  mapaD8: Map<string, Record8> | Record<string, any>
-): ValidacaoIAOutput {
-  const d8 = (r.ncm || '').replace(/\D/g, '');
-  const rec = mapaD8 instanceof Map ? mapaD8.get(d8) : (mapaD8 as any)[d8];
+  extracted: { ncm: string, descricaoNcm?: string, confianca?: string },
+  ncmDataset: Map<string, { ncm: string, desc?: string, descricao?: string }>
+) {
+  const result = { ...extracted, valido: false };
 
-  if (!rec || d8.length !== 8) {
-    return {
-      ncm: d8,
-      valido: false,
-      confianca: 'BAIXA',
-      aviso: 'NCM não localizado na tabela oficial do Siscomex; descartado.',
-    };
+  // Limpa caracteres especiais, pontuação
+  const cleanNcm = result.ncm.replace(/\D/g, '');
+
+  if (cleanNcm.length === 8 && ncmDataset.has(cleanNcm)) {
+    result.ncm = cleanNcm;
+    result.valido = true;
+
+    // Sobrescreve a descrição pela oficial
+    const ncmData = ncmDataset.get(cleanNcm);
+    result.descricaoNcm = ncmData?.desc || ncmData?.descricao || result.descricaoNcm;
+  } else {
+    // Rejeita NCMs com comprimento incorreto ou não existentes na tabela
+    result.confianca = 'BAIXA';
   }
 
-  return {
-    ncm: rec.ncm || d8,
-    valido: true,
-    confianca: r.confianca || 'MEDIA',
-    descricaoNcm: rec.desc || rec.descricao,
-  };
+  return result;
 }

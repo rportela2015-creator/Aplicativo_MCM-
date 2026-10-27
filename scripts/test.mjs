@@ -27,7 +27,10 @@ const inlineTs = {
     // caminhos vista de lib/ viram basename ('lib/x.ts'); '.parse-csv.ts' fica na raiz
     b.onResolve({ filter: /\.ts$/ }, (a2) => {
       const base = a2.path.split('/').pop();
-      const path = base.startsWith('.') ? base : `lib/${base}`;
+      let path = base.startsWith('.') ? base : `lib/${base}`;
+      if (a2.path.includes('validar.ts')) path = 'lib/ai/validar.ts';
+      if (a2.path.includes('ncm-server.ts')) path = 'lib/ai/ncm-server.ts';
+      if (a2.path.includes('utils.ts')) path = 'lib/ai/utils.ts';
       return { path, namespace: 'ts' };
     });
     b.onLoad({ filter: /.*/, namespace: 'ts' }, async (a) => {
@@ -68,7 +71,7 @@ let fail = 0;
   const r = spawnSync(process.execPath, ['scripts/ui-smoke.mjs'], { stdio: 'inherit' });
   if (r.status !== 0) fail++;
 }
-for (const entry of ['tests/engine.test.mjs', 'tests/lote.test.mjs', 'tests/probe.test.mjs', 'tests/reforma.test.mjs', 'tests/xml.test.mjs', 'tests/auditoria.test.mjs']) {
+for (const entry of ['tests/engine.test.mjs', 'tests/lote.test.mjs', 'tests/probe.test.mjs', 'tests/reforma.test.mjs', 'tests/xml.test.mjs', 'tests/auditoria.test.mjs', 'tests/ncm-validation.test.mjs']) {
   const out = '.bundle-' + entry.split('/').pop() + '.mjs';
   try {
     await build({
