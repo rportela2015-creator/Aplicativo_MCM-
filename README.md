@@ -141,13 +141,15 @@ Banda de confiança: `0,30·|top1| + 0,24·margin + 0,26·cov + 0,14 + 0,12·fra
 − 0,14·sem-substantivo`, limitada a [0, 0,96]; **alta** exige `margin ≥ 0,78` **e** `cov ≥ 0,62`.
 `margin = (top1 − top2)/top1`. Rótulos na UI: *consistente* / *confirmar dados* / *não feche o código*.
 
-## Regras (o arquivo que você pode auditar e estender)
+## Regras (os arquivos que você pode auditar e estender)
 
-`rules/rules.json`
+`rules/rules.json` e `rules/reforma-extra.json` (para novidades da reforma)
+
+Você pode testar a injeção de novas regras com `node scripts/sync_notebook_rules.mjs --dry-run`.
 
 - `rgi` — as 8 Regras Gerais (mais a RLI) com texto e efeito.
 - `notas_legais` — notas por capítulo que mudam o resultado (ex.: Seção XVI Nota 2 sobre partes).
-- `armadilhas` (17) — cada uma com `quando`, `materiais?`, `capitulos?`, `candidatos?`,
+- `armadilhas` (18) — cada uma com `quando`, `materiais?`, `capitulos?`, `candidatos?`,
   `penalizar_prefijos?` e três guardas que evitam falso positivo:
   - `exceto_quando` — desliga a armadilha se a descrição traz um destes termos
     (ex.: “cadeira/estofado” desliga o critério material do Cap. 39, porque assento tem

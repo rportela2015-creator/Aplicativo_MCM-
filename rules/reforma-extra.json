@@ -1,0 +1,56 @@
+[
+  {
+    "id": "REF-CCONST-01",
+    "titulo": "Construção Civil e Materiais de Construção (LC 214/25, Art. 252 e 255)",
+    "kind": "Nota Legal",
+    "severidade": "critico",
+    "texto": "Na aquisição de tijolos, blocos e materiais de construção, o prestador de serviços em regime regular só pode creditar IBS/CBS relativo aos materiais até o limite do débito sobre o serviço quando o tomador for não-contribuinte (§5º do art. 255). Alíquota com redução de 50% aplicável na prestação.",
+    "ncms": ["68101100", "68101900", "68109100", "69041000"],
+    "fonte": "LC 214/2025 art. 255, §5º e DERE Anexo I"
+  },
+  {
+    "id": "REF-CESTA-01",
+    "titulo": "Cesta Básica Nacional de Alimentos — Alíquota Zero (Art. 125)",
+    "kind": "Nota Legal",
+    "severidade": "info",
+    "texto": "Ficam reduzidas a zero as alíquotas do IBS e da CBS para itens essenciais do Anexo I (arroz, feijão, leite, pão francês, farinhas). cClassTrib 200003.",
+    "ncms": ["10063011", "10063021", "07133319", "04012010", "19059090"],
+    "fonte": "LC 214/2025 art. 125 e Anexo I"
+  },
+  {
+    "id": "REF-IS-01",
+    "titulo": "Incidência de Imposto Seletivo (2027)",
+    "kind": "Armadilha",
+    "severidade": "critico",
+    "texto": "Mercadorias do setor de bebidas alcoólicas, produtos fumígenos e bebidas açucaradas sujeitam-se ao Imposto Seletivo cumulativo na saída a partir de 2027.",
+    "ncms": ["22030000", "22041010", "22083020", "24022000"],
+    "fonte": "LC 214/2025 e LC 227/2026"
+  },
+  {
+    "id": "REF-AGRO-01",
+    "titulo": "Insumos Agropecuários e Aquícolas — Redução de 60% e Diferimento (Art. 138)",
+    "kind": "Nota Legal",
+    "severidade": "info",
+    "texto": "Redução de 60% com possibilidade de diferimento (cClassTrib 515001) para fertilizantes e defensivos do Anexo IX com registro no MAPA.",
+    "ncms": ["31010000", "31021010", "38249977", "38249979"],
+    "fonte": "LC 214/2025 art. 138 e Anexo IX"
+  },
+  {
+    "id": "split_e_unidade_isolada",
+    "titulo": "Ar-condicionado tipo split: unidade isolada x sistema completo",
+    "kind": "Armadilha",
+    "severidade": "critico",
+    "texto": "Aparelhos de ar-condicionado tipo split requerem atenção: unidades condensadora (externa) ou evaporadora (interna) apresentadas separadamente devem ser classificadas como partes (8415.90), enquanto o sistema completo apresentado em conjunto classifica-se na posição 8415.10.",
+    "ncms": [
+      "84151011",
+      "84151019",
+      "84159000",
+      "84159010",
+      "84159020"
+    ],
+    "quando": [
+      "split"
+    ],
+    "fonte": "NESH posição 84.15 e Soluções de Consulta Cosit"
+  }
+]

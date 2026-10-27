@@ -2,76 +2,80 @@ import fs from 'fs';
 import path from 'path';
 
 const rulesPath = path.resolve('rules', 'rules.json');
-
-const regrasReformaNotebook = [
-  {
-    id: "REF-CCONST-01",
-    titulo: "Construção Civil e Materiais de Construção (LC 214/25, Art. 252 e 255)",
-    kind: "Nota Legal",
-    severidade: "critico",
-    texto: "Na aquisição de tijolos, blocos e materiais de construção, o prestador de serviços em regime regular só pode creditar IBS/CBS relativo aos materiais até o limite do débito sobre o serviço quando o tomador for não-contribuinte (§5º do art. 255). Alíquota com redução de 50% aplicável na prestação.",
-    ncms: ["68101100", "68101900", "68109100", "69041000"],
-    fonte: "LC 214/2025 art. 255, §5º e DERE Anexo I"
-  },
-  {
-    id: "REF-CESTA-01",
-    titulo: "Cesta Básica Nacional de Alimentos — Alíquota Zero (Art. 125)",
-    kind: "Nota Legal",
-    severidade: "info",
-    texto: "Ficam reduzidas a zero as alíquotas do IBS e da CBS para itens essenciais do Anexo I (arroz, feijão, leite, pão francês, farinhas). cClassTrib 200003.",
-    ncms: ["10063011", "10063021", "07133319", "04012010", "19059090"],
-    fonte: "LC 214/2025 art. 125 e Anexo I"
-  },
-  {
-    id: "REF-IS-01",
-    titulo: "Incidência de Imposto Seletivo (2027)",
-    kind: "Armadilha",
-    severidade: "critico",
-    texto: "Mercadorias do setor de bebidas alcoólicas, produtos fumígenos e bebidas açucaradas sujeitam-se ao Imposto Seletivo cumulativo na saída a partir de 2027.",
-    ncms: ["22030000", "22041010", "22083020", "24022000"],
-    fonte: "LC 214/2025 e LC 227/2026"
-  },
-  {
-    id: "REF-AGRO-01",
-    titulo: "Insumos Agropecuários e Aquícolas — Redução de 60% e Diferimento (Art. 138)",
-    kind: "Nota Legal",
-    severidade: "info",
-    texto: "Redução de 60% com possibilidade de diferimento (cClassTrib 515001) para fertilizantes e defensivos do Anexo IX com registro no MAPA.",
-    ncms: ["31010000", "31021010", "38249977", "38249979"],
-    fonte: "LC 214/2025 art. 138 e Anexo IX"
-  }
-];
+const extraPath = path.resolve('rules', 'reforma-extra.json');
 
 try {
-  let list = [];
-  let isArray = true;
-  let rawObj = {};
-
-  if (fs.existsSync(rulesPath)) {
-    const raw = fs.readFileSync(rulesPath, 'utf-8');
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      list = parsed;
-    } else if (parsed && Array.isArray(parsed.rules)) {
-      list = parsed.rules;
-      isArray = false;
-      rawObj = parsed;
-    }
+  if (!fs.existsSync(rulesPath)) {
+    console.error("Arquivo rules/rules.json não encontrado");
+    process.exit(1);
   }
 
-  const existingIds = new Set(list.map(r => r.id));
-  let adicionadas = 0;
+  const raw = fs.readFileSync(rulesPath, 'utf-8');
+  const parsed = JSON.parse(raw);
 
-  for (const regra of regrasReformaNotebook) {
+  if (Array.isArray(parsed) || (parsed.rules && Array.isArray(parsed.rules))) {
+     console.error("Formato inesperado em rules.json");
+     process.exit(1);
+  }
+
+  const originalKeys = Object.keys(parsed).length;
+  const originalStats = {};
+  for (const key of Object.keys(parsed)) {
+      if (Array.isArray(parsed[key])) {
+          originalStats[key] = parsed[key].length;
+      }
+  }
+
+  const regrasExtra = fs.existsSync(extraPath) ? JSON.parse(fs.readFileSync(extraPath, 'utf-8')) : [];
+
+  let adicionadas = 0;
+  let skipped = 0;
+
+  const isDryRun = process.argv.includes('--dry-run');
+
+  for (const regra of regrasExtra) {
+    const listKey = regra.kind === 'Nota Legal' ? 'notas_legais' : 'armadilhas';
+
+    if (!parsed[listKey]) {
+        parsed[listKey] = [];
+    }
+
+    const list = parsed[listKey];
+    const existingIds = new Set(list.map(r => r.id));
+
     if (!existingIds.has(regra.id)) {
       list.push(regra);
       adicionadas++;
+      if (isDryRun) {
+        console.log(`+ ${regra.id} (em ${listKey})`);
+      }
+    } else {
+      skipped++;
     }
   }
 
-  const payload = isArray ? list : { ...rawObj, rules: list };
-  fs.writeFileSync(rulesPath, JSON.stringify(payload, null, 2), 'utf-8');
+  if (isDryRun) {
+    console.log(`Dry-run: ${adicionadas} seriam adicionadas, ${skipped} puladas.`);
+    process.exit(0);
+  }
+
+  // Sanity checks
+  const newKeys = Object.keys(parsed).length;
+  if (newKeys < originalKeys) {
+      console.error(`Abortando: número de chaves raiz caiu de ${originalKeys} para ${newKeys}`);
+      process.exit(1);
+  }
+
+  for (const key of Object.keys(originalStats)) {
+      if (parsed[key] && parsed[key].length < originalStats[key]) {
+          console.error(`Abortando: número de itens em '${key}' caiu de ${originalStats[key]} para ${parsed[key].length}`);
+          process.exit(1);
+      }
+  }
+
+  fs.writeFileSync(rulesPath, JSON.stringify(parsed, null, 2), 'utf-8');
   console.log(`✓ Sincronização concluída: ${adicionadas} regras normativas injetadas em rules/rules.json`);
+
 } catch (err) {
   console.error("Erro na sincronização:", err);
   process.exit(1);
