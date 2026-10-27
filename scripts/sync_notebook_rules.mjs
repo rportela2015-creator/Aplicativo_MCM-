@@ -19,12 +19,13 @@ try {
   }
 
   const originalKeys = Object.keys(parsed).length;
-  const originalStats = {};
-  for (const key of Object.keys(parsed)) {
-      if (Array.isArray(parsed[key])) {
-          originalStats[key] = parsed[key].length;
-      }
-  }
+  // Use absolute minimums based on the initial expected counts for protection against reduced copies
+  const originalStats = {
+      armadilhas: 17,
+      sinonimos: 359,
+      notas_legais: 13,
+      rgi: 8
+  };
 
   const regrasExtra = fs.existsSync(extraPath) ? JSON.parse(fs.readFileSync(extraPath, 'utf-8')) : [];
 
@@ -67,8 +68,10 @@ try {
   }
 
   for (const key of Object.keys(originalStats)) {
-      if (parsed[key] && parsed[key].length < originalStats[key]) {
-          console.error(`Abortando: número de itens em '${key}' caiu de ${originalStats[key]} para ${parsed[key].length}`);
+      // Check length against minimum baseline. Object.keys handles sinonimos, array handles others.
+      const len = Array.isArray(parsed[key]) ? parsed[key].length : (parsed[key] ? Object.keys(parsed[key]).length : 0);
+      if (len < originalStats[key]) {
+          console.error(`Abortando: número de itens em '${key}' caiu de ${originalStats[key]} para ${len}`);
           process.exit(1);
       }
   }
