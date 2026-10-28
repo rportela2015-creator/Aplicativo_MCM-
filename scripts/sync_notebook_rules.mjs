@@ -3,6 +3,7 @@ import path from 'path';
 
 const rulesPath = path.resolve('rules', 'rules.json');
 const extraPath = path.resolve('rules', 'reforma-extra.json');
+const floorsPath = path.resolve('rules', 'floors.json');
 
 try {
   if (!fs.existsSync(rulesPath)) {
@@ -18,14 +19,25 @@ try {
      process.exit(1);
   }
 
-  const originalKeys = Object.keys(parsed).length;
   // Use absolute minimums based on the initial expected counts for protection against reduced copies
-  const originalStats = {
-      armadilhas: 17,
-      sinonimos: 359,
-      notas_legais: 13,
-      rgi: 8
-  };
+  const originalStats = JSON.parse(fs.readFileSync(floorsPath, 'utf-8'));
+  const originalKeys = Object.keys(originalStats).length;
+
+  // Sanity checks: check the INPUT file before any processing, to prevent operating on a corrupted copy
+  const newKeys = Object.keys(parsed).length;
+  if (newKeys < originalKeys) {
+      console.error(`Abortando: número de chaves raiz caiu de ${originalKeys} para ${newKeys}`);
+      process.exit(1);
+  }
+
+  for (const key of Object.keys(originalStats)) {
+      // Check length against minimum baseline. Object.keys handles sinonimos, array handles others.
+      const len = Array.isArray(parsed[key]) ? parsed[key].length : (parsed[key] ? Object.keys(parsed[key]).length : 0);
+      if (len < originalStats[key]) {
+          console.error(`Abortando: número de itens em '${key}' caiu de ${originalStats[key]} para ${len}`);
+          process.exit(1);
+      }
+  }
 
   const regrasExtra = fs.existsSync(extraPath) ? JSON.parse(fs.readFileSync(extraPath, 'utf-8')) : [];
 
@@ -33,6 +45,7 @@ try {
   let skipped = 0;
 
   const isDryRun = process.argv.includes('--dry-run');
+  const isUpdateFloors = process.argv.includes('--update-floors');
 
   for (const regra of regrasExtra) {
     const listKey = regra.kind === 'Nota Legal' ? 'notas_legais' : 'armadilhas';
@@ -60,20 +73,23 @@ try {
     process.exit(0);
   }
 
-  // Sanity checks
-  const newKeys = Object.keys(parsed).length;
-  if (newKeys < originalKeys) {
-      console.error(`Abortando: número de chaves raiz caiu de ${originalKeys} para ${newKeys}`);
-      process.exit(1);
-  }
-
-  for (const key of Object.keys(originalStats)) {
-      // Check length against minimum baseline. Object.keys handles sinonimos, array handles others.
-      const len = Array.isArray(parsed[key]) ? parsed[key].length : (parsed[key] ? Object.keys(parsed[key]).length : 0);
-      if (len < originalStats[key]) {
-          console.error(`Abortando: número de itens em '${key}' caiu de ${originalStats[key]} para ${len}`);
-          process.exit(1);
+  if (isUpdateFloors) {
+    let floorsUpdated = false;
+    for (const key of Object.keys(parsed)) {
+      const val = parsed[key];
+      // Only raise floors for arrays or plain objects; ignore strings, numbers, booleans, etc.
+      if (typeof val === 'object' && val !== null) {
+        const len = Array.isArray(val) ? val.length : Object.keys(val).length;
+        if (!originalStats[key] || len > originalStats[key]) {
+          originalStats[key] = len;
+          floorsUpdated = true;
+        }
       }
+    }
+    if (floorsUpdated) {
+      fs.writeFileSync(floorsPath, JSON.stringify(originalStats, null, 2), 'utf-8');
+      console.log(`✓ Pisos atualizados em rules/floors.json`);
+    }
   }
 
   fs.writeFileSync(rulesPath, JSON.stringify(parsed, null, 2), 'utf-8');
