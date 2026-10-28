@@ -36,11 +36,36 @@ const campo = (p, grupo, tag) => p.campos.find((b) => b.grupo.startsWith(grupo) 
 const nivel = (p, re) => p.verificacoes.filter((x) => re.test(x.campo)).map((x) => x.nivel);
 
 t('CNPJ: validação de dígitos verificadores (não é só tamanho)', () => {
-  assert.equal(mods.xml.cnpjValido('11.222.333/0001-81'), true, 'CNPJ válido rejeitado');
-  assert.equal(mods.xml.cnpjValido('00.000.000/0001-91'), true, 'CNPJ canônico da receita rejeitado');
-  assert.equal(mods.xml.cnpjValido('11222333000180'), false, 'dígito verificador trocado aceito');
-  assert.equal(mods.xml.cnpjValido('11111111111111'), false, 'CNPJ repetido aceito');
-  assert.equal(mods.xml.cnpjValido('123'), false, 'tamanho errado aceito');
+  const validos = [
+    '11.222.333/0001-81',
+    '00.000.000/0001-91',
+    '11222333000181', // Sem formatação
+    ' 11.222.333/0001-81 ', // Com espaços
+    '06.990.590/0001-23', // Google Brasil
+    '15.436.940/0001-03', // Amazon Brasil
+    '60.701.190/0001-04' // Itau Unibanco
+  ];
+  for (const cnpj of validos) {
+    assert.equal(mods.xml.cnpjValido(cnpj), true, `CNPJ válido rejeitado: ${cnpj}`);
+  }
+
+  const invalidos = [
+    '11222333000180', // dv 1 ou 2 errado
+    '11.222.333/0001-80',
+    '123', // tamanho errado
+    '11.222.333/0001-819', // tamanho errado (maior)
+    '11111111111111', // todos digitos iguais
+    '00000000000000',
+    '22222222222222',
+    '99999999999999',
+    '', // vazio
+    'abcdefghijklmn', // letras
+    '11.222.333/0001-XX', // letras no final
+    '00.000.000/0001-92' // Errado no último dígito
+  ];
+  for (const cnpj of invalidos) {
+    assert.equal(mods.xml.cnpjValido(cnpj), false, `CNPJ inválido aceito: ${cnpj}`);
+  }
 });
 
 t('IE: valida onde a regra é pública (SP/PR) e se cala nos demais', () => {
