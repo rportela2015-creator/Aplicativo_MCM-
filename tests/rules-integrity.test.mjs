@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 
 const rulesPath = path.resolve('rules', 'rules.json');
 const ncmPath = path.resolve('public', 'data', 'ncm.json');
+const floorsPath = path.resolve('rules', 'floors.json');
 
 async function runTests() {
   console.log('──────── tests/rules-integrity.test.mjs ────────');
@@ -12,21 +13,14 @@ async function runTests() {
   const raw = fs.readFileSync(rulesPath, 'utf-8');
   const parsed = JSON.parse(raw);
 
-  // 1. Should have at least 17 armadilhas
-  assert.ok(parsed.armadilhas.length >= 17, 'Should have at least 17 armadilhas');
-  console.log('OK  armadilhas count');
+  const floorsRaw = fs.readFileSync(floorsPath, 'utf-8');
+  const floors = JSON.parse(floorsRaw);
 
-  // 2. Should have at least 359 sinonimos
-  assert.ok(Object.keys(parsed.sinonimos).length >= 359, 'Should have at least 359 sinonimos');
-  console.log('OK  sinonimos count');
-
-  // 3. Should have at least 13 notas_legais
-  assert.ok(parsed.notas_legais.length >= 13, 'Should have at least 13 notas_legais');
-  console.log('OK  notas_legais count');
-
-  // 4. Should have at least 8 rgi
-  assert.ok(parsed.rgi.length >= 8, 'Should have at least 8 rgi');
-  console.log('OK  rgi count');
+  for (const key of Object.keys(floors)) {
+      const len = Array.isArray(parsed[key]) ? parsed[key].length : (parsed[key] ? Object.keys(parsed[key]).length : 0);
+      assert.ok(len >= floors[key], `Should have at least ${floors[key]} items in ${key}`);
+      console.log(`OK  ${key} count`);
+  }
 
   // 5. All ncms in existing rules must be in public/data/ncm.json
   const ncmRaw = fs.readFileSync(ncmPath, 'utf-8');
@@ -86,13 +80,37 @@ async function runTests() {
   // 8. Should abort with exit 1 without saving when a reduced copy of rules.json is parsed
   fs.copyFileSync('rules/rules.json', 'rules/rules.json.bak');
   try {
-    const reducedRules = { ...parsed };
-    reducedRules.armadilhas = reducedRules.armadilhas.slice(0, 5); // reduce
-    fs.writeFileSync('rules/rules.json', JSON.stringify(reducedRules, null, 2), 'utf-8');
+    for (const key of Object.keys(floors)) {
+        const reducedRules = JSON.parse(JSON.stringify(parsed));
+        if (Array.isArray(reducedRules[key])) {
+            reducedRules[key] = reducedRules[key].slice(0, -1);
+        } else {
+            const firstKey = Object.keys(reducedRules[key])[0];
+            delete reducedRules[key][firstKey];
+        }
+        fs.writeFileSync('rules/rules.json', JSON.stringify(reducedRules, null, 2), 'utf-8');
 
-    const run = spawnSync(process.execPath, ['scripts/sync_notebook_rules.mjs'], { encoding: 'utf-8' });
-    assert.equal(run.status, 1, 'Sync script did not exit with code 1 on reduced rules');
-    assert.ok(run.stderr.includes('Abortando: número de itens'), 'Sync script did not output abort message on reduced rules');
+        const run = spawnSync(process.execPath, ['scripts/sync_notebook_rules.mjs'], { encoding: 'utf-8' });
+        assert.equal(run.status, 1, `Sync script did not exit with code 1 on reduced rules for key ${key}`);
+        assert.ok(run.stderr.includes('Abortando: número de itens'), `Sync script did not output abort message on reduced rules for key ${key}`);
+    }
+
+    // (b) apagar 20 materiais dá falha
+    const reducedRulesMat = JSON.parse(JSON.stringify(parsed));
+    if (Array.isArray(reducedRulesMat.materiais)) {
+        reducedRulesMat.materiais = reducedRulesMat.materiais.slice(0, -20);
+    } else {
+        const matKeys = Object.keys(reducedRulesMat.materiais);
+        for (let i = 0; i < 20 && i < matKeys.length; i++) {
+            delete reducedRulesMat.materiais[matKeys[i]];
+        }
+    }
+
+    fs.writeFileSync('rules/rules.json', JSON.stringify(reducedRulesMat, null, 2), 'utf-8');
+    const runMat = spawnSync(process.execPath, ['scripts/sync_notebook_rules.mjs'], { encoding: 'utf-8' });
+    assert.equal(runMat.status, 1, `Sync script did not exit with code 1 on removing 20 materiais`);
+    assert.ok(runMat.stderr.includes('Abortando: número de itens'), `Sync script did not output abort message on removing 20 materiais`);
+
     console.log('OK  sync script abortion on reduced rules');
   } finally {
     fs.copyFileSync('rules/rules.json.bak', 'rules/rules.json');
