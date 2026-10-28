@@ -1,7 +1,13 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
 
+let cachedContext: string | null = null;
+
 export async function getFiscalContext(): Promise<string> {
+  if (cachedContext !== null) {
+    return cachedContext;
+  }
+
   try {
     const regrasRaw = await readFile(path.join(process.cwd(), 'public', 'data', 'regras.json'), 'utf8');
     const reformaRaw = await readFile(path.join(process.cwd(), 'public', 'data', 'reforma.json'), 'utf8');
@@ -34,6 +40,7 @@ export async function getFiscalContext(): Promise<string> {
     context += '- Retorne um JSON estrito conforme solicitado.\n';
     context += '- Aja como um auditor fiscal para gerar sugestões de cClassTrib e alertas sobre itens de crédito permitido ou não, e o CFOP sugerido para a entrada.\n';
 
+    cachedContext = context;
     return context;
   } catch (error) {
     console.error('Failed to load fiscal context', error);
