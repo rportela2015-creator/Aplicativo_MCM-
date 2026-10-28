@@ -175,4 +175,29 @@ t('aliquotasReforma transforma o dicionário em array ordenado por ano', () => {
   assert.equal(arr[3].cbs, 1);
   assert.deepEqual(arr[3].uf, []);
 });
+
+t('aliquotasReforma lida com edge cases como uniao zero e objetos vazios', () => {
+  const m = {
+    aliquotas: {
+      '2028': { uniao: 0, uf: [0] },
+      '2029': { uniao: null, uf: null },
+      '2030': {}
+    }
+  };
+  const arr = mods.reforma.aliquotasReforma(m);
+  assert.equal(arr.length, 3);
+
+  assert.equal(arr[0].ano, '2028');
+  assert.equal(arr[0].cbs, 0);
+  assert.deepEqual(arr[0].uf, [0]);
+
+  assert.equal(arr[1].ano, '2029');
+  assert.equal(arr[1].cbs, undefined);
+  assert.deepEqual(arr[1].uf, []);
+
+  assert.equal(arr[2].ano, '2030');
+  assert.equal(arr[2].cbs, undefined);
+  assert.deepEqual(arr[2].uf, []);
+});
+
 console.log('\nREFORMA OK ✓');
