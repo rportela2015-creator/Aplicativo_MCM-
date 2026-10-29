@@ -299,8 +299,6 @@ assert set(HOT) | set(COLD) == set(dataset[0]) | set(next(iter(frias.values())))
                                encoding="utf-8")
 (OUT / "ncm-frio.json").write_text(json.dumps(frias, ensure_ascii=False, separators=(",", ":")),
                                     encoding="utf-8")
-(OUT / "ncm.json").write_text(json.dumps(dataset, ensure_ascii=False, separators=(",", ":")),
-                               encoding="utf-8")
 (OUT / "regras.json").write_text(json.dumps(rules, ensure_ascii=False, separators=(",", ":")),
                                  encoding="utf-8")  # publica o arquivo inteiro (inclui listas extras)
 (OUT / "atributos.json").write_text(json.dumps({"codigos": ATTR_CODES, "defs": attr_lookup},
@@ -498,7 +496,13 @@ if falhas or not fontes_log.get("oficial", True):
 elif fontes_log:
     aviso_fontes = None
 
+
+import hashlib
+ncm_bytes = (OUT / "ncm.json").read_bytes()
+regras_bytes = (OUT / "regras.json").read_bytes()
+versao_hash = hashlib.sha1(ncm_bytes + regras_bytes).hexdigest()[:12]
 meta = {
+    "versao": versao_hash,
     "aviso_fontes": aviso_fontes,
     "gerado_em": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
     "ncm_vigente": vig,
