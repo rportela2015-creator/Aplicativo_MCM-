@@ -2,7 +2,7 @@
 import { parseCsv } from '../.parse-csv.ts';
 import assert from 'node:assert/strict';
 import { mods } from 'ncm:libs';
-globalThis.fetch = async (u) => { const rel=String(u).replace(/^\//,'');
+globalThis.fetch = async (u) => { let url = String(u); if (url.includes('?v=')) { url = url.split('?v=')[0]; } const rel = url.replace(/^\//, '');
   const { readFile } = await import('node:fs/promises');
   try{const t=await readFile(process.cwd()+'/public/'+rel,'utf8');return {ok:true,status:200,json:async()=>JSON.parse(t)}}catch{return{ok:false,status:404,json:async()=>null}}};
 const ds = await mods.data.loadDataset(); await ds.pronto;
