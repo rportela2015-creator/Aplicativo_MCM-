@@ -26,7 +26,7 @@ g.IS_REACT_ACT_ENVIRONMENT = true;
 
 // os dados do build, servidos como o navegador os pediria
 g.fetch = async (u: any) => {
-  const rel = String(typeof u === 'string' ? u : u.url).replace(/^https?:\/\/[^/]+/, '').replace(/^\//, '');
+  let url = String(typeof u === 'string' ? u : u.url); if (url.includes('?v=')) { url = url.split('?v=')[0]; } const rel = url.replace(/^https?:\/\/[^/]+/, '').replace(/^\//, '');
   try {
     const buf = await readFile(process.cwd() + '/public/' + rel);
     return new Response(buf, { status: 200, headers: { 'content-type': 'application/json' } });

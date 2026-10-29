@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { mods } from 'ncm:libs';
 
 globalThis.fetch = async (u) => {
-  const rel = String(u).replace(/^\//, '');
+  let url = String(u); if (url.includes('?v=')) { url = url.split('?v=')[0]; } const rel = url.replace(/^\//, '');
   try {
     const t = await readFile(`${process.cwd()}/public/${rel}`, 'utf8');
     return { ok: true, status: 200, json: async () => JSON.parse(t) };

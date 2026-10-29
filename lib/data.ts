@@ -96,7 +96,7 @@ export type ErpTabela = { arquivo: string; sha256: string; cabecalho: string[]; 
   contagens: Record<string, number>; itens: ErpItem[]; aviso: string };
 
 export type Meta = {
-  gerado_em: string; ncm_vigente: string; ncm_ato: string;
+  gerado_em: string; ncm_vigente: string; ncm_ato: string; versao?: string;
   /** definido quando alguma fonte falhou e o dataset usou cache local (a UI exibe o alerta) */
   aviso_fontes?: string | null;
   fontes: Record<string, { nome: string; url?: string; api?: string; status: string; linhas?: number }>;
@@ -118,8 +118,12 @@ export type Dataset = {
   pronto: Promise<Dataset>;
 };
 
+
+let dataVersion = '';
+
 const get = async (f: string) => {
-  const r = await fetch(`/data/${f}`, { cache: 'force-cache' });
+  const url = dataVersion ? `/data/${f}?v=${dataVersion}` : `/data/${f}`;
+  const r = await fetch(url, { cache: 'force-cache' });
   if (!r.ok) throw new Error(`falha ao carregar /data/${f} (HTTP ${r.status})`);
   return r.json();
 };
@@ -128,12 +132,31 @@ let cache: Promise<Dataset> | null = null;
 let refCache: Promise<Reforma | null> | null = null;
 let erpCache: Promise<ErpTabela | null> | null = null;
 
+const loadMetaAndVersion = async (): Promise<Meta> => {
+  const r = await fetch('/data/meta.json', { cache: 'no-cache' });
+  if (!r.ok) throw new Error(`falha ao carregar /data/meta.json (HTTP ${r.status})`);
+  const meta = await r.json() as Meta;
+  if (meta && typeof meta.versao === 'string' && meta.versao.length > 0) {
+    dataVersion = encodeURIComponent(meta.versao);
+  }
+  return meta;
+};
+
+const ensureVersion = async () => {
+  if (!dataVersion && cache) {
+    try { await cache; } catch { /* silencia */ }
+  }
+};
+
+
 /** tabela da reforma (opcional): null = dataset gerado sem ela — a UI avisa */
 export function loadReforma(): Promise<Reforma | null> {
   if (!refCache) {
     refCache = (async () => {
       try {
-        const r = await fetch('/data/reforma.json', { cache: 'force-cache' });
+        await ensureVersion();
+        const url = dataVersion ? `/data/reforma.json?v=${dataVersion}` : '/data/reforma.json';
+        const r = await fetch(url, { cache: 'force-cache' });
         if (!r.ok) return null;
         const j = await r.json();
         return j && j.disponivel ? (j as Reforma) : null;
@@ -146,7 +169,10 @@ export function loadReforma(): Promise<Reforma | null> {
 export function loadErpTabela(): Promise<ErpTabela | null> {
   if (!erpCache) {
     erpCache = (async () => {
-      try { const r = await fetch('/data/erp-parametros.json', { cache: 'force-cache' });
+      try {
+        await ensureVersion();
+        const url = dataVersion ? `/data/erp-parametros.json?v=${dataVersion}` : '/data/erp-parametros.json';
+        const r = await fetch(url, { cache: 'force-cache' });
         return r.ok ? ((await r.json()) as ErpTabela) : null; } catch { return null; }
     })();
   }
@@ -156,8 +182,15 @@ export function loadErpTabela(): Promise<ErpTabela | null> {
 export function loadDataset(): Promise<Dataset> {
   if (!cache) {
     cache = (async () => {
-      const [records, hier, search, rules, meta] = await Promise.all([
-        get('ncm.json'), get('hierarquia.json'), get('search.json'), get('regras.json'), get('meta.json'),
+      const meta = await loadMetaAndVersion().catch(async () => {
+         dataVersion = '';
+         const r = await fetch('/data/meta.json', { cache: 'force-cache' });
+         if (!r.ok) throw new Error(`HTTP ${r.status}`);
+         return r.json();
+      });
+
+      const [records, hier, search, rules] = await Promise.all([
+        get('ncm.json'), get('hierarquia.json'), get('search.json'), get('regras.json'),
       ]);
       const byD8 = new Map<string, Record8>();
       for (const r of records) { byD8.set(r.d8, r); if (!byD8.has(r.ncm)) byD8.set(r.ncm, r); }
