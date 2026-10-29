@@ -6,22 +6,37 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/data/meta.json',
+        source: '/((?!data/).*)',
         headers: [
-          { key: 'Cache-Control', value: 'no-cache' }
+          { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
+          { key: 'X-Frame-Options', value: 'ALLOWALL' },
         ],
       },
       {
         source: '/data/:path*',
+        has: [
+          { type: 'query', key: 'v' }
+        ],
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'X-Frame-Options', value: 'ALLOWALL' }
         ],
       },
       {
-        source: '/:path*',
+        source: '/data/:path*',
+        missing: [
+          { type: 'query', key: 'v' }
+        ],
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
-          { key: 'X-Frame-Options', value: 'ALLOWALL' },
+          { key: 'X-Frame-Options', value: 'ALLOWALL' }
+        ],
+      },
+      {
+        source: '/data/meta.json',
+        headers: [
+          { key: 'Cache-Control', value: 'no-cache' },
+          { key: 'X-Frame-Options', value: 'ALLOWALL' }
         ],
       }
     ];
