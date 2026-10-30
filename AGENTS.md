@@ -9,11 +9,11 @@ Este arquivo contém o contexto e regras gerais para agentes IA executarem taref
 
 ## 2. Tech Stack
 
-- Utilizamos `@google/genai` (SDK nativo do Gemini, atualmente `gemini-3.8-flash`) para geração de IA forçando saídas em JSON via `responseSchema`.
+- Utilizamos `@google/genai` (SDK nativo do Gemini) para geração de IA forçando saídas em JSON via `responseSchema`. O modelo está hardcoded em `app/api/classificar-ia` (lista com fallback) e `app/api/auditoria-entrada`; a meta é centralizar em env (`GEMINI_MODELS`). Não troque o id do modelo sem pedido explícito.
 - Relatórios server-side são gerados com texto puro/markdown (substituindo o pdfkit para evitar problemas de compilação no Windows).
 - Parser de XML: `fast-xml-parser`.
 - Extração de texto em PDFs: `pdf-parse`.
-- Validação de entrada e esquema de API: `zod`.
+- Validação de entrada e esquema de API: `zod` (hoje só em `auditoria-pdf`; a rota será consolidada em `auditoria-relatorio`).
 
 ## 3. Diretrizes de UI
 
@@ -25,7 +25,7 @@ Este arquivo contém o contexto e regras gerais para agentes IA executarem taref
 - Módulos internos são acessados nos testes via `import { mods } from 'ncm:libs'`.
 - Para executar a suíte de testes: `npm run test` ou `node scripts/test.mjs`.
 - Para verificação de tipos TypeScript estática em todo o projeto: `npm run typecheck`.
-- **Importante:** Quando um novo arquivo de teste é criado, o caminho dele deve ser explicitamente adicionado no array `entries` do arquivo `scripts/test.mjs` para o test runner customizado conseguir localizá-lo e executá-lo.
+- **Importante:** Quando um novo arquivo de teste é criado, o caminho dele deve ser adicionado ao array inline do `for (const entry of [...])` em `scripts/test.mjs` para o test runner customizado conseguir localizá-lo e executá-lo.
 
 ## 5. Fluxo de Dados (Pipeline)
 

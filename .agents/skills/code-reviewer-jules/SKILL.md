@@ -7,7 +7,7 @@
 1. **Garantia Arquitetural:** Verificar se o `lib/engine.ts` não sofreu "hardcodes" e segue extraindo suas regras do JSON orientado a dados (`rules/rules.json`).
 2. **Revisão de Segurança (OWASP 10):**
     - Identificar injeções ou sanitização precária.
-    - O validador de entradas deve usar o `zod` de forma estrita.
+    - O validador de entradas deve usar o `zod` de forma estrita (hoje só em `auditoria-pdf`; a rota será consolidada em `auditoria-relatorio`).
     - Evitar processamento de PDF ou XML (com `fast-xml-parser` e `pdf-parse`) com entidades externas habilitadas (XXE) e outras vulnerabilidades clássicas.
 3. **Análise de Tipagem:** Código Typescript deve ser limpo e isento de "any" desnecessários. O compilador via `npm run typecheck` é mandatário.
 4. **Relatórios Server-side:** Monitorar o não reuso/adição de pacotes inseguros em plataformas (ex: `pdfkit`), preferindo o formato plaintext/markdown conforme regra.
