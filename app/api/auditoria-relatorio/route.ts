@@ -1,4 +1,41 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
+function esc(str: any): string {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+const itemSchema = z.object({
+  cProd: z.any().optional(),
+  xProd: z.any().optional(),
+  ncm: z.any().optional(),
+  cest: z.any().optional(),
+  cfopEntrada: z.any().optional(),
+  cstIcmsEntrada: z.any().optional(),
+  aliqIcms: z.any().optional(),
+  permiteCredito: z.boolean().optional(),
+  cstPisCofinsEntrada: z.any().optional(),
+  aliqPis: z.any().optional(),
+  aliqCofins: z.any().optional(),
+  cClassTrib: z.any().optional(),
+  aliqIbsTransitorio: z.any().optional(),
+  aliqCbsTransitorio: z.any().optional(),
+  regimeEspecial: z.any().optional(),
+  instrucaoCadastro: z.any().optional(),
+});
+
+const payloadSchema = z.object({
+  format: z.enum(['html', 'txt']).optional().default('html'),
+  parecerTecnicoXml: z.any().optional(),
+  parecerConformidade: z.any().optional(),
+  itens: z.array(itemSchema).optional(),
+});
 
 export async function POST(req: Request) {
   try {
@@ -8,7 +45,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Nenhum dado fornecido para o relatório.' }, { status: 400 });
     }
 
-    const { format } = data; // 'html' or 'txt'
+    const parseResult = payloadSchema.safeParse(data);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: 'Payload inválido', details: parseResult.error.format() },
+        { status: 400 }
+      );
+    }
+
+    const { format, parecerTecnicoXml, parecerConformidade, itens } = parseResult.data;
 
     if (format === 'html') {
       const htmlContent = `
@@ -42,53 +87,53 @@ export async function POST(req: Request) {
 </head>
 <body>
   <h1>Portela Contabilidade - Laudo de Auditoria Fiscal</h1>
-  <div class="header-info">Data da geração: ${new Date().toLocaleString('pt-BR')}</div>
+  <div class="header-info">Data da geração: ${esc(new Date().toLocaleString('pt-BR'))}</div>
 
   <div class="section parecer-tecnico">
     <h2>Parecer Técnico do Documento</h2>
-    <p>${data.parecerTecnicoXml || 'Nenhum parecer técnico disponível.'}</p>
+    <p>${esc(parecerTecnicoXml || 'Nenhum parecer técnico disponível.')}</p>
   </div>
 
   <div class="section parecer-conformidade">
     <h2>Parecer Breve de Conformidade e Créditos</h2>
-    <p>${data.parecerConformidade || 'Nenhum parecer de conformidade disponível.'}</p>
+    <p>${esc(parecerConformidade || 'Nenhum parecer de conformidade disponível.')}</p>
   </div>
 
   <h2>Parametrização de ERP - Detalhamento de Itens</h2>
-  ${data.itens && data.itens.length > 0 ? data.itens.map((item: any, i: number) => `
+  ${itens && itens.length > 0 ? itens.map((item: any, i: number) => `
     <div class="item-card">
       <div class="item-header">
-        <div class="item-title">Item ${i + 1}: ${item.cProd || 'N/A'} - ${item.xProd || 'N/A'}</div>
-        <div class="item-ncm">NCM: ${item.ncm || 'N/A'} | CEST: ${item.cest || 'N/A'}</div>
+        <div class="item-title">Item ${i + 1}: ${esc(item.cProd || 'N/A')} - ${esc(item.xProd || 'N/A')}</div>
+        <div class="item-ncm">NCM: ${esc(item.ncm || 'N/A')} | CEST: ${esc(item.cest || 'N/A')}</div>
       </div>
 
       <div class="grid-container">
         <div class="tax-block icms">
           <div class="tax-title">Bloco ICMS/ST</div>
-          <div class="tax-row"><span class="tax-label">CFOP:</span> <span class="tax-value">${item.cfopEntrada || 'N/A'}</span></div>
-          <div class="tax-row"><span class="tax-label">CST:</span> <span class="tax-value">${item.cstIcmsEntrada || 'N/A'}</span></div>
-          <div class="tax-row"><span class="tax-label">Alíquota:</span> <span class="tax-value">${item.aliqIcms || 'N/A'}</span></div>
+          <div class="tax-row"><span class="tax-label">CFOP:</span> <span class="tax-value">${esc(item.cfopEntrada || 'N/A')}</span></div>
+          <div class="tax-row"><span class="tax-label">CST:</span> <span class="tax-value">${esc(item.cstIcmsEntrada || 'N/A')}</span></div>
+          <div class="tax-row"><span class="tax-label">Alíquota:</span> <span class="tax-value">${esc(item.aliqIcms || 'N/A')}</span></div>
           <div class="tax-row"><span class="tax-label">Crédito:</span> <span class="tax-value">${item.permiteCredito ? 'Sim' : 'Não'}</span></div>
         </div>
 
         <div class="tax-block pis-cofins">
           <div class="tax-title">Bloco PIS/COFINS</div>
-          <div class="tax-row"><span class="tax-label">CST:</span> <span class="tax-value">${item.cstPisCofinsEntrada || 'N/A'}</span></div>
-          <div class="tax-row"><span class="tax-label">Alíquota PIS:</span> <span class="tax-value">${item.aliqPis || 'N/A'}</span></div>
-          <div class="tax-row"><span class="tax-label">Alíquota COFINS:</span> <span class="tax-value">${item.aliqCofins || 'N/A'}</span></div>
+          <div class="tax-row"><span class="tax-label">CST:</span> <span class="tax-value">${esc(item.cstPisCofinsEntrada || 'N/A')}</span></div>
+          <div class="tax-row"><span class="tax-label">Alíquota PIS:</span> <span class="tax-value">${esc(item.aliqPis || 'N/A')}</span></div>
+          <div class="tax-row"><span class="tax-label">Alíquota COFINS:</span> <span class="tax-value">${esc(item.aliqCofins || 'N/A')}</span></div>
         </div>
 
         <div class="tax-block reforma">
           <div class="tax-title">Bloco Reforma Tributária</div>
-          <div class="tax-row"><span class="tax-label">cClassTrib:</span> <span class="tax-value">${item.cClassTrib || 'N/A'}</span></div>
-          <div class="tax-row"><span class="tax-label">Alíquota IBS:</span> <span class="tax-value">${item.aliqIbsTransitorio || 'N/A'}</span></div>
-          <div class="tax-row"><span class="tax-label">Alíquota CBS:</span> <span class="tax-value">${item.aliqCbsTransitorio || 'N/A'}</span></div>
-          <div class="tax-row"><span class="tax-label">Regime:</span> <span class="tax-value">${item.regimeEspecial || 'N/A'}</span></div>
+          <div class="tax-row"><span class="tax-label">cClassTrib:</span> <span class="tax-value">${esc(item.cClassTrib || 'N/A')}</span></div>
+          <div class="tax-row"><span class="tax-label">Alíquota IBS:</span> <span class="tax-value">${esc(item.aliqIbsTransitorio || 'N/A')}</span></div>
+          <div class="tax-row"><span class="tax-label">Alíquota CBS:</span> <span class="tax-value">${esc(item.aliqCbsTransitorio || 'N/A')}</span></div>
+          <div class="tax-row"><span class="tax-label">Regime:</span> <span class="tax-value">${esc(item.regimeEspecial || 'N/A')}</span></div>
         </div>
       </div>
 
       <div class="instruction">
-        <strong>Instrução:</strong> ${item.instrucaoCadastro || 'N/A'}
+        <strong>Instrução:</strong> ${esc(item.instrucaoCadastro || 'N/A')}
       </div>
     </div>
   `).join('') : '<p>Nenhum item processado nesta auditoria.</p>'}
@@ -101,23 +146,23 @@ export async function POST(req: Request) {
         headers: {
           'Content-Type': 'text/html',
           'Content-Disposition': 'attachment; filename="relatorio_executivo.html"',
+          'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'",
         },
       });
     } else {
-      // Default to TXT / Markdown
       let txtContent = `# Portela Contabilidade - Laudo de Auditoria Fiscal\n`;
       txtContent += `Data da geração: ${new Date().toLocaleString('pt-BR')}\n\n`;
 
       txtContent += `## Parecer Técnico do Documento\n`;
-      txtContent += `${data.parecerTecnicoXml || 'Nenhum parecer técnico disponível.'}\n\n`;
+      txtContent += `${parecerTecnicoXml || 'Nenhum parecer técnico disponível.'}\n\n`;
 
       txtContent += `## Parecer Breve de Conformidade e Créditos\n`;
-      txtContent += `${data.parecerConformidade || 'Nenhum parecer de conformidade disponível.'}\n\n`;
+      txtContent += `${parecerConformidade || 'Nenhum parecer de conformidade disponível.'}\n\n`;
 
       txtContent += `## Parametrização de ERP - Detalhamento de Itens\n\n`;
 
-      if (data.itens && data.itens.length > 0) {
-        data.itens.forEach((item: any, i: number) => {
+      if (itens && itens.length > 0) {
+        itens.forEach((item: any, i: number) => {
           txtContent += `### Item ${i + 1}: ${item.cProd || 'N/A'} - ${item.xProd || 'N/A'}\n`;
           txtContent += `- NCM: ${item.ncm || 'N/A'} | CEST: ${item.cest || 'N/A'}\n\n`;
 

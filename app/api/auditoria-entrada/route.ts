@@ -4,6 +4,8 @@ import * as pdfParseModule from 'pdf-parse';
 const pdfParse = (pdfParseModule as any).default || pdfParseModule;
 import { getFiscalContext } from '@/lib/fiscal-context';
 import { GoogleGenAI, Type } from '@google/genai';
+import { getMapaD8 } from '@/lib/ai/ncm-server';
+import { validarNcmIA } from '@/lib/ai/validar';
 
 export async function POST(request: Request) {
   try {
@@ -21,8 +23,11 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(arrayBuffer);
 
     let parsedContent = '';
+    let isXml = false;
+    let originalItens: Record<string, any> = {};
 
     if (file.name.toLowerCase().endsWith('.xml')) {
+      isXml = true;
       const xmlString = buffer.toString('utf-8');
       const parser = new XMLParser({ ignoreAttributes: false });
       const parsedXml = parser.parse(xmlString);
@@ -48,15 +53,21 @@ export async function POST(request: Request) {
 
       const itens = Array.isArray(nfe.det) ? nfe.det : (nfe.det ? [nfe.det] : []);
 
-      const detExtraido = itens.map((d: any) => ({
-        cProd: d.prod?.cProd,
-        xProd: d.prod?.xProd,
-        NCM: d.prod?.NCM,
-        CEST: d.prod?.CEST,
-        CFOP: d.prod?.CFOP,
-        vProd: d.prod?.vProd,
-        imposto: d.imposto
-      }));
+      const detExtraido = itens.map((d: any) => {
+        const item = {
+          cProd: d.prod?.cProd,
+          xProd: d.prod?.xProd,
+          NCM: d.prod?.NCM,
+          CEST: d.prod?.CEST,
+          CFOP: d.prod?.CFOP,
+          vProd: d.prod?.vProd,
+          imposto: d.imposto
+        };
+        if (item.cProd) {
+          originalItens[item.cProd.toString()] = item;
+        }
+        return item;
+      });
 
       const resumo = {
         emit,
@@ -135,52 +146,96 @@ Responda usando o seguinte JSON Schema, exatamente:
     }
 
     const ai = new GoogleGenAI({ apiKey });
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.8-flash',
-      contents: [
-        { role: 'user', parts: [{ text: fiscalContext + '\n\n' + userPrompt }] }
-      ],
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            statusGlobal: { type: Type.STRING },
-            parecerTecnicoXml: { type: Type.STRING },
-            parecerConformidade: { type: Type.STRING },
-            itens: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  cProd: { type: Type.STRING },
-                  xProd: { type: Type.STRING },
-                  ncm: { type: Type.STRING },
-                  cest: { type: Type.STRING },
-                  cfopEntrada: { type: Type.STRING },
-                  cstIcmsEntrada: { type: Type.STRING },
-                  aliqIcms: { type: Type.STRING },
-                  cstPisCofinsEntrada: { type: Type.STRING },
-                  aliqPis: { type: Type.STRING },
-                  aliqCofins: { type: Type.STRING },
-                  permiteCredito: { type: Type.BOOLEAN },
-                  cClassTrib: { type: Type.STRING },
-                  aliqIbsTransitorio: { type: Type.STRING },
-                  aliqCbsTransitorio: { type: Type.STRING },
-                  regimeEspecial: { type: Type.STRING },
-                  instrucaoCadastro: { type: Type.STRING },
-                },
-                required: ['cProd', 'xProd', 'ncm', 'cClassTrib']
-              }
-            }
-          },
-          required: ['statusGlobal', 'parecerTecnicoXml', 'parecerConformidade', 'itens']
-        }
-      }
-    });
 
-    const textResponse = typeof response.text === 'function' ? (response as any).text() : response.text;
+    // Fallback model array for this route as well
+    const modelos = ['gemini-3.8-flash', 'gemini-3.6-flash'];
+    let textResponse = '';
+    let ultimoErro: any = null;
+
+    for (const model of modelos) {
+      try {
+        const response = await ai.models.generateContent({
+          model,
+          contents: [
+            { role: 'user', parts: [{ text: fiscalContext + '\n\n' + userPrompt }] }
+          ],
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                statusGlobal: { type: Type.STRING },
+                parecerTecnicoXml: { type: Type.STRING },
+                parecerConformidade: { type: Type.STRING },
+                itens: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      cProd: { type: Type.STRING },
+                      xProd: { type: Type.STRING },
+                      ncm: { type: Type.STRING },
+                      cest: { type: Type.STRING },
+                      cfopEntrada: { type: Type.STRING },
+                      cstIcmsEntrada: { type: Type.STRING },
+                      aliqIcms: { type: Type.STRING },
+                      cstPisCofinsEntrada: { type: Type.STRING },
+                      aliqPis: { type: Type.STRING },
+                      aliqCofins: { type: Type.STRING },
+                      permiteCredito: { type: Type.BOOLEAN },
+                      cClassTrib: { type: Type.STRING },
+                      aliqIbsTransitorio: { type: Type.STRING },
+                      aliqCbsTransitorio: { type: Type.STRING },
+                      regimeEspecial: { type: Type.STRING },
+                      instrucaoCadastro: { type: Type.STRING },
+                    },
+                    required: ['cProd', 'xProd', 'ncm', 'cClassTrib']
+                  }
+                }
+              },
+              required: ['statusGlobal', 'parecerTecnicoXml', 'parecerConformidade', 'itens']
+            }
+          }
+        });
+        if (response.text) {
+          textResponse = typeof response.text === 'function' ? (response as any).text() : response.text;
+          break;
+        }
+      } catch (err: any) {
+        ultimoErro = err;
+        console.warn(`Tentativa com ${model} falhou, tentando próximo modelo...`, err?.message || err);
+      }
+    }
+
+    if (!textResponse) {
+      throw ultimoErro || new Error('Nenhum modelo respondeu à solicitação.');
+    }
+
     const result = JSON.parse(textResponse);
+    const mapaD8 = getMapaD8();
+
+    if (result.itens && Array.isArray(result.itens)) {
+      result.itens = result.itens.map((item: any) => {
+        // Reconcile NCM from XML
+        if (isXml && item.cProd && originalItens[item.cProd.toString()]) {
+          const originalNcm = originalItens[item.cProd.toString()].NCM;
+          if (originalNcm) {
+             item.ncm = originalNcm.toString();
+          }
+        }
+
+        // Validate NCM
+        const validacao = validarNcmIA({ ncm: item.ncm }, mapaD8);
+        if (!validacao.valido) {
+          item.ncmValidado = false;
+          item.confianca = "BAIXA";
+        } else {
+          item.ncmValidado = true;
+          item.confianca = validacao.confianca || "MEDIA";
+        }
+        return item;
+      });
+    }
 
     return NextResponse.json(result);
   } catch (error: any) {
