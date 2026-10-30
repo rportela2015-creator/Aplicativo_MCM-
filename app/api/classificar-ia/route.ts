@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI, Type } from '@google/genai';
+import { getMapaD8 } from '@/lib/ai/ncm-server';
+import { validarNcmIA } from '@/lib/ai/validar';
 
 export async function POST(req: Request) {
   try {
@@ -100,6 +102,23 @@ Contexto: "${contextoOperacao || 'Operação comercial interna padrão'}"`;
     }
 
     const resultado = JSON.parse(responseText);
+
+    const mapaD8 = getMapaD8();
+    const validacao = validarNcmIA(resultado, mapaD8);
+
+    if (!validacao.valido) {
+      resultado.ncm = "";
+      resultado.confianca = "BAIXA";
+      resultado.valido = false;
+      resultado.descricaoNcm = "";
+      resultado.aviso = validacao.aviso;
+    } else {
+      resultado.ncm = validacao.ncm;
+      resultado.confianca = validacao.confianca;
+      resultado.valido = true;
+      resultado.descricaoNcm = validacao.descricaoNcm;
+    }
+
     return NextResponse.json(resultado);
   } catch (error: any) {
     console.error('Erro na classificação por IA:', error);

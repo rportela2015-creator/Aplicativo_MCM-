@@ -9,10 +9,10 @@ export interface ValidacaoIAOutput {
 }
 
 export function validarNcmIA(
-  r: { ncm: string; confianca?: 'ALTA' | 'MEDIA' | 'BAIXA' },
+  r: { ncm?: string | null; confianca?: 'ALTA' | 'MEDIA' | 'BAIXA' },
   mapaD8: Map<string, Record8> | Record<string, any>
 ): ValidacaoIAOutput {
-  const d8 = (r.ncm || '').replace(/\D/g, '');
+  const d8 = (r.ncm ?? '').replace(/\D/g, '');
   const rec = mapaD8 instanceof Map ? mapaD8.get(d8) : (mapaD8 as any)[d8];
 
   if (!rec || d8.length !== 8) {
