@@ -180,8 +180,40 @@ npm run typecheck
 
 Scripts: `fontes`, `dados`, `build:dados`, `reforma`, `build:reforma`, `erp`, `ui:test`, `dev`, `build`,
 `start`, `typecheck`, `test`.
-`POST /api/atualizar` chama `baixar_fontes.py` (240 s) e `pipeline.py` (180 s) e devolve o
-stdout — é o botão da aba 6. `?tipo=reforma` roda `baixar_reforma.py` + `baixar_is.py` + o pipeline.
+`POST /api/atualizar` executa os scripts Python no servidor e devolve o stdout (últimos 20 KB) — é
+o botão da aba 6. `?tipo=fontes` roda `baixar_fontes.py`; `completo` (padrão) roda `baixar_fontes.py` +
+`pipeline.py`; `reforma` roda `baixar_reforma.py` + `baixar_is.py` + o pipeline (sem `baixar_fontes.py`).
+**Desligada por padrão** (ver "Segurança e variáveis de ambiente").
+
+### IA em runtime
+
+O motor de classificação é determinístico. Duas rotas usam o Gemini (`@google/genai`) como apoio:
+
+| Rota | O que envia ao modelo |
+|---|---|
+| `POST /api/classificar-ia` | descrição do produto e contexto da operação |
+| `POST /api/auditoria-entrada` | itens do XML/PDF da nota (**inclui CNPJ/CPF e razão social** de emitente e destinatário) |
+
+Dados de NF-e saem para um terceiro: o uso exige base legal e consentimento adequados (LGPD). Todo NCM
+devolvido pela IA é conferido contra a Tabela NCM oficial; NCM inexistente nunca chega ao front como válido.
+
+### Segurança e variáveis de ambiente
+
+Veja `.env.example`. Resumo:
+
+| Variável | Efeito |
+|---|---|
+| `GEMINI_API_KEY` | chave das rotas de IA |
+| `GEMINI_MODELS` | modelos em ordem de prioridade (padrão em `lib/ai/config.ts`); único lugar com ids de modelo |
+| `RATE_LIMIT_PER_MIN` | limite por IP nas rotas de IA (padrão 20; **em memória**, por instância) |
+| `ENABLE_UPDATE_ROUTE` | `true` habilita `/api/atualizar` (padrão: desligada, responde 403) |
+| `UPDATE_TOKEN` | exigido em `Authorization: Bearer <token>` quando habilitada |
+| `FRAME_ANCESTORS` | origens extras que podem embutir o app em iframe (padrão: só o próprio site) |
+
+Uploads de `/api/auditoria-entrada`: máx. 5 MB (413), extensão `.xml`/`.pdf` e conteúdo conferido pelos
+primeiros bytes; o texto de PDF enviado ao modelo é limitado a 60 mil caracteres (`textoTruncado: true`).
+Em hospedagem de disco efêmero (ex.: Colab), mantenha `/api/atualizar` desligada e gere os dados em
+CI/local (commitando `public/data`).
 
 ### Fontes
 

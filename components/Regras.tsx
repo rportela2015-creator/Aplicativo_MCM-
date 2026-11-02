@@ -9,6 +9,7 @@ export default function Regras() {
   const [abrindo, setAbrindo] = useState('');
   const [saida, setSaida] = useState('');
   const [trabalhando, setTrabalhando] = useState(false);
+  const [token, setToken] = useState('');
 
   useEffect(() => { loadDataset().then(async (d) => { setDs(d); await d.pronto; }).catch(() => setDs(null)); }, []);
   if (!ds) return <div className="card"><span className="spin" /> carregando…</div>;
@@ -17,7 +18,10 @@ export default function Regras() {
   const atualizar = async (tipo: 'fontes' | 'completo' | 'reforma') => {
     setTrabalhando(true); setSaida('…');
     try {
-      const res = await fetch(`/api/atualizar?tipo=${tipo}`, { method: 'POST' });
+      const res = await fetch(`/api/atualizar?tipo=${tipo}`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
       const j = await res.json();
       setSaida([`HTTP ${res.status}`, j.stdout?.slice(-4000) || '', j.error || ''].join('\n'));
     } catch (e) { setSaida(String(e)); } finally { setTrabalhando(false); }
@@ -145,6 +149,14 @@ export default function Regras() {
           Executa <code className="mono">scripts/baixar_fontes.py</code> e <code className="mono">scripts/pipeline.py</code> no
           servidor, revalida cada NCM citado nas regras e regenera o dataset. Requer acesso de rede ao portal.
         </p>
+        <p className="small muted">
+          Rota desligada por padrão: o servidor precisa de <code className="mono">ENABLE_UPDATE_ROUTE=true</code> e{' '}
+          <code className="mono">UPDATE_TOKEN</code>. Informe o token abaixo (fica só na memória desta aba).
+        </p>
+        <div className="row" style={{ marginBottom: 8 }}>
+          <input type="password" value={token} onChange={(e) => setToken(e.target.value)}
+            placeholder="UPDATE_TOKEN" autoComplete="off" aria-label="Token de atualização" />
+        </div>
         <div className="row">
           <button className="btn" type="button" onClick={() => atualizar('completo')} disabled={trabalhando}>
             {trabalhando ? <><span className="spin" /> atualizando…</> : 'baixar fontes + regenerar dataset'}

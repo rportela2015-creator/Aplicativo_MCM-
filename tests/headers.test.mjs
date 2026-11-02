@@ -26,4 +26,23 @@ test('headers()', async (t) => {
     const cacheHeader = metaRule.headers.find(h => h.key === 'Cache-Control');
     assert.ok(cacheHeader && cacheHeader.value === 'no-cache', 'Cache-Control de meta.json deve ser no-cache');
   });
+
+  await t.test('sem X-Frame-Options ALLOWALL em nenhuma regra', () => {
+    for (const r of headers) {
+      for (const h of r.headers) {
+        assert.ok(!(h.key.toLowerCase() === 'x-frame-options' && /allowall/i.test(h.value)),
+          `ALLOWALL encontrado em ${r.source}`);
+      }
+    }
+  });
+
+  await t.test("páginas têm CSP frame-ancestors 'self' e /api e /data ficam de fora", () => {
+    const regra = headers.find(r => r.headers.some(h => h.key === 'Content-Security-Policy' && h.value.startsWith("frame-ancestors 'self'")));
+    assert.ok(regra, 'Regra de frame-ancestors não encontrada');
+    assert.ok(regra.source.includes('api/') && regra.source.includes('data/'),
+      'frame-ancestors não pode sobrescrever o CSP próprio das rotas /api nem aplicar a /data');
+    for (const r of headers.filter(r => r !== regra)) {
+      assert.ok(!r.headers.some(h => h.key === 'Content-Security-Policy'), `CSP inesperado em ${r.source}`);
+    }
+  });
 });
