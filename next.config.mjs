@@ -1,3 +1,5 @@
+import { montarFrameAncestors } from './lib/frame-ancestors.mjs';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -9,7 +11,14 @@ const nextConfig = {
         source: '/((?!data/).*)',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
-          { key: 'X-Frame-Options', value: 'ALLOWALL' },
+        ],
+      },
+      {
+        // Páginas: anti-clickjacking. /api fica de fora para não sobrescrever o CSP próprio
+        // das rotas (ex.: /api/auditoria-relatorio devolve `default-src 'none'`).
+        source: '/((?!data/|api/).*)',
+        headers: [
+          { key: 'Content-Security-Policy', value: `frame-ancestors ${montarFrameAncestors()}` },
         ],
       },
       {
@@ -19,7 +28,6 @@ const nextConfig = {
         ],
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-          { key: 'X-Frame-Options', value: 'ALLOWALL' }
         ],
       },
       {
@@ -29,14 +37,12 @@ const nextConfig = {
         ],
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
-          { key: 'X-Frame-Options', value: 'ALLOWALL' }
         ],
       },
       {
         source: '/data/meta.json',
         headers: [
           { key: 'Cache-Control', value: 'no-cache' },
-          { key: 'X-Frame-Options', value: 'ALLOWALL' }
         ],
       }
     ];

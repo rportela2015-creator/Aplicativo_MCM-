@@ -1,8 +1,12 @@
 import { spawn } from 'node:child_process';
 import { NextResponse } from 'next/server';
+import { bearerValido, criarTrava, ultimosChars } from '@/lib/seguranca';
+import { planoAtualizacao, tipoSchema, TIPOS_ATUALIZACAO } from '@/lib/atualizar';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 1500;
+
+const trava = criarTrava();
 
 const run = (cmd: string, args: string[], timeoutMs: number) =>
   new Promise<{ code: number; stdout: string; stderr: string }>((resolve) => {
@@ -11,48 +15,69 @@ const run = (cmd: string, args: string[], timeoutMs: number) =>
     const killer = setTimeout(() => { p.kill('SIGKILL'); }, timeoutMs);
     p.stdout.on('data', (d) => (out += d));
     p.stderr.on('data', (d) => (er += d));
+    p.on('error', (e) => { clearTimeout(killer); resolve({ code: -1, stdout: out, stderr: er + String(e) }); });
     p.on('close', (code) => { clearTimeout(killer); resolve({ code: code ?? -1, stdout: out, stderr: er }); });
   });
 
 /**
  * POST /api/atualizar?tipo=fontes|completo|reforma
  *  - fontes   : só a Tabela NCM/atributos (Siscomex) e as tabelas derivadas
- *  - completo : fontes + pipeline (regenera public/data)
+ *  - completo : fontes + pipeline (regenera public/data)            [padrão]
  *  - reforma  : tabelas oficiais da reforma do consumo (cClassTrib/IS/alíquotas) + pipeline.
- *               A parte do Imposto Seletivo é 1 requisição por NCM e pode levar dezenas de
- *               minutos; o script retoma do cache se for interrompido.
+ *               Não baixa as fontes do Siscomex. O Imposto Seletivo é 1 requisição por NCM e
+ *               pode levar dezenas de minutos; o script retoma do cache se for interrompido.
+ *
+ * SEGURANÇA: a rota executa processos e grava em disco. Fica DESLIGADA por padrão e exige
+ *   ENABLE_UPDATE_ROUTE=true  +  UPDATE_TOKEN definido  +  "Authorization: Bearer <token>".
+ *   Uma execução por vez (409 se já houver outra). Em hospedagem de FS efêmero (ex.: Colab)
+ *   mantenha desligada: gere os dados em CI/local e commite public/data.
  */
 export async function POST(req: Request) {
-  const tipo = new URL(req.url).searchParams.get('tipo') || 'completo';
-  const fontes = await run('python3', ['scripts/baixar_fontes.py'], 240_000);
-  const partes = [`$ python3 scripts/baixar_fontes.py\n${fontes.stdout}${fontes.stderr ? `\n[stderr]\n${fontes.stderr}` : ''}`];
-  if (fontes.code !== 0) {
-    return NextResponse.json({ ok: false, tipo, exitCode: fontes.code, stdout: partes.join('\n\n') }, { status: 502 });
+  if (process.env.ENABLE_UPDATE_ROUTE !== 'true') {
+    return NextResponse.json(
+      { ok: false, error: 'Rota de atualização desabilitada. Defina ENABLE_UPDATE_ROUTE=true e UPDATE_TOKEN para habilitar.' },
+      { status: 403 },
+    );
   }
-  if (tipo === 'reforma') {
-    const ref = await run('python3', ['scripts/baixar_reforma.py'], 300_000);
-    partes.push(`$ python3 scripts/baixar_reforma.py\n${ref.stdout}${ref.stderr ? `\n[stderr]\n${ref.stderr}` : ''}`);
-    const is = await run('python3', ['scripts/baixar_is.py'], 1_500_000);
-    partes.push(`$ python3 scripts/baixar_is.py\n${is.stdout}${is.stderr ? `\n[stderr]\n${is.stderr}` : ''}`);
-    const pipe2 = await run('python3', ['scripts/pipeline.py'], 180_000);
-    partes.push(`$ python3 scripts/pipeline.py\n${pipe2.stdout}${pipe2.stderr ? `\n[stderr]\n${pipe2.stderr}` : ''}`);
-    const code = pipe2.code || 0;
-    return NextResponse.json({ ok: code === 0, tipo, exitCode: code, stdout: partes.join('\n\n') },
-      { status: code === 0 ? 200 : 502 });
+  const token = process.env.UPDATE_TOKEN;
+  if (!token) {
+    return NextResponse.json({ ok: false, error: 'UPDATE_TOKEN não configurado no servidor.' }, { status: 403 });
   }
-  if (tipo === 'completo') {
-    const pipe = await run('python3', ['scripts/pipeline.py'], 180_000);
-    partes.push(`$ python3 scripts/pipeline.py\n${pipe.stdout}${pipe.stderr ? `\n[stderr]\n${pipe.stderr}` : ''}`);
-    return NextResponse.json({ ok: pipe.code === 0, tipo, exitCode: pipe.code, stdout: partes.join('\n\n') },
-      { status: pipe.code === 0 ? 200 : 502 });
+  if (!bearerValido(req.headers.get('authorization'), token)) {
+    return NextResponse.json({ ok: false, error: 'Não autorizado.' }, { status: 401 });
   }
-  return NextResponse.json({ ok: true, tipo, exitCode: 0, stdout: partes.join('\n\n') });
+
+  const parsed = tipoSchema.safeParse(new URL(req.url).searchParams.get('tipo') ?? undefined);
+  if (!parsed.success) {
+    return NextResponse.json({ ok: false, error: 'Parâmetro tipo inválido.', tiposValidos: TIPOS_ATUALIZACAO }, { status: 400 });
+  }
+  const tipo = parsed.data;
+
+  if (!trava.tentar()) {
+    return NextResponse.json({ ok: false, error: 'Já existe uma atualização em andamento.' }, { status: 409 });
+  }
+  try {
+    const partes: string[] = [];
+    let exitCode = 0;
+    for (const passo of planoAtualizacao(tipo)) {
+      const r = await run(passo.cmd, passo.args, passo.timeoutMs);
+      partes.push(`$ ${passo.cmd} ${passo.args.join(' ')}\n${r.stdout}${r.stderr ? `\n[stderr]\n${r.stderr}` : ''}`);
+      if (r.code !== 0) { exitCode = r.code; break; }
+    }
+    return NextResponse.json(
+      { ok: exitCode === 0, tipo, exitCode, stdout: ultimosChars(partes.join('\n\n')) },
+      { status: exitCode === 0 ? 200 : 502 },
+    );
+  } finally {
+    trava.liberar();
+  }
 }
 
 export async function GET() {
   return NextResponse.json({
     ok: true,
-    uso: 'POST /api/atualizar?tipo=completo|fontes|reforma',
+    habilitado: process.env.ENABLE_UPDATE_ROUTE === 'true',
+    uso: 'POST /api/atualizar?tipo=completo|fontes|reforma (Authorization: Bearer <UPDATE_TOKEN>)',
     fontes: 'https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json',
   });
 }

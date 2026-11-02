@@ -6,9 +6,29 @@ import { getFiscalContext } from '@/lib/fiscal-context';
 import { GoogleGenAI, Type } from '@google/genai';
 import { getMapaD8 } from '@/lib/ai/ncm-server';
 import { validarNcmIA } from '@/lib/ai/validar';
+import { getApiKey, getModels } from '@/lib/ai/config';
+import { gerarComFallback } from '@/lib/ai/fallback';
+import { limiteIA } from '@/lib/ai/limite';
+import {
+  MAX_TEXTO_PDF, MAX_UPLOAD_BYTES, compactarImposto, ipDoCliente, truncarTexto,
+  validarUploadConteudo, validarUploadMeta,
+} from '@/lib/seguranca';
 
 export async function POST(request: Request) {
+  const limite = limiteIA.check(ipDoCliente(request.headers));
+  if (!limite.ok) {
+    return NextResponse.json(
+      { error: 'Muitas requisições. Aguarde e tente novamente.' },
+      { status: 429, headers: { 'Retry-After': String(limite.retryAfter) } },
+    );
+  }
   try {
+    // Recusa cedo pelo Content-Length (o corpo multipart tem um pequeno overhead)
+    const contentLength = Number(request.headers.get('content-length') ?? 0);
+    if (contentLength > MAX_UPLOAD_BYTES + 100_000) {
+      return NextResponse.json({ error: `Arquivo excede o limite de ${MAX_UPLOAD_BYTES / 1024 / 1024} MB.` }, { status: 413 });
+    }
+
     const formData = await request.formData();
 
     const file = formData.get('file') as File;
@@ -19,14 +39,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Nenhum arquivo enviado.' }, { status: 400 });
     }
 
+    // Extensão e tamanho ANTES de ler o conteúdo; magic bytes logo após
+    const meta = validarUploadMeta(file.name, file.size);
+    if (!meta.ok) return NextResponse.json({ error: meta.error }, { status: meta.status });
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+    const conteudo = validarUploadConteudo(meta.tipo, buffer);
+    if (!conteudo.ok) return NextResponse.json({ error: conteudo.error }, { status: conteudo.status });
 
+    let textoTruncado = false;
     let parsedContent = '';
     let isXml = false;
     let originalItens: Record<string, any> = {};
 
-    if (file.name.toLowerCase().endsWith('.xml')) {
+    if (meta.tipo === 'xml') {
       isXml = true;
       const xmlString = buffer.toString('utf-8');
       const parser = new XMLParser({ ignoreAttributes: false });
@@ -61,7 +88,7 @@ export async function POST(request: Request) {
           CEST: d.prod?.CEST,
           CFOP: d.prod?.CFOP,
           vProd: d.prod?.vProd,
-          imposto: d.imposto
+          imposto: compactarImposto(d.imposto)
         };
         if (item.cProd) {
           originalItens[item.cProd.toString()] = item;
@@ -76,7 +103,7 @@ export async function POST(request: Request) {
       };
 
       parsedContent = JSON.stringify(resumo, null, 2);
-    } else if (file.name.toLowerCase().endsWith('.pdf')) {
+    } else {
       const pdfData = await pdfParse(buffer);
       const text = pdfData.text;
 
@@ -87,8 +114,12 @@ export async function POST(request: Request) {
       const cfops = [...text.matchAll(/CFOP:\s*(\d{4})/g)].map(m => m[1]);
       const ncms = [...text.matchAll(/NCM[\/\s]*SH[:\s]*([\d\.]+)/g)].map(m => m[1]);
 
+      // A extração acima usa o texto completo; só o que vai ao modelo é limitado
+      const limitado = truncarTexto(text, MAX_TEXTO_PDF);
+      textoTruncado = limitado.truncado;
+
       const resumoPdf = {
-        textoIntegral: text,
+        textoIntegral: limitado.texto,
         extracaoAuxiliar: {
           emitenteCnpj: emitMatch ? emitMatch[1] : null,
           destinatarioCnpjCpf: destMatch ? destMatch[1] : null,
@@ -98,8 +129,6 @@ export async function POST(request: Request) {
       };
 
       parsedContent = JSON.stringify(resumoPdf, null, 2);
-    } else {
-      return NextResponse.json({ error: 'Formato de arquivo não suportado. Apenas XML ou PDF.' }, { status: 400 });
     }
 
     const fiscalContext = await getFiscalContext();
@@ -140,76 +169,56 @@ Responda usando o seguinte JSON Schema, exatamente:
 }
 `;
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = getApiKey();
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY is not set');
     }
 
     const ai = new GoogleGenAI({ apiKey });
 
-    // Fallback model array for this route as well
-    const modelos = ['gemini-3.8-flash', 'gemini-3.6-flash'];
-    let textResponse = '';
-    let ultimoErro: any = null;
-
-    for (const model of modelos) {
-      try {
-        const response = await ai.models.generateContent({
-          model,
-          contents: [
-            { role: 'user', parts: [{ text: fiscalContext + '\n\n' + userPrompt }] }
-          ],
-          config: {
-            responseMimeType: 'application/json',
-            responseSchema: {
-              type: Type.OBJECT,
-              properties: {
-                statusGlobal: { type: Type.STRING },
-                parecerTecnicoXml: { type: Type.STRING },
-                parecerConformidade: { type: Type.STRING },
-                itens: {
-                  type: Type.ARRAY,
-                  items: {
-                    type: Type.OBJECT,
-                    properties: {
-                      cProd: { type: Type.STRING },
-                      xProd: { type: Type.STRING },
-                      ncm: { type: Type.STRING },
-                      cest: { type: Type.STRING },
-                      cfopEntrada: { type: Type.STRING },
-                      cstIcmsEntrada: { type: Type.STRING },
-                      aliqIcms: { type: Type.STRING },
-                      cstPisCofinsEntrada: { type: Type.STRING },
-                      aliqPis: { type: Type.STRING },
-                      aliqCofins: { type: Type.STRING },
-                      permiteCredito: { type: Type.BOOLEAN },
-                      cClassTrib: { type: Type.STRING },
-                      aliqIbsTransitorio: { type: Type.STRING },
-                      aliqCbsTransitorio: { type: Type.STRING },
-                      regimeEspecial: { type: Type.STRING },
-                      instrucaoCadastro: { type: Type.STRING },
-                    },
-                    required: ['cProd', 'xProd', 'ncm', 'cClassTrib']
-                  }
-                }
-              },
-              required: ['statusGlobal', 'parecerTecnicoXml', 'parecerConformidade', 'itens']
+    // Modelos em ordem de prioridade (GEMINI_MODELS), com fallback entre eles
+    const textResponse = await gerarComFallback(ai, getModels(), {
+      contents: [
+        { role: 'user', parts: [{ text: fiscalContext + '\n\n' + userPrompt }] },
+      ],
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            statusGlobal: { type: Type.STRING },
+            parecerTecnicoXml: { type: Type.STRING },
+            parecerConformidade: { type: Type.STRING },
+            itens: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  cProd: { type: Type.STRING },
+                  xProd: { type: Type.STRING },
+                  ncm: { type: Type.STRING },
+                  cest: { type: Type.STRING },
+                  cfopEntrada: { type: Type.STRING },
+                  cstIcmsEntrada: { type: Type.STRING },
+                  aliqIcms: { type: Type.STRING },
+                  cstPisCofinsEntrada: { type: Type.STRING },
+                  aliqPis: { type: Type.STRING },
+                  aliqCofins: { type: Type.STRING },
+                  permiteCredito: { type: Type.BOOLEAN },
+                  cClassTrib: { type: Type.STRING },
+                  aliqIbsTransitorio: { type: Type.STRING },
+                  aliqCbsTransitorio: { type: Type.STRING },
+                  regimeEspecial: { type: Type.STRING },
+                  instrucaoCadastro: { type: Type.STRING },
+                },
+                required: ['cProd', 'xProd', 'ncm', 'cClassTrib']
+              }
             }
-          }
-        });
-        if (response.text) {
-          textResponse = typeof response.text === 'function' ? (response as any).text() : response.text;
-          break;
+          },
+          required: ['statusGlobal', 'parecerTecnicoXml', 'parecerConformidade', 'itens']
         }
-      } catch (err: any) {
-        ultimoErro = err;
-        console.warn(`Tentativa com ${model} falhou, tentando próximo modelo...`, err?.message || err);
       }
-    }
-
-    if (!textResponse) {
-      throw ultimoErro || new Error('Nenhum modelo respondeu à solicitação.');
-    }
+    });
 
     const result = JSON.parse(textResponse);
     const mapaD8 = getMapaD8();
@@ -237,6 +246,7 @@ Responda usando o seguinte JSON Schema, exatamente:
       });
     }
 
+    if (textoTruncado) result.textoTruncado = true;
     return NextResponse.json(result);
   } catch (error: any) {
     console.error('Erro na auditoria de entrada:', error);

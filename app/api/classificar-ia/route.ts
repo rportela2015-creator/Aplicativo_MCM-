@@ -2,10 +2,21 @@ import { NextResponse } from 'next/server';
 import { GoogleGenAI, Type } from '@google/genai';
 import { getMapaD8 } from '@/lib/ai/ncm-server';
 import { validarNcmIA } from '@/lib/ai/validar';
+import { getApiKey, getModels } from '@/lib/ai/config';
+import { gerarComFallback } from '@/lib/ai/fallback';
+import { limiteIA } from '@/lib/ai/limite';
+import { ipDoCliente } from '@/lib/seguranca';
 
 export async function POST(req: Request) {
+  const limite = limiteIA.check(ipDoCliente(req.headers));
+  if (!limite.ok) {
+    return NextResponse.json(
+      { error: 'Muitas requisições. Aguarde e tente novamente.' },
+      { status: 429, headers: { 'Retry-After': String(limite.retryAfter) } },
+    );
+  }
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = getApiKey();
     if (!apiKey) {
       return NextResponse.json(
         { error: 'Chave GEMINI_API_KEY não encontrada no .env.local.' },
@@ -75,31 +86,8 @@ Contexto: "${contextoOperacao || 'Operação comercial interna padrão'}"`;
       },
     };
 
-    // Lista de modelos em ordem de prioridade para contornar picos de tráfego (503)
-    const modelos = ['gemini-3.8-flash', 'gemini-3.6-flash'];
-    let responseText = '';
-    let ultimoErro: any = null;
-
-    for (const model of modelos) {
-      try {
-        const res = await ai.models.generateContent({
-          model,
-          contents: prompt,
-          config,
-        });
-        if (res.text) {
-          responseText = res.text;
-          break;
-        }
-      } catch (err: any) {
-        ultimoErro = err;
-        console.warn(`Tentativa com ${model} falhou, tentando próximo modelo...`, err?.message || err);
-      }
-    }
-
-    if (!responseText) {
-      throw ultimoErro || new Error('Nenhum modelo respondeu à solicitação.');
-    }
+    // Modelos em ordem de prioridade (GEMINI_MODELS) para contornar picos de tráfego (503)
+    const responseText = await gerarComFallback(ai, getModels(), { contents: prompt, config });
 
     const resultado = JSON.parse(responseText);
 
